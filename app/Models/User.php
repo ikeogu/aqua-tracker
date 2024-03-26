@@ -1,0 +1,115 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\Otp;
+use App\Enums\Role;
+use App\Notifications\EmailVerificationNotification;
+use App\Traits\HasOtp;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Permission\Traits\HasRoles;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+
+class User extends Authenticatable implements HasMedia
+{
+    use HasFactory, Notifiable, InteractsWithMedia, HasOtp, HasUuids, HasRoles;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'email',
+        'password',
+        'fully_onboarded',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'fully_onboarded' => 'boolean'
+        ];
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('display_photo')->singleFile();
+    }
+
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole([Role::SUPER_ADMIN->value]);
+    }
+
+    public function isCreator(): bool
+    {
+        return $this->hasAnyRole([Role::ORGANIZATION_OWNER->value, Role::FARM_TEAM_OWNER->value]);
+    }
+
+    public function isUser(): bool
+    {
+        return $this->hasRole([Role::FARM_EMPLOYEE->value]);
+    }
+
+
+    public function sendEmailVerificationOtp(): void
+    {
+        $this->generateOtpFor(Otp::EMAIL_VERIFICATION); // @phpstan-ignore-line
+        $this->notify(new EmailVerificationNotification()); // @phpstan-ignore-line
+    }
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(config('tenancy.tenant_model'), BelongsToTenant::$tenantIdColumn);
+    }
+
+    public function tenants(): BelongsToMany
+    {
+        return $this->belongsToMany(Tenant::class, 'tenant_user', 'user_id', 'tenant_id')->withPivot(['status', 'role']);
+    }
+
+    protected function fullName(): Attribute
+    {
+        $fullName = ($this->first_name ?? '') . ' ' . ($this->last_name  ?? '');
+
+        return Attribute::make(
+            get: fn () => empty($fullName) || $fullName == " " ? null : $fullName,
+        );
+    }
+
+    public function otp(): HasMany
+    {
+        return $this->hasMany(OtpCode::class);
+    }
+}
