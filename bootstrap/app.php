@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('api')
                 ->prefix('api/farmer')
                 ->group(base_path('routes/routes_includes/farmer.php'));
+                
 
         }
 
@@ -31,12 +32,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         /* $middleware->append(\App\Http\Middleware\UserFullyOnboarded::class);
         $middleware->append(\App\Http\Middleware\InitializeUserPermissionsForCurrentTenant::class); */
-        $middleware->statefulApi();
+
         $middleware->append(\Illuminate\Session\Middleware\StartSession::class);
         $middleware->append(\Illuminate\View\Middleware\ShareErrorsFromSession::class);
 
         $middleware->group('api', [
-             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);

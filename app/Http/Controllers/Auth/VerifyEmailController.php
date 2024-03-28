@@ -25,8 +25,10 @@ class VerifyEmailController extends Controller
             $user->sendEmailVerificationOtp();
         }
 
+
         return $this->success(
             message: 'Email verification code has been sent to your email address',
+
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }

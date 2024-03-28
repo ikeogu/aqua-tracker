@@ -6,6 +6,7 @@ use App\Actions\BootstrapFarmerAsTenant;
 use App\Enums\HttpStatusCode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OnboardFarmerRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -22,6 +23,7 @@ class FarmerOnboardingController extends Controller
 
          return $this->success(
              code: HttpStatusCode::SUCCESSFUL->value,
+             data:  new UserResource($user),
              message: 'Creator onboarding completed successfully',
          );
     }
