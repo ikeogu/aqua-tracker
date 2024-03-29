@@ -9,9 +9,9 @@ config:
 hosts:
 
   develop:
-    hostname: "13.60.13.133"
-    remote_user: "root"
-    http_user: "fiatplug-staging-api"
+    hostname: "ec2-16-171-171-236.eu-north-1.compute.amazonaws.com"
+    remote_user: "ubuntu"
+    http_user: "nginx"
     deploy_path: "/var/www/aqua-tracker"
     branch: "develop"
     ssh_multiplexing: true
