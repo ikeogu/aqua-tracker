@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,6 +17,15 @@ class IdentifyAuthUserCurrentTenant
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+         /** @var User $user */
+         $user = auth()->user();
+
+         if (!$user->tenant) { //@phpstan-ignore-line
+             throw new Exception('Unable to identify tenant with payload', 500);
+         }
+
+         tenancy()->initialize($user->tenant);
+
+         return $next($request);
     }
 }
