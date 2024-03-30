@@ -23,7 +23,7 @@ class IdentifyAuthUserCurrentTenant
          if (!$user->tenant) { //@phpstan-ignore-line
              throw new Exception('Unable to identify tenant with payload', 500);
          }
-
+        
          tenancy()->initialize($user->tenant);
 
          return $next($request);

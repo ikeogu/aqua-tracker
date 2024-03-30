@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateFarmRequest extends FormRequest
+class CreatePondRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,15 @@ class CreateFarmRequest extends FormRequest
         return [
             //
 
-            'name' => 'required|string',
-            'location' => 'nullable|string',
-            'no_of_ponds' => 'required|integer',
-            'date_established' => 'nullable|date',
-
+            "name" => ["required", "string"],
+            "type" => ["required", "string"],
+            "holding_capacity" => ["required", "numeric"],
+            "unit" => ["required", "numeric"],
+            "size" => ["required", "numeric"],
+            "feed_size" => ["required", "numeric"],
+            "mortality_rate" => ["required", "numeric"],
+            "batch_id" => ["required", "exists:batches,id"],
+    
         ];
     }
 }

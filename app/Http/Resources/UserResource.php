@@ -29,6 +29,19 @@ class UserResource extends JsonResource
             'farms' => $this->whenLoaded('tenant', function () {
                 return $this->tenant->farms;
             }),
+
+            'tenant' => $this->whenLoaded('tenant', function () {
+                return [
+                    'id' => $this->tenant->id,
+                    'type' => 'tenant',
+                    'attributes' => [
+                        'name' => $this->tenant->name,
+                        'organization_name' => $this->tenant->organization_name,
+                        'no_of_farms_owned' => $this->tenant->no_of_farms_owned,
+                        'capital' => $this->tenant->capital
+                    ],
+                ];
+            }),
         ];
     }
 }
