@@ -24,10 +24,27 @@ class UserResource extends JsonResource
                 'email_verified_at' => $this->email_verified_at,
                 'role' => $this->role,
                 'fully_onboarded' => $this->fully_onboarded,
+                'profile_photo' => $this->profile_picture,
             ],
 
-            'farms' => $this->whenLoaded('tenant', function () {
-                return $this->tenant->farms;
+            'farms' => $this->farms->map(function ($farm) {
+                return [
+                    'id' => $farm->id,
+                    'name' => $farm->name,
+                ];
+            }),
+
+            'tenant' => $this->whenLoaded('tenant', function () {
+                return [
+                    'id' => $this->tenant->id,
+                    'type' => 'tenant',
+                    'attributes' => [
+                        'name' => $this->tenant->name,
+                        'organization_name' => $this->tenant->organization_name,
+                        'no_of_farms_owned' => $this->tenant->no_of_farms_owned,
+                        'capital' => $this->tenant->capital
+                    ],
+                ];
             }),
         ];
     }

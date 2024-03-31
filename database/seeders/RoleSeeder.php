@@ -68,7 +68,8 @@ class RoleSeeder extends Seeder
             ModelsRole::create([
                 'name' => $role['name'],
                 'title' => $role['title'],
-                'description' => $role['description']
+                'description' => $role['description'],
+                'guard_name' => 'api'
             ]);
         });
 

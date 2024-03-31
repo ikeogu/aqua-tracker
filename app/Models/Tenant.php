@@ -19,19 +19,34 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     protected $table = 'tenants';
 
     protected $fillable = [
+
         'organization_name',
         'no_of_farms_owned',
         'capital',
         'data',
         'username',
-
     ];
+
+
+    public static function getCustomColumns(): array
+    {
+        return [
+            'id',
+            'organization_name',
+            'no_of_farms_owned',
+            'capital',
+    
+            'username',
+        ];
+    }
 
      /**
      *
      * RELATIONSHIPS
      *
      */
+
+
 
      public function user(): HasOne
      {

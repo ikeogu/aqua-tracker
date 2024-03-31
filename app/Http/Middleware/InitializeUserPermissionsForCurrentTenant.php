@@ -24,7 +24,7 @@ class InitializeUserPermissionsForCurrentTenant
                 return $next($request);
             }
 
-            setPermissionsTeamId(0);
+           // setPermissionsTeamId(0);
         }
 
         setPermissionsTeamId(0);

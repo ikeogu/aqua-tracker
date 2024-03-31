@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Enums\Role;
 use App\Models\User;
 use App\Models\Tenant;
 
@@ -31,13 +32,14 @@ class BootstrapFarmerAsTenant
     {
         /** @var Tenant $tenant */
         $tenant = Tenant::updateOrCreate(
-           [
-            'username' => $user->email,
-            'organization_name' => $data['organization_name']
-           ],[
-            'no_of_farms_owned' => $data['no_of_farms_owned'],
-            'capital' => $data['capital'],
-            'data' => json_encode( $data['team_members'] ?? [] ),
+            [
+                'username' => $user->email,
+                'organization_name' => $data['organization_name']
+            ],
+            [
+                'no_of_farms_owned' => $data['no_of_farms_owned'],
+                'capital' => $data['capital'],
+                'data' => json_encode($data['team_members'] ?? []),
             ]
         );
 

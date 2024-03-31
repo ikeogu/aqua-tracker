@@ -22,6 +22,7 @@ class UserFullyOnboarded
          $user = $request->user();
 
          setPermissionsTeamId(0);
+       
 
          if (!$user?->fully_onboarded) {
             return $this->error(

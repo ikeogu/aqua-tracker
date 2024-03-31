@@ -23,6 +23,7 @@ class EmailVerifiedListener
     public function handle(EmailVerified $event): void
     {
         $user = $event->user;
+       // dd(Role::ORGANIZATION_OWNER->value);
         $user->assignRole(Role::ORGANIZATION_OWNER->value);
 
         !$user->hasVerifiedEmail() && $user->markEmailAsVerified();

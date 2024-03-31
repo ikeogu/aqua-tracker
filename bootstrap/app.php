@@ -1,6 +1,9 @@
 <?php
 
 use App\Exceptions\InvalidOrExpiredOtp;
+use App\Http\Middleware\IdentifyAuthUserCurrentTenant;
+use App\Http\Middleware\InitializeUserPermissionsForCurrentTenant;
+use App\Http\Middleware\UserFullyOnboarded;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -25,22 +28,20 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->prefix('api/farmer')
                 ->group(base_path('routes/routes_includes/farmer.php'));
 
+
         }
 
     )
     ->withMiddleware(function (Middleware $middleware) {
-        /* $middleware->append(\App\Http\Middleware\UserFullyOnboarded::class);
-        $middleware->append(\App\Http\Middleware\InitializeUserPermissionsForCurrentTenant::class); */
-        $middleware->statefulApi();
-        $middleware->append(\Illuminate\Session\Middleware\StartSession::class);
-        $middleware->append(\Illuminate\View\Middleware\ShareErrorsFromSession::class);
 
-        $middleware->group('api', [
-             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            'throttle:api',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        $middleware->appendToGroup('farmer-admin', [
+            UserFullyOnboarded::class,
+            InitializeUserPermissionsForCurrentTenant::class,
+            IdentifyAuthUserCurrentTenant::class,
+
         ]);
 
+    
 
     })
     ->withExceptions(function (Exceptions $exceptions) {

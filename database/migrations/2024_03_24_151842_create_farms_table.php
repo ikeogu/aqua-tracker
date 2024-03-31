@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('location');
-            $table->integer('no_of_pounds');
+            $table->integer('no_of_ponds');
             $table->timestamp('date_established')->nullable();
             $table->foreignUuid('tenant_id')->nullable()->constrained('tenants')->cascadeOnDelete();
             $table->timestamps();

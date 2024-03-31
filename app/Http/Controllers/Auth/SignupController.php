@@ -15,7 +15,7 @@ class SignupController extends Controller
 {
     public function __invoke(SignupRequest $request) : JsonResponse
     {
-        
+
          /** @var User $user */
          $user = User::updateOrCreate(
             $request->validated(),
@@ -26,13 +26,15 @@ class SignupController extends Controller
             $user->sendEmailVerificationOtp();
         }
 
-        Auth::login($user);
-        $request->session()->regenerate();
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return $this->success(
             message: 'Email verification OTP sent',
             code: HttpStatusCode::CREATED->value,
-            data: new UserResource($user), //@phpstan-ignore-line
+            data: [
+                'user' => new UserResource($user),
+                'token' => $token,
+            ], //@phpstan-ignore-line
         );
     }
 }

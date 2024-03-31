@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Otp;
 use App\Enums\Role;
 use App\Notifications\EmailVerificationNotification;
+use App\Notifications\ForgotPasswordNotification;
 use App\Traits\HasOtp;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
@@ -22,7 +24,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class User extends Authenticatable implements HasMedia
 {
-    use HasFactory, Notifiable, InteractsWithMedia, HasOtp, HasUuids, HasRoles;
+    use HasFactory, Notifiable, InteractsWithMedia, HasOtp, HasUuids, HasRoles, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -63,9 +65,24 @@ class User extends Authenticatable implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('display_photo')->singleFile();
+        $this->addMediaCollection('profile_picture')->singleFile();
     }
 
+    /** @codeCoverageIgnore */
+    public function role(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getRoleNames()[0] ?? null
+        );
+    }
+
+    /** @codeCoverageIgnore */
+    public function isVerified(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => !is_null($this->email_verified_at),
+        );
+    }
 
     public function isAdmin(): bool
     {
@@ -87,6 +104,12 @@ class User extends Authenticatable implements HasMedia
     {
         $this->generateOtpFor(Otp::EMAIL_VERIFICATION); // @phpstan-ignore-line
         $this->notify(new EmailVerificationNotification()); // @phpstan-ignore-line
+    }
+
+    public function sendPasswordResetOtp(): void
+    {
+        $this->generateOtpFor(Otp::PASSWORD_RESET); // @phpstan-ignore-line
+        $this->notify(new ForgotPasswordNotification()); // @phpstan-ignore-line
     }
 
     public function tenant(): BelongsTo
@@ -112,4 +135,17 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(OtpCode::class);
     }
+
+    public function profilePicture(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getFirstMediaUrl('profile_picture'),
+        );
+    }
+
+    public function farms(): BelongsToMany
+    {
+        return $this->belongsToMany(Farm::class, 'farm_user', 'user_id', 'farm_id')->withPivot(['status', 'role', 'data']);
+    }
+
 }
