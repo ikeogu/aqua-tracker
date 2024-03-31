@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
@@ -41,7 +42,7 @@ class Farm extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'farm_user', 'farm_id', 'user_id')->withPivot(['status','role']);
+        return $this->belongsToMany(User::class, 'farm_user', 'farm_id', 'user_id')->withPivot(['status','role','data']);
     }
 
     public function batches() : HasMany
@@ -54,5 +55,26 @@ class Farm extends Model
         return $this->hasMany(Pond::class , 'farm_id');
     }
 
+    public function owner(): User
+    {
+        return $this->users()->wherePivot('role', Role::FARM_TEAM_OWNER->value)->first();
+    }
+
+    public function harvestcustomers(): HasMany
+    {
+        return $this->hasMany(HarvestCustomer::class, 'farm_id');
+    }
+
+    public function inventories(): HasMany
+    {
+        return $this->hasMany(Inventory::class, 'farm_id');
+    }
+
+    public function harvests(): HasMany
+    {
+        return $this->hasMany(Harvest::class, 'farm_id');
+    }
+
+    
 
 }

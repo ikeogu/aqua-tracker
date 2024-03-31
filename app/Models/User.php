@@ -65,7 +65,7 @@ class User extends Authenticatable implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('display_photo')->singleFile();
+        $this->addMediaCollection('profile_picture')->singleFile();
     }
 
     /** @codeCoverageIgnore */
@@ -135,4 +135,17 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(OtpCode::class);
     }
+
+    public function profilePicture(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getFirstMediaUrl('profile_picture'),
+        );
+    }
+
+    public function farms(): BelongsToMany
+    {
+        return $this->belongsToMany(Farm::class, 'farm_user', 'user_id', 'farm_id')->withPivot(['status', 'role', 'data']);
+    }
+
 }

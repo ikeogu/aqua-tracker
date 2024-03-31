@@ -29,4 +29,13 @@ enum Role: string
             default => null,
         };
     }
+
+    public static function getRoleNames(string $role ): string
+    {
+        return match ($role) {
+            "Farm Employee" => Role::FARM_EMPLOYEE->value,
+            "Organization Owner" => Role::ORGANIZATION_OWNER->value,
+           "Farm Admin"  => Role::FARM_ADMIN->value
+        };
+    }
 }
