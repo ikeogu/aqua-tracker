@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Farm\BatchController;
 use App\Http\Controllers\Farm\CustomerController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\Farm\HarvestController;
 use App\Http\Controllers\Farm\HarvestCustomerController;
 use App\Http\Controllers\Farm\InventoryController;
 use App\Http\Controllers\Farm\PondController;
+use App\Http\Controllers\Farm\TaskController;
 use App\Http\Controllers\FetchAllCustomersController;
 use App\Http\Controllers\PurchaseController;
 use Illuminate\Support\Facades\Route;
@@ -39,4 +41,11 @@ Route::middleware([
     Route::patch('{farm}/harvest/{harvest}/purchase/{purchase}', [PurchaseController::class, 'update']);
 
     Route::get('{farm}/customers', FetchAllCustomersController::class);
+
+    Route::post('{farm}/task', [TaskController::class, 'store']);
+    Route::patch('{farm}/task/{task}', [TaskController::class, 'update']);
+    Route::delete('{farm}/task/{task}', [TaskController::class, 'destroy']);
+
+    Route::get('{farm}/dashboard', DashboardController::class)->name('dashboard');
+
 });

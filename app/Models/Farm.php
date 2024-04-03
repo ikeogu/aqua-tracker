@@ -75,6 +75,9 @@ class Farm extends Model
         return $this->hasMany(Harvest::class, 'farm_id');
     }
 
-    
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'farm_id');
+    }
 
 }
