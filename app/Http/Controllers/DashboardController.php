@@ -14,19 +14,18 @@ class DashboardController extends Controller
     public function __invoke(Request $request, Farm $farm) : JsonResponse
     {
         $overview = [
-            'capital' => 100,
-            'net_profit' => 200,
-            'total_expense' => 300,
-            'total_balance' => 400
+            'capital' => $farm->inventories()->sum('amount') + $farm->batches()->sum('amount_spent'),
+            'net_profit' => $farm->purchases()->sum('amount') - $farm->inventories()->sum('amount') - $farm->batches()->sum('amount_spent'),
+            'total_expense' => $farm->expenses()->sum('amount'),
 
         ];
 
         $farmDetails = [
-            'total_units' => 100,
+            'total_units' => $farm->ponds()->sum('unit'),
             'batch' => $farm->batches()->count(),
-            'feed_available' => 300,
+            'feed_available' => $farm->inventories()->sum('amount'),
             'ponds' => $farm->ponds()->count(),
-            'mortality_rate' => 500,
+            'mortality_rate' => $farm->batches()->sum('mortality_rate'),
         ];
 
         $farmDetails = $this->pieChartData($farmDetails);
@@ -38,6 +37,7 @@ class DashboardController extends Controller
             data: [
                 'overview' => $overview,
                 'farm_details' => $farmDetails,
+                'graph_data' => $this->linearGraphPerMonth($request, $farm),
                 'tasks' => $tasks
             ],
             code: 200
@@ -64,4 +64,35 @@ class DashboardController extends Controller
         ];
     }
 
+
+    private function linearGraphPerMonth(Request $request, Farm $farm) : array
+    {
+       $months = [
+           'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+       ];
+
+       $inventoriesPerMonth = $farm->inventories()
+            ->whereYear('created_at', $request->year)
+            ->get()->groupBy(function($inventory) {
+                return $inventory->created_at->format('F');
+            });
+
+        $batchesPerMonth = $farm->batches()
+            ->whereYear('created_at', $request->year)
+            ->get()->groupBy(function($batch) {
+            return $batch->created_at->format('F');
+            });
+
+        $capitalPerMonth =  [];
+
+        foreach ($months as $month) {
+            $capitalPerMonth[$month] = [
+                'capital' => $inventoriesPerMonth[$month]->sum('amount') + $batchesPerMonth[$month]->sum('amount_spent'),
+                'net_profit' => $farm->purchases()->whereMonth('created_at', $month)->sum('amount') - $inventoriesPerMonth[$month]->sum('amount') - $batchesPerMonth[$month]->sum('amount_spent'),
+                'total_expense' => $farm->expenses()->whereMonth('created_at', $month)->sum('amount'),
+            ];
+        }
+
+        return $capitalPerMonth;
+    }
 }

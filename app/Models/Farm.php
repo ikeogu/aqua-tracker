@@ -80,4 +80,8 @@ class Farm extends Model
         return $this->hasMany(Task::class, 'farm_id');
     }
 
+    public function purchases(): HasMany
+    {
+        return $this->hasMany(Purchase::class, 'farm_id');
+    }
 }
