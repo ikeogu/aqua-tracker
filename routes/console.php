@@ -10,7 +10,7 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 
-Schedule::command('app:update-task-status-command')->addMinute();
+Schedule::command('app:update-task-status-command')->everyMinute();
 
 
 
