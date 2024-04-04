@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class createHarvestRequest extends FormRequest
+class CreateExpenseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,11 @@ class createHarvestRequest extends FormRequest
         return [
             //
 
-            'name' => 'required|string',
-            'consultant' => 'nullable|string',
-            'batch_id' => 'required|string|exists:batches,id',
+            'description' => 'required|string',
+            'total_amount' => 'required|numeric',
+            'splitted_for_batch' => 'required|array',
+            'splitted_for_batch.*batch_id ' => 'required|exists:batches,id',
+            'splitted_for_batch.*amount' => 'required|numeric',
         ];
     }
 }

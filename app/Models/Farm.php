@@ -84,4 +84,9 @@ class Farm extends Model
     {
         return $this->hasMany(Purchase::class, 'farm_id');
     }
+
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(Expense::class, 'farm_id');
+    }
 }

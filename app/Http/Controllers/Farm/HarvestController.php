@@ -52,6 +52,9 @@ class HarvestController extends Controller
     {
         $harvest = $farm->harvests()->create($request->validated());
 
+        $batch = $farm->batches()->find($request->batch_id);
+        $batch->update(['status' => 'sold out']);
+
         return $this->success(
             message: 'Harvest created successfully',
             data: new HarvestResource($harvest),

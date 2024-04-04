@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Farm\BatchController;
 use App\Http\Controllers\Farm\CustomerController;
+use App\Http\Controllers\Farm\ExpenseController;
 use App\Http\Controllers\Farm\FarmController;
 use App\Http\Controllers\Farm\HarvestController;
 use App\Http\Controllers\Farm\HarvestCustomerController;
@@ -36,6 +37,7 @@ Route::middleware([
     Route::apiResource('{farm}/harvest/{harvest}/customer', HarvestCustomerController::class);
     Route::apiResource('{farm}/inventory', InventoryController::class);
     Route::apiResource('{farm}/harvest', HarvestController::class);
+    Route::apiResource('{farm}/expense', ExpenseController::class);
 
     Route::post('{farm}/harvest/{harvest}/purchase', [PurchaseController::class, 'store']);
     Route::patch('{farm}/harvest/{harvest}/purchase/{purchase}', [PurchaseController::class, 'update']);
