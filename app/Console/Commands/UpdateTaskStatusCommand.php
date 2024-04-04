@@ -28,6 +28,9 @@ class UpdateTaskStatusCommand extends Command
     {
         //
 
+        $this->info("Command Initiated ");
         UpdateTrackerStatusJob::dispatch();
+
+        return COMMAND::SUCCESS;
     }
 }

@@ -53,7 +53,7 @@ class DashboardController extends Controller
         // Calculate the percentages
         $percentages = [];
         foreach ($data as $key => $value) {
-            $percentages[$key] = round((($value / $totalSum) * 100),2);
+            $percentages[$key] = ($totalSum) ? round((($value / $totalSum) * 100),2) : 0;
         }
 
         // Return the percentages
