@@ -30,15 +30,13 @@ class DashboardController extends Controller
 
         $farmDetails = $this->pieChartData($farmDetails);
 
-        $tasks = TaskResource::collection($farm->tasks()->latest()->paginate($request->per_page ?? 10))->response()->getData();
-
         return $this->success(
             message: 'Dashboard overview',
             data: [
                 'overview' => $overview,
                 'farm_details' => $farmDetails,
                 'graph_data' => $this->linearGraphPerMonth($request, $farm),
-                'tasks' => $tasks
+              
             ],
             code: 200
         );

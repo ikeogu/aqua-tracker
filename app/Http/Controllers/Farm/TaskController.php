@@ -12,6 +12,17 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
+
+    public function index(Request $request, Farm $farm) : JsonResponse
+    {
+        $tasks = TaskResource::collection($farm->tasks()->latest()->paginate($request->per_page ?? 10))->response()->getData();
+
+        return $this->success(
+            message: 'Tasks retrieved successfully',
+            data: $tasks,
+            code: 200
+        );
+    }
     public function store(CreateTaskRequest $request, Farm $farm) : JsonResponse
     {
 
