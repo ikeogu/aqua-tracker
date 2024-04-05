@@ -99,12 +99,12 @@ class DashboardController extends Controller
         foreach ($months as $month) {
 
             $capitalPerMonth[] = [
-                [
-                    'name' => $month,
-                    'capital' => $inventoriesPerMonth[$month]->sum('amount') + $batchesPerMonth[$month]->sum('amount_spent'),
-                    'net_profit' => $farm->purchases()->whereMonth('created_at', $month)->sum('amount') - $inventoriesPerMonth[$month]->sum('amount') - $batchesPerMonth[$month]->sum('amount_spent'),
-                    'total_expense' => $farm->expenses()->whereMonth('created_at', $month)->sum('total_amount'),
-                ]
+
+                'name' => $month,
+                'capital' => $inventoriesPerMonth[$month]->sum('amount') + $batchesPerMonth[$month]->sum('amount_spent'),
+                'net_profit' => $farm->purchases()->whereMonth('created_at', $month)->sum('amount') - $inventoriesPerMonth[$month]->sum('amount') - $batchesPerMonth[$month]->sum('amount_spent'),
+                'total_expense' => $farm->expenses()->whereMonth('created_at', $month)->sum('total_amount'),
+            
             ];
         }
 
