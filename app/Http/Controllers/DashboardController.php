@@ -51,16 +51,19 @@ class DashboardController extends Controller
         $totalSum = array_sum($data);
 
         // Calculate the percentages
-        $percentages = [];
+        $pieData = [];
         foreach ($data as $key => $value) {
-            $percentages[$key] = ($totalSum) ? round((($value / $totalSum) * 100),2) : 0;
+            $pieData = [
+                'name' => $key,
+                'value' => ($totalSum) ? round((($value / $totalSum) * 100),2) : 0
+            ];
+
         }
 
         // Return the percentages
         return [
             'data' => $data,
-            'percentages' => $percentages,
-            'labels' => array_keys($data)
+            'pie_data' => $pieData
         ];
     }
 
@@ -104,7 +107,7 @@ class DashboardController extends Controller
                 'capital' => $inventoriesPerMonth[$month]->sum('amount') + $batchesPerMonth[$month]->sum('amount_spent'),
                 'net_profit' => $farm->purchases()->whereMonth('created_at', $month)->sum('amount') - $inventoriesPerMonth[$month]->sum('amount') - $batchesPerMonth[$month]->sum('amount_spent'),
                 'total_expense' => $farm->expenses()->whereMonth('created_at', $month)->sum('total_amount'),
-            
+
             ];
         }
 
