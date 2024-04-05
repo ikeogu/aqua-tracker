@@ -53,7 +53,7 @@ class DashboardController extends Controller
         // Calculate the percentages
         $pieData = [];
         foreach ($data as $key => $value) {
-            $pieData = [
+            $pieData[] = [
                 'name' => $key,
                 'value' => ($totalSum) ? round((($value / $totalSum) * 100),2) : 0
             ];
