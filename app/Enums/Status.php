@@ -17,6 +17,8 @@ enum Status: string
     case DUE = "DUE";
     case OVERDUE = "OVERDUE";
     case CANCELLED = "CANCELLED";
+    case SOLDOUT = "sold out";
+    case INSTOCK = "in stock";
 
 
 }

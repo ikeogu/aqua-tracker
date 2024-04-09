@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Farm;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createHarvestRequest;
 use App\Http\Resources\HarvestResource;
 use App\Models\Farm;
 use App\Models\Harvest;
+use App\Models\Inventory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -54,6 +56,9 @@ class HarvestController extends Controller
 
         $batch = $farm->batches()->find($request->batch_id);
         $batch->update(['status' => 'sold out']);
+
+        $farm->inventories()->where('batch_id', $request->batch_id)->update(['status' => Status::SOLDOUT->value]);
+        
 
         return $this->success(
             message: 'Harvest created successfully',

@@ -20,6 +20,8 @@ class Inventory extends Model
         'vendor',
         'batch_id',
         'size',
+        'left_over',
+        'status',
     ];
 
 

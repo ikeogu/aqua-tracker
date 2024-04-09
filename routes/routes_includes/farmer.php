@@ -52,5 +52,6 @@ Route::middleware([
     Route::get('{farm}/dashboard', DashboardController::class)->name('dashboard');
 
     Route::post('team-member-invitation', TeamMemberInvitation::class);
+    Route::get('list-team-members', [TeamMemberInvitation::class, 'listTeamMembers']);
 
 });

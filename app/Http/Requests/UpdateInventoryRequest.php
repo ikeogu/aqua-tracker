@@ -30,6 +30,9 @@ class UpdateInventoryRequest extends FormRequest
             'vendor' => 'nullable|string',
             'batch_id' => 'nullable|exists:batches,id',
             'size' => 'nullable|numeric',
+            'status' => 'nullable|string|in:sold out,in stock',
+            'left_over' => 'required_if:status,sold out|numeric'
+
         ];
     }
 }

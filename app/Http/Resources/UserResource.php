@@ -28,12 +28,6 @@ class UserResource extends JsonResource
                 'profile_photo' => $this->profile_picture,
             ],
 
-         /*    'farms' => $this->tenant->farms->map(function ($farm) {
-                return [
-                    'id' => $farm->id,
-                    'name' => $farm->name,
-                ];
-            }), */
 
             'organizations' => $this->whenLoaded('tenants',function () {
                 return $this->tenants->map(function ($tenant) {
@@ -41,7 +35,7 @@ class UserResource extends JsonResource
                         'id' => $tenant->id,
                         'type' => 'tenant',
                         'attributes' => [
-        
+
                             'organization_name' => $tenant->organization_name,
                             'no_of_farms_owned' => $tenant->no_of_farms_owned,
                             'capital' => $tenant->capital

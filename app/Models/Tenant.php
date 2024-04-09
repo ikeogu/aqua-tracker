@@ -35,7 +35,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'organization_name',
             'no_of_farms_owned',
             'capital',
-    
+
             'username',
         ];
     }
@@ -68,5 +68,9 @@ class Tenant extends BaseTenant implements TenantWithDatabase
          return $this->hasMany(Farm::class);
      }
 
+     public function teamMembers(): BelongsToMany
+     {
+         return $this->users()->whereIn('role', [Role::FARM_TEAM_OWNER, Role::FARM_ADMIN->value, Role::VIEW_FARMS->value, Role::EDIT_FARMS->value]);
+     }
 
 }

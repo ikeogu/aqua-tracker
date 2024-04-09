@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Farm;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateInventoryRequest;
 use App\Http\Requests\UpdateInventoryRequest;
@@ -18,7 +19,9 @@ class InventoryController extends Controller
     public function store(CreateInventoryRequest $request, Farm $farm) : JsonResponse
     {
         // Create a new inventory
-        $inventory = $farm->inventories()->create($request->validated());
+        $inventory = $farm->inventories()->create(
+            array_merge($request->validated(), ['status' => Status::INSTOCK->value ])
+        );
 
         return $this->success(
             message: 'Inventory created successfully',
@@ -33,7 +36,10 @@ class InventoryController extends Controller
             return $query->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('description', 'like', '%' . $request->search . '%')
                 ->orWhere('quantity', 'like', '%' . $request->search . '%')
-                ->orWhere('price', 'like', '%' . $request->search . '%');
+                ->orWhere('price', 'like', '%' . $request->search . '%')
+                ->orWhere('vendor', 'like', '%' . $request->search . '%')
+                ->orWhere('status', 'like', '%' . $request->search . '%');
+
         })->paginate($request->per_page ?? 20);
 
         return $this->success(

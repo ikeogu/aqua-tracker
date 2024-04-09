@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Status;
 use App\Http\Resources\TaskResource;
 use App\Models\Farm;
 use Illuminate\Http\JsonResponse;
@@ -20,12 +21,13 @@ class DashboardController extends Controller
 
         ];
 
+        $batches_id =$farm->batches()->where('status', Status::INSTOCK->value)->pluck('id');
         $farmDetails = [
-            'total_units' => $farm->ponds()->sum('unit'),
-            'batch' => $farm->batches()->count(),
-            'feed_available' => $farm->inventories()->sum('amount'),
-            'ponds' => $farm->ponds()->count(),
-            'mortality_rate' => $farm->ponds()->sum('mortality_rate'),
+            'total_units' => $farm->ponds()->whereIn('batch_id', $batches_id)->sum('unit'),
+            'batch' => $farm->batches()->where('status', Status::INSTOCK->value)->count(),
+            'feed_available' => $farm->inventories()->where('status', Status::INSTOCK->value)->sum('quantity') + $farm->inventories()->where('status', Status::SOLDOUT->value)->sum('left_over'),
+            'ponds' => $farm->ponds()->whereIn('batch_id', $batches_id)->count(),
+            'mortality_rate' => $farm->ponds()->whereIn('batch_id', $batches_id)->sum('mortality_rate'),
         ];
 
         $farmDetails = $this->pieChartData($farmDetails);
@@ -36,7 +38,7 @@ class DashboardController extends Controller
                 'overview' => $overview,
                 'farm_details' => $farmDetails,
                 'graph_data' => $this->linearGraphPerMonth($request, $farm),
-              
+
             ],
             code: 200
         );

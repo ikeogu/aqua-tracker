@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\Role;
 use App\Http\Requests\ProfileSettingRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Farm;
@@ -13,7 +14,7 @@ class SettingController extends Controller
 {
     //
 
-    public function __invoke(ProfileSettingRequest $request, Farm $farm) : JsonResponse
+    public function __invoke(ProfileSettingRequest $request) : JsonResponse
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
@@ -32,14 +33,18 @@ class SettingController extends Controller
             ]);
         }
 
-        /** @var \App\Models\Tenant $tenant */
-        $tenant  = $farm->tenant;
 
-        $tenant->update([
-            'organization_name' => $data['organization_name'] ?? $tenant->organization_name,
-            'location' => $data['location'] ?? $tenant->location,
-        ]);
+        if($user->hasAnyRole([Role::ORGANIZATION_OWNER->value, Role::FARM_ADMIN->value])){
 
+             /** @var \App\Models\Tenant $tenant */
+            $tenant  = $user->tenant;
+
+            $tenant->update([
+                'organization_name' => $data['organization_name'] ?? $tenant->organization_name,
+                'location' => $data['location'] ?? $tenant->location,
+            ]);
+
+        }
 
 
         return $this->success(
