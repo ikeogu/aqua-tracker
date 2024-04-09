@@ -23,28 +23,38 @@ class UserResource extends JsonResource
                 'email' => $this->email,
                 'email_verified_at' => $this->email_verified_at,
                 'role' => $this->role,
+                'permissions' => $this->permissions,
                 'fully_onboarded' => $this->fully_onboarded,
                 'profile_photo' => $this->profile_picture,
             ],
 
-            'farms' => $this->farms->map(function ($farm) {
+         /*    'farms' => $this->tenant->farms->map(function ($farm) {
                 return [
                     'id' => $farm->id,
                     'name' => $farm->name,
                 ];
-            }),
+            }), */
 
-            'tenant' => $this->whenLoaded('tenant', function () {
-                return [
-                    'id' => $this->tenant->id,
-                    'type' => 'tenant',
-                    'attributes' => [
-                        'name' => $this->tenant->name,
-                        'organization_name' => $this->tenant->organization_name,
-                        'no_of_farms_owned' => $this->tenant->no_of_farms_owned,
-                        'capital' => $this->tenant->capital
-                    ],
-                ];
+            'organizations' => $this->whenLoaded('tenants',function () {
+                return $this->tenants->map(function ($tenant) {
+                    return [
+                        'id' => $tenant->id,
+                        'type' => 'tenant',
+                        'attributes' => [
+        
+                            'organization_name' => $tenant->organization_name,
+                            'no_of_farms_owned' => $tenant->no_of_farms_owned,
+                            'capital' => $tenant->capital
+                        ],
+                        'farms' => $tenant->farms->map(function ($farm) {
+                            return [
+                                'id' => $farm->id,
+                                'name' => $farm->name,
+                            ];
+                        }),
+                    ];
+                });
+
             }),
         ];
     }

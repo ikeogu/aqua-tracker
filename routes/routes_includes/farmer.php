@@ -13,6 +13,7 @@ use App\Http\Controllers\Farm\PondController;
 use App\Http\Controllers\Farm\TaskController;
 use App\Http\Controllers\FetchAllCustomersController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\TeamMemberInvitation;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([
@@ -49,5 +50,7 @@ Route::middleware([
     Route::delete('{farm}/task/{task}', [TaskController::class, 'destroy']);
 
     Route::get('{farm}/dashboard', DashboardController::class)->name('dashboard');
+
+    Route::post('team-member-invitation', TeamMemberInvitation::class);
 
 });

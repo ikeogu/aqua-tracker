@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-/*         Schema::create('tenant_user', function (Blueprint $table) {
+        Schema::dropIfExists('notifications');
 
+        Schema::create('notifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('tenant_id')->constrained('tenants')->cascadeOnDelete();
-            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('role')->default('user');
-            $table->string('status')->default('active');
-
+            $table->string('type');
+            $table->uuidMorphs('notifiable');
+            $table->text('data');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
-        }); */
+        });
     }
 
     /**
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-       // Schema::dropIfExists('tenant_user');
+        Schema::dropIfExists('notifications');
     }
 };

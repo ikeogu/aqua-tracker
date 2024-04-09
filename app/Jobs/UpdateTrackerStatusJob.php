@@ -39,6 +39,13 @@ class UpdateTrackerStatusJob implements ShouldQueue
 
             }
 
+            if ($task->due_date < now() && $task->repeat) {
+
+                $task->update(['status' => Status::PENDING->value]);
+
+
+            }
+
             if($task->due_date > now()) {
 
                 $task->update(['status' => Status::DUE->value]);
