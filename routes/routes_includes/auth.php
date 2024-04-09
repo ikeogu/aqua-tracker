@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\FarmerOnboardingController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SigninController;
 use App\Http\Controllers\Auth\SignupController;
@@ -23,12 +24,11 @@ Route::middleware('auth:sanctum')
         // EMAIL VERIFICATION
 
 
-
         // TWO FACTOR AUTHENTICATION
         Route::post('/reset-password', ResetPasswordController::class)->name('password.reset');
 
         // LOGOUT
-       // Route::post('/logout', LogoutController::class)->name('logout');
+         Route::post('/logout', LogoutController::class)->name('logout');
 
         //ONBOARDING
         Route::post('/onboarding/farm-owner', FarmerOnboardingController::class)->name('farmer.onboarding')->middleware('verified');

@@ -54,4 +54,6 @@ Route::middleware([
     Route::post('team-member-invitation', TeamMemberInvitation::class);
     Route::get('list-team-members', [TeamMemberInvitation::class, 'listTeamMembers']);
 
+    Route::post('delete-all', \App\Http\Controllers\DeleteAllController::class);
+
 });

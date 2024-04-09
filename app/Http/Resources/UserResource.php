@@ -23,7 +23,6 @@ class UserResource extends JsonResource
                 'email' => $this->email,
                 'email_verified_at' => $this->email_verified_at,
                 'role' => $this->role,
-                'permissions' => $this->permissions,
                 'fully_onboarded' => $this->fully_onboarded,
                 'profile_photo' => $this->profile_picture,
             ],
