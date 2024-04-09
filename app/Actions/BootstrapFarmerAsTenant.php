@@ -3,8 +3,10 @@
 namespace App\Actions;
 
 use App\Enums\Role;
+use App\Enums\Status;
 use App\Models\User;
 use App\Models\Tenant;
+use PhpOffice\PhpSpreadsheet\Calculation\Token\Stack;
 
 class BootstrapFarmerAsTenant
 {
@@ -48,6 +50,15 @@ class BootstrapFarmerAsTenant
             'tenant_id' => $tenant->id
 
             ])->save();
+
+        $user->tenants()->attach(
+            $tenant->id,
+            ['role' => Role::ORGANIZATION_OWNER->value,
+            'status' => Status::ACTIVE->value,
+             'created_at' => now(),
+             'updated_at' => now()
+            ]
+        );
 
         return $tenant;
     }

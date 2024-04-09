@@ -64,7 +64,7 @@ class User extends Authenticatable implements HasMedia
         ];
     }
 
-    protected $with = ['roles', 'tenants', 'tenant'];
+    protected $with = [ 'tenants'];
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('profile_picture')->singleFile();
