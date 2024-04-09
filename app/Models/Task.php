@@ -12,7 +12,7 @@ class Task extends Model
 {
     use HasFactory, HasUuids, BelongsToPrimaryModel;
 
-    protected $fillable = ['title', 'description', 'status', 'start_date','due_date','set_reminder','farm_id'];
+    protected $fillable = ['title', 'description', 'status', 'start_date','due_date','repeat','farm_id'];
 
 
 

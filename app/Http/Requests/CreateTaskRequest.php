@@ -27,7 +27,7 @@ class CreateTaskRequest extends FormRequest
             'description' => 'required|string',
             'start_date' => 'required|date',
             'due_date' => 'required|date|after:start_date',
-            'set_reminder' => 'required|string',
+            'repeat' => 'required|boolean',
 
         ];
     }
