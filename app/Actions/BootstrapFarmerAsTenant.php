@@ -51,14 +51,13 @@ class BootstrapFarmerAsTenant
 
             ])->save();
 
-        $user->tenants()->attach(
-            $tenant->id,
-            ['role' => Role::ORGANIZATION_OWNER->value,
+        $tenant->users()->attach($user->id, [
             'status' => Status::ACTIVE->value,
-             'created_at' => now(),
-             'updated_at' => now()
-            ]
-        );
+            'role' => Role::ORGANIZATION_OWNER->value,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
 
         return $tenant;
     }
