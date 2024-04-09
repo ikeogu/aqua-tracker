@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tenant_user', function (Blueprint $table) {
+            
             $table->uuid('id')->primary();
             $table->foreignUuid('tenant_id')->constrained('tenants')->cascadeOnDelete();
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('role')->default('user');
             $table->string('status')->default('active');
-            
+
             $table->timestamps();
         });
     }
