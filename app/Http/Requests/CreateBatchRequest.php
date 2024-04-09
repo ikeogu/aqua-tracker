@@ -30,7 +30,7 @@ class CreateBatchRequest extends FormRequest
             'fish_specie' => ['required','string'],
             'fish_type' => ['required', 'required'],
             'vendor' => ['nullable', 'string'],
-            'status' => ['required', 'string','in:sold out, in stock'],
+            'status' => ['required', 'string','in:sold out,in stock'],
             'date_purchased' => ['required', 'date']
         ];
     }
