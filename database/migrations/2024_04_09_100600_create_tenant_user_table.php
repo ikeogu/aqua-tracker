@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tenant_user', function (Blueprint $table) {
-            
+/*         Schema::create('tenant_user', function (Blueprint $table) {
+
             $table->uuid('id')->primary();
             $table->foreignUuid('tenant_id')->constrained('tenants')->cascadeOnDelete();
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('status')->default('active');
 
             $table->timestamps();
-        });
+        }); */
     }
 
     /**
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tenant_user');
+       // Schema::dropIfExists('tenant_user');
     }
 };
