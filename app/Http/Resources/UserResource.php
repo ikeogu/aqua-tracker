@@ -57,7 +57,7 @@ class UserResource extends JsonResource
 
     public function others() : mixed
     {
-        $this->whenLoaded('tenants',function () {
+       return $this->whenLoaded('tenants',function () {
             return $this->tenants->map(function ($tenant) {
                 return [
                     'id' => $tenant->id,
