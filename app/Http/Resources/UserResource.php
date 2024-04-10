@@ -44,7 +44,7 @@ class UserResource extends JsonResource
 
                 'organization_name' => $this->tenant?->organization_name,
                 'no_of_farms_owned' => $this->tenant?->no_of_farms_owned,
-                'capital' => $this->tenant->capital
+                'capital' => $this->tenant?->capital
             ],
             'farms' => $this->tenant?->farms->map(function ($farm) {
                 return [
