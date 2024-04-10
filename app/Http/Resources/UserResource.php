@@ -38,15 +38,15 @@ class UserResource extends JsonResource
     public function farmOwner() : array
     {
         return [
-            'id' => $this->tenant->id,
+            'id' => $this->tenant?->id,
             'type' => 'tenant',
             'attributes' => [
 
-                'organization_name' => $this->tenant->organization_name,
-                'no_of_farms_owned' => $this->tenant->no_of_farms_owned,
+                'organization_name' => $this->tenant?->organization_name,
+                'no_of_farms_owned' => $this->tenant?->no_of_farms_owned,
                 'capital' => $this->tenant->capital
             ],
-            'farms' => $this->tenant->farms->map(function ($farm) {
+            'farms' => $this->tenant?->farms->map(function ($farm) {
                 return [
                     'id' => $farm->id,
                     'name' => $farm->name,
