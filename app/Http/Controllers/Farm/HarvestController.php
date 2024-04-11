@@ -10,6 +10,8 @@ use App\Http\Resources\HarvestResource;
 use App\Models\Farm;
 use App\Models\Harvest;
 use App\Models\Inventory;
+use App\Models\Purchase;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -21,12 +23,44 @@ class HarvestController extends Controller
         $harvests = $farm->harvests()->when($request->search, function ($query) use ($request) {
             return $query->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('consultant', 'like', '%' . $request->search . '%')
-                ->orWhere('batch_id', 'like', '%' . $request->search . '%');
-        })->paginate($request->per_page ?? 20);
+                ->orWhereHas('batch', function (Builder $query) use ($request) {
+                    $query->where('name', 'like', '%' . $request->search . '%');
+                });
+        })
+        ->paginate($request->per_page ?? 20)
+        ->through(function ($harvest) {
+            return [
+                'id' => $harvest->id,
+                'date' => $harvest->created_at->format('d/m/Y'),
+                'name' => $harvest->name,
+                'consultant' => $harvest->consultant,
+                'batch' => [
+                    'id' => $harvest->batch_id,
+                    'name' => $harvest->batch->name,
+                ],
+                'total_sales' => $harvest->purchases()->sum('amount'),
+
+            ];
+        });
+
+
+        $totalHarvest = Purchase::whereIn('harvest_id', $farm->harvests()->pluck('harvests.id')->toArray())->sum('amount');
+        $batch_ids = $farm->harvests()->pluck('batch_id')->toArray();
+
+        $inventories = $farm->inventories()->whereIn('batch_id', $batch_ids)->sum('amount');
+        $expenses = $farm->expenses()->whereIn('splitted_for_batch->batch_id', $batch_ids)->sum('splitted_for_batch->amount');
+
+
+        $data = [
+            'total_harvest' => (int) $totalHarvest,
+            'total_capital' => $inventories + $expenses,
+             'total_profit' => $totalHarvest - ($inventories + $expenses),
+            'harvests' => $harvests
+        ];
 
         return $this->success(
             message: 'Harvests retrieved successfully',
-            data: HarvestResource::collection($harvests)->response()->getData(),
+            data: $data,
             code: HttpStatusCode::SUCCESSFUL->value
         );
 
@@ -58,7 +92,7 @@ class HarvestController extends Controller
         $batch->update(['status' => 'sold out']);
 
         $farm->inventories()->where('batch_id', $request->batch_id)->update(['status' => Status::SOLDOUT->value]);
-        
+
 
         return $this->success(
             message: 'Harvest created successfully',
