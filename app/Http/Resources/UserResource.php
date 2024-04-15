@@ -29,8 +29,6 @@ class UserResource extends JsonResource
                 'profile_photo' => $this->profile_picture,
             ],
 
-
-
             'organizations' => ($this->role === Role::ORGANIZATION_OWNER->value) ? [$this->farmOwner()] : $this->others()
         ];
     }
@@ -44,7 +42,8 @@ class UserResource extends JsonResource
 
                 'organization_name' => $this->tenant?->organization_name,
                 'no_of_farms_owned' => $this->tenant?->no_of_farms_owned,
-                'capital' => $this->tenant?->capital
+                'capital' => $this->tenant?->capital,
+                'location' => $this->tenant?->location
             ],
             'farms' => $this->tenant?->farms->map(function ($farm) {
                 return [

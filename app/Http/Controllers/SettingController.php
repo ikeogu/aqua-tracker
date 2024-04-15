@@ -28,9 +28,8 @@ class SettingController extends Controller
         ]);
 
         if ($request->hasFile('profile_picture')) {
-            $user->update([
-                'profile_picture' => $request->file('profile_picture')->store('profile_pictures', 'public')
-            ]);
+
+            $user->addMediaFromRequest('profile_picture')->toMediaCollection('profile_picture');
         }
 
 
