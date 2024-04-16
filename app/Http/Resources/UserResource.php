@@ -27,6 +27,7 @@ class UserResource extends JsonResource
                 'role' => $this->role,
                 'fully_onboarded' => $this->fully_onboarded,
                 'profile_photo' => $this->profile_picture,
+                'phone_number' => $this->phone_number,
             ],
 
             'organizations' => ($this->role === Role::ORGANIZATION_OWNER->value) ? [$this->farmOwner()] : $this->others()
