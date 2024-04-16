@@ -38,7 +38,7 @@ class HarvestController extends Controller
                     'id' => $harvest->batch_id,
                     'name' => $harvest->batch->name,
                 ],
-                'total_sales' => $harvest->purchases()->sum('amount'),
+                'total_sales' => number_format($harvest->purchases()->sum('amount'),2),
 
             ];
         });
@@ -52,9 +52,9 @@ class HarvestController extends Controller
 
 
         $data = [
-            'total_harvest' => (int) $totalHarvest,
-            'total_capital' => $inventories + $expenses,
-             'total_profit' => $totalHarvest - ($inventories + $expenses),
+            'total_harvest' => number_format($totalHarvest,2),
+            'total_capital' => number_format($inventories + $expenses,2),
+             'total_profit' => number_format($totalHarvest - ($inventories + $expenses),2),
             'harvests' => $harvests
         ];
 
