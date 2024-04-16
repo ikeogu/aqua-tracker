@@ -59,8 +59,10 @@ class BatchController extends Controller
 
 
 
-    public function update(UpdateBatchRequest $request, Batch $batch) : JsonResponse
+    public function update(UpdateBatchRequest $request,Farm $farm,  Batch $batch) : JsonResponse
     {
+        $batch = $farm->batches()->find($batch->id);
+
         $batch->update($request->validated());
 
         return $this->success(

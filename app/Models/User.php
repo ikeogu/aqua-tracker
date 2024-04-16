@@ -38,6 +38,7 @@ class User extends Authenticatable implements HasMedia
         'password',
         'fully_onboarded',
         'tenant_id',
+        'phone_number',
     ];
 
     /**

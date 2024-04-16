@@ -33,7 +33,7 @@ class SettingController extends Controller
         }
 
 
-        if($user->hasAnyRole([Role::ORGANIZATION_OWNER->value, Role::FARM_ADMIN->value])){
+       // if($user->hasAnyRole([Role::ORGANIZATION_OWNER->value, Role::FARM_ADMIN->value])){
 
              /** @var \App\Models\Tenant $tenant */
             $tenant  = $user->tenant;
@@ -43,7 +43,7 @@ class SettingController extends Controller
                 'location' => $data['location'] ?? $tenant->location,
             ]);
 
-        }
+      //  }
 
 
         return $this->success(

@@ -53,6 +53,8 @@ Route::middleware([
 
     Route::post('team-member-invitation', TeamMemberInvitation::class);
     Route::get('list-team-members', [TeamMemberInvitation::class, 'listTeamMembers']);
+    Route::patch('update-team-member/{teamMember}', [TeamMemberInvitation::class, 'updateTeamMember']);
+    Route::delete('delete-team-member/{teamMember}', [TeamMemberInvitation::class, 'deleteTeamMember']);
 
     Route::post('delete-all', \App\Http\Controllers\DeleteAllController::class);
 
