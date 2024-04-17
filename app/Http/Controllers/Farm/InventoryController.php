@@ -44,7 +44,7 @@ class InventoryController extends Controller
 
         return $this->success(
             message: 'Inventories retrieved successfully',
-            data: InventoryResource::collection($inventories)->response()->getData(),
+            data: InventoryResource::collection($inventories)->response()->getData(true),
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }
