@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Farm\BatchController;
+use App\Http\Controllers\Farm\BeneficiaryController;
 use App\Http\Controllers\Farm\CustomerController;
 use App\Http\Controllers\Farm\ExpenseController;
 use App\Http\Controllers\Farm\FarmController;
@@ -57,5 +58,8 @@ Route::middleware([
     Route::delete('delete-team-member/{teamMember}', [TeamMemberInvitation::class, 'deleteTeamMember']);
 
     Route::post('delete-all', \App\Http\Controllers\DeleteAllController::class);
+
+    Route::get('{farm}/beneficiaries', [BeneficiaryController::class, 'index']);
+    Route::post('{farm}/beneficiary', [BeneficiaryController::class, 'store']);
 
 });
