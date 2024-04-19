@@ -19,12 +19,12 @@ class PurchaseResource extends JsonResource
             'type' => "purchase",
             'attributes' => [
                 'pieces' => $this->pieces,
-                'price_per_unit' => $this->price_per_unit,
-                'amount' => $this->amount,
+                'price_per_unit' => number_format($this->price_per_unit,2),
+                'amount' => number_format($this->amount,2),
                 'status' => $this->status,
-                'size' => $this->size,
+                'size' => intval($this->size),
             ],
-            
+
         ];
     }
 }
