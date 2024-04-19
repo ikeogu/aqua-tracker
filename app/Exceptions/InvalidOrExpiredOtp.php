@@ -13,16 +13,16 @@ class InvalidOrExpiredOtp extends Exception
 
     public function render(Request $request): mixed
     {
-        if ($request->is('/*')) {
-            return $this->error(
-                message: $this->message,
-                error: [
-                    'code' => $this->message,
-                ],
-                code: $this->code
-            );
-        }
 
-        return false;
+
+
+        return $this->error(
+            message: $this->message,
+            error: [
+                'code' => $this->message,
+            ],
+            code: $this->code
+        );
+
     }
 }
