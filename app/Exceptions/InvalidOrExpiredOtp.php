@@ -13,7 +13,7 @@ class InvalidOrExpiredOtp extends Exception
 
     public function render(Request $request): mixed
     {
-        if ($request->is('api/*')) {
+        if ($request->is('/*')) {
             return $this->error(
                 message: $this->message,
                 error: [
