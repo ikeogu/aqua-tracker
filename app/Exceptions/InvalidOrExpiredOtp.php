@@ -14,8 +14,6 @@ class InvalidOrExpiredOtp extends Exception
     public function render(Request $request): mixed
     {
 
-
-
         return $this->error(
             message: $this->message,
             error: [
