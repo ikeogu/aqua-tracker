@@ -51,7 +51,9 @@ class CustomerResource extends JsonResource
                          ((($this->purchases->where('status', 'paid')->count() == $this->purchases->count())) ? 'completed' : 'incomplete'),
                 ],
 
-               'purchases_made' => $this->purchases->sum('amount')
+               'purchases_made' => $this->purchases->sum('amount'),
+               'is_beneficiary' => $this->farm->beneficiaries->contains('harvest_customer_id', $this->id) ? true : false,
+
             ],
         ];
     }

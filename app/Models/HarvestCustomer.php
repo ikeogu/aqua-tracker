@@ -41,4 +41,6 @@ class HarvestCustomer extends Model
         return $this->hasMany(Purchase::class);
     }
 
+    
+
 }

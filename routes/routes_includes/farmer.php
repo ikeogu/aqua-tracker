@@ -43,6 +43,7 @@ Route::middleware([
 
     Route::post('{farm}/harvest/{harvest}/purchase', [PurchaseController::class, 'store']);
     Route::patch('{farm}/harvest/{harvest}/purchase/{purchase}', [PurchaseController::class, 'update']);
+    Route::delete('{farm}/harvest/{harvest}/purchase/{purchase}', [PurchaseController::class, 'destroy']);
 
     Route::get('{farm}/customers', FetchAllCustomersController::class);
     Route::get('{farm}/tasks', [TaskController::class, 'index']);
