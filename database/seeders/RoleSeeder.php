@@ -51,26 +51,65 @@ class RoleSeeder extends Seeder
                 'description' => 'Can manage and info abt farm'
             ],
 
+            [
+                'title' => 'View Farms',
+                'name' => Role::VIEW_FARMS->value,
+                'description' => 'Can view farms'
+            ],
+            [
+                'title' => 'Edit Farms',
+                'name' => Role::EDIT_FARMS->value,
+                'description' => 'Can edit farms'
+            ],
+
         ];
 
-        $permissions = [];
+        $permissions = [
+
+            [
+                'name' => 'view farm',
+                'description' => 'Can view farm',
+                'group' => Role::VIEW_FARMS->value,
+            ],
+            [
+                'name' => 'edit farm',
+                'description' => 'Can edit farm',
+                'group' => Role::EDIT_FARMS->value,
+            ],
+        ];
 
 
-        collect($permissions)->map(function (array $permission) {
-            Permission::create([
-                'name' => $permission['name'],
+      collect($permissions)->map(function (array $permission) {
+            Permission::updateOrCreate(['name' => $permission['name']],
+                [
                 'description' => $permission['description'],
                 'group' => $permission['group']
             ]);
         });
 
-        collect($roles)->each(function (array $role) {
-            ModelsRole::create([
+        collect($roles)->each(function (array $role) use ($permissions){
+            $role =  ModelsRole::updateOrCreate(
+                [
                 'name' => $role['name'],
-                'title' => $role['title'],
+                'title' => $role['title']
+                ],
+                [
                 'description' => $role['description'],
                 'guard_name' => 'api'
             ]);
+
+            if ($role['name'] === Role::VIEW_FARMS->value || $role['name'] === Role::EDIT_FARMS->value) {
+                $mappedPermissions = collect($permissions)->filter(function ($permission) use ($role) {
+
+                  return $permission['group'] === $role['name'];
+                })->map(function ($permission) {
+                    return $permission['name'];
+                });
+
+                $role->syncPermissions($mappedPermissions);
+            }
+
+
         });
 
 

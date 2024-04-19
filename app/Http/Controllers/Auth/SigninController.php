@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\Role;
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -26,6 +28,13 @@ class SigninController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
+
+        if($user->hasAnyRole([Role::EDIT_FARMS->value, Role::FARM_ADMIN->value, Role::VIEW_FARMS->value])){
+            $user->load('tenants');
+            $user->tenants->each(function($tenant){
+                $tenant->pivot->update(['status' => Status::ACTIVE->value]);
+            });
+        }
 
         return $this->success(
             message: 'User signed in successfully',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,6 +15,7 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
         return [
             'id' => $this->id,
             'type' => 'user',
@@ -25,27 +27,56 @@ class UserResource extends JsonResource
                 'role' => $this->role,
                 'fully_onboarded' => $this->fully_onboarded,
                 'profile_photo' => $this->profile_picture,
+                'phone_number' => $this->phone_number,
             ],
 
-            'farms' => $this->farms->map(function ($farm) {
+            'organizations' => ($this->role === Role::ORGANIZATION_OWNER->value) ? [$this->farmOwner()] : $this->others()
+        ];
+    }
+
+    public function farmOwner() : array
+    {
+        return [
+            'id' => $this->tenant?->id,
+            'type' => 'tenant',
+            'attributes' => [
+
+                'organization_name' => $this->tenant?->organization_name,
+                'no_of_farms_owned' => $this->tenant?->no_of_farms_owned,
+                'capital' => $this->tenant?->capital,
+                'location' => $this->tenant?->location
+            ],
+            'farms' => $this->tenant?->farms->map(function ($farm) {
                 return [
                     'id' => $farm->id,
                     'name' => $farm->name,
                 ];
             }),
+        ];
+    }
 
-            'tenant' => $this->whenLoaded('tenant', function () {
+    public function others() : mixed
+    {
+       return $this->whenLoaded('tenants',function () {
+            return $this->tenants->map(function ($tenant) {
                 return [
-                    'id' => $this->tenant->id,
+                    'id' => $tenant->id,
                     'type' => 'tenant',
                     'attributes' => [
-                        'name' => $this->tenant->name,
-                        'organization_name' => $this->tenant->organization_name,
-                        'no_of_farms_owned' => $this->tenant->no_of_farms_owned,
-                        'capital' => $this->tenant->capital
+
+                        'organization_name' => $tenant->organization_name,
+                        'no_of_farms_owned' => $tenant->no_of_farms_owned,
+                        'capital' => $tenant->capital
                     ],
+                    'farms' => $tenant->farms->map(function ($farm) {
+                        return [
+                            'id' => $farm->id,
+                            'name' => $farm->name,
+                        ];
+                    }),
                 ];
-            }),
-        ];
+            });
+
+        });
     }
 }

@@ -75,6 +75,23 @@ class Farm extends Model
         return $this->hasMany(Harvest::class, 'farm_id');
     }
 
-    
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'farm_id');
+    }
 
+    public function purchases(): HasMany
+    {
+        return $this->hasMany(Purchase::class, 'farm_id');
+    }
+
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(Expense::class, 'farm_id');
+    }
+
+    public function beneficiaries(): HasMany
+    {
+        return $this->hasMany(Beneficiary::class, 'farm_id');
+    }
 }

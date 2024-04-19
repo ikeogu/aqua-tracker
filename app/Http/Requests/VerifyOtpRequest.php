@@ -23,7 +23,7 @@ class VerifyOtpRequest extends FormRequest
     {
         return [
             //
-            'code' => 'required|numeric|digits:6',
+            'code' => 'required|numeric|digits:4',
         ];
     }
 }

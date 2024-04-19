@@ -25,7 +25,7 @@ class createHarvestRequest extends FormRequest
             //
 
             'name' => 'required|string',
-            'consul' => 'nullable|string',
+            'consultant' => 'nullable|string',
             'batch_id' => 'required|string|exists:batches,id',
         ];
     }

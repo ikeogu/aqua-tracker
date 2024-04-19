@@ -30,7 +30,7 @@ class UpdateBatchRequest extends FormRequest
             'fish_specie' => ['nullable','string'],
             'fish_type' => ['nullable', 'nullable'],
             'vendor' => ['nullable', 'string'],
-            'status' => ['nullable', 'string','in:sold out, in stock'],
+            'status' => ['nullable', 'string','in:sold out,in stock'],
             'date_purchased' => ['nullable', 'date']
         ];
     }

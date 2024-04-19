@@ -19,7 +19,7 @@ class VerifyEmailController extends Controller
     public function resend(Request $request): JsonResponse
     {
         /** @var \App\Models\User $user */
-        $user = $request->user();
+        $user = User::where('email', $request->email)->first();
 
         if ($user->canRequestNewOtpFor(Otp::EMAIL_VERIFICATION)) {
             $user->sendEmailVerificationOtp();

@@ -8,13 +8,15 @@ enum Role: string
 {
     use EnumValues;
 
-    case FARM_EMPLOYEE = "FARM_EMPLOYEE";
-    case ORGANIZATION_OWNER = "ORGANIZATION_OWNER";
-    case FARM_ADMIN = "FARM_ADMIN";
-    case ORGANIZATION_TEAM_MEMBER = "ORGANIZATION_TEAM_MEMBER";
+    case FARM_EMPLOYEE = "FARM EMPLOYEE";
+    case ORGANIZATION_OWNER = "ORGANIZATION OWNER";
+    case FARM_ADMIN = "FARM ADMIN";
+    case VIEW_FARMS = "VIEW FARMS";
+    case EDIT_FARMS = "EDIT FARMS";
+    case ORGANIZATION_TEAM_MEMBER = "ORGANIZATION TEAM MEMBER";
 
-    case FARM_TEAM_OWNER = "FARM_TEAM_OWNER";
-    case SUPER_ADMIN = "SUPER_ADMIN";
+    case FARM_TEAM_OWNER = "FARM TEAM OWNER";
+    case SUPER_ADMIN = "SUPER ADMIN";
 
 
     public static function getRoleTextName(string|Role $role)
@@ -26,6 +28,8 @@ enum Role: string
             Role::ORGANIZATION_TEAM_MEMBER => "Organization Team Member",
             Role::FARM_TEAM_OWNER => "Farm Team Owner",
             Role::SUPER_ADMIN => "Super Admin",
+            Role::VIEW_FARMS => "View Farms",
+            Role::EDIT_FARMS => "Edit Farms",
             default => null,
         };
     }
@@ -35,7 +39,7 @@ enum Role: string
         return match ($role) {
             "Farm Employee" => Role::FARM_EMPLOYEE->value,
             "Organization Owner" => Role::ORGANIZATION_OWNER->value,
-           "Farm Admin"  => Role::FARM_ADMIN->value
+            "Farm Admin"  => Role::FARM_ADMIN->value
         };
     }
 }

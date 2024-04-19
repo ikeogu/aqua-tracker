@@ -14,7 +14,7 @@ trait HasOtp
             'user_id' => $this->id,
             'for' => $for,
         ], [
-            'otp' => rand(100000, 999999),
+            'otp' => rand(1000, 9999),
             'expires_at' => now()->addMinutes(6),
         ]);
     }

@@ -20,8 +20,8 @@ class BatchResource extends JsonResource
             'attributes' => [
                 'name' => $this->name,
                 'unit_purchase' => $this->unit_purchase,
-                'price_per_unit' => $this->price_per_unit,
-                'amount_spent' => $this->amount_spent,
+                'price_per_unit' => number_format($this->price_per_unit,2),
+                'amount_spent' => number_format($this->amount_spent,2),
                 'fish_specie' => $this->fish_specie,
                 'fish_type' => $this->fish_type,
                 'vendor' => $this->vendor,
