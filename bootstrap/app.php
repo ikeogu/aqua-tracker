@@ -13,19 +13,22 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
-        api: __DIR__.'/../routes/api.php',
+       // api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function(){
-            Route::prefix('api/auth')
+            Route::prefix('auth')
             ->group(base_path('routes/routes_includes/auth.php'));
 
             Route::middleware('api')
-                ->prefix('api/admin')
+                ->prefix('admin')
                 ->group(base_path('routes/routes_includes/admin.php'));
+                
+            Route::middleware('api')
+                ->group(base_path('routes/api.php'));
 
             Route::middleware('api')
-                ->prefix('api/farmer')
+                ->prefix('farmer')
                 ->group(base_path('routes/routes_includes/farmer.php'));
 
 
@@ -41,7 +44,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         ]);
 
-    
+
 
     })
     ->withExceptions(function (Exceptions $exceptions) {
