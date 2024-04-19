@@ -2,6 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Expense;
+use App\Models\Inventory;
+use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,7 +17,21 @@ class HarvestResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+
+
+        $totalHarvest = Purchase::where('harvest_id', $this->id)->sum('amount');
+        $inventories = Inventory::where('batch_id', $this->batch_id)->sum('amount');
+        $expenses = Expense::where('splitted_for_batch->batch_id', $this->batch_id)->sum('splitted_for_batch->amount');
+
+
+        $data = [
+            'total_harvest' => (int) $totalHarvest,
+            'total_capital' => $inventories + $expenses,
+             'total_profit' => $totalHarvest - ($inventories + $expenses),
+
+        ];
+
+        $details = [
             'id' => $this->id,
             'type' => 'harvest',
             'attributes' => [
@@ -36,9 +53,16 @@ class HarvestResource extends JsonResource
                         'type' => 'batch',
                         'name' => $this->batch->name,
                     ]
-                ]
+                ],
+
+                'customers' => CustomerResource::collection($this->customers),
 
             ],
+        ];
+
+        return [
+            'card_data' => $data,
+            'details' => $details
         ];
     }
 }

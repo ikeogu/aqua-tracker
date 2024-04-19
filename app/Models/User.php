@@ -37,6 +37,8 @@ class User extends Authenticatable implements HasMedia
         'email',
         'password',
         'fully_onboarded',
+        'tenant_id',
+        'phone_number',
     ];
 
     /**
@@ -63,6 +65,7 @@ class User extends Authenticatable implements HasMedia
         ];
     }
 
+    protected $with = [ 'tenants'];
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('profile_picture')->singleFile();
@@ -147,5 +150,8 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->belongsToMany(Farm::class, 'farm_user', 'user_id', 'farm_id')->withPivot(['status', 'role', 'data']);
     }
+
+
+
 
 }

@@ -21,10 +21,11 @@ class InventoryResource extends JsonResource
                 'name' => $this->name,
                 'vendor' => $this->vendor,
                 'size' => $this->size,
-                'price' => $this->price,
+                'price' => (int) $this->price,
                 'quantity' => $this->quantity,
-                'amount' => $this->amount,
-
+                'amount' => (int) $this->amount,
+                'left_over' => $this->left_over,
+                'status' => $this->status,
                 'created_at' => $this->created_at,
             ],
             'relationships' => [

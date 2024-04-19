@@ -2,7 +2,7 @@ import:
   - recipe/laravel.php
 
 config:
-  repository: "git@github.com:eachblock-io/aquatrack-api.git"
+  repository: "git@github.com:ikeogu/aqua-tracker.git"
   bin/php: "/usr/bin/php"
   keep_releases: 5
 

@@ -47,7 +47,8 @@ class CustomerResource extends JsonResource
                     'total_size' => $this->purchases->sum('size'),
                     'total_amount' => $this->purchases->sum('amount'),
                     'total_pieces' => $this->purchases->sum('pieces'),
-                    'payment_status' => ($this->purchases->where('status', 'paid')->count() == $this->purchases->count() ? 'completed' : 'incomplete'),
+                    'payment_status' => ($this->purchases->count() == 0) ? '' :
+                         ((($this->purchases->where('status', 'paid')->count() == $this->purchases->count())) ? 'completed' : 'incomplete'),
                 ],
 
                'purchases_made' => $this->purchases->sum('amount')

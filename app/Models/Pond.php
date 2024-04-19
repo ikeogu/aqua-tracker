@@ -24,6 +24,13 @@ class Pond extends Model
         "batch_id",
     ];
 
+    protected $cast = [
+        'holding_capacity' => 'integer',
+        'unit' => 'integer',
+        'size' => 'integer',
+        'feed_size' => 'integer',
+        'mortality_rate' => 'integer',
+    ];
 
 
     public function getRelationshipToPrimaryModel(): string

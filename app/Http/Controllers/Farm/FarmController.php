@@ -36,12 +36,33 @@ class FarmController extends Controller
 
     public function index(Request $request)
     {
-        $tenant = $request->user()->tenant;
-        $farms = $tenant->farms()->get();
+        $tenants = $request->user()->tenants;
+
+        $organizations = $tenants->map(function ($tenant) {
+            return [
+                'id' => $tenant->id,
+                'type' => 'tenant',
+                'attributes' => [
+                    'organization_name' => $tenant->organization_name,
+                    'no_of_farms_owned' => $tenant->no_of_farms_owned,
+                    'capital' => $tenant->capital
+                ],
+                'farms' => $tenant->farms->map(function ($farm) {
+                    return [
+                        'id' => $farm->id,
+                        'name' => $farm->name,
+                    ];
+                }),
+            ];
+        });
+
 
         return $this->success(
             message: 'Farms retrieved successfully',
-            data: FarmResource::collection($farms)
+            data: [
+                'organizations' => $organizations
+            ],
+            code: HttpStatusCode::SUCCESSFUL->value
         );
     }
 }

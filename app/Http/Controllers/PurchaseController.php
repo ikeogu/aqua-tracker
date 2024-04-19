@@ -12,23 +12,27 @@ use App\Models\Purchase;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class PurchaseController extends Controller
 {
     //
 
-    public function store(CreatePurchaseRequest $request, Farm $farm, Harvest $harvest) : JsonResponse
+    public function store(Request $request, Farm $farm, Harvest $harvest) : JsonResponse
     {
-        $harvest = $farm->harvests()->find($harvest->id);
 
-        $purchase = $harvest->purchases()->create(
-            array_merge($request->validated(), ['farm_id' => $farm->id])
-        );
+        $harvest = $farm->harvests()->find($harvest->id);
+        $purchases =  Arr::map($request->data, function($purchase) use($harvest, $farm){
+          return  Purchase::create(
+                array_merge($purchase, ['harvest_id' => $harvest->id, 'farm_id' => $farm->id])
+            );
+        });
+
 
         return $this->success(
             message: 'Purchase created successfully',
-            data: new PurchaseResource($purchase),
-            code: HttpStatusCode::SUCCESSFUL->value
+            data:  PurchaseResource::collection($purchases),
+            code: HttpStatusCode::CREATED->value
         );
     }
 

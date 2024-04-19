@@ -26,13 +26,13 @@ class SignupRequest extends FormRequest
             //
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => ['required', 'email', function (string $attribute, string $value, Closure $fail) {
+            'email' => ['required', 'email','unique:users,email' /* function (string $attribute, string $value, Closure $fail) {
                 $user = User::where('email', $value)->first();
 
                 if ($user?->isCreator() && $user?->fully_onboarded) {
                     $fail('An account already exists with this email address');
                 }
-            }],
+            }, */],
             'password' => 'required|string|min:8|confirmed',
 
         ];
