@@ -112,7 +112,7 @@ class User extends Authenticatable implements HasMedia
     public function sendPasswordResetOtp(): void
     {
         $this->generateOtpFor(Otp::PASSWORD_RESET); // @phpstan-ignore-line
-        $this->notify(new ForgotPasswordNotification()); // @phpstan-ignore-line
+       $this->notify(new ForgotPasswordNotification()); // @phpstan-ignore-line
     }
 
     public function tenant(): BelongsTo
