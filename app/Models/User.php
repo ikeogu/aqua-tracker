@@ -106,13 +106,13 @@ class User extends Authenticatable implements HasMedia
     public function sendEmailVerificationOtp(): void
     {
         $this->generateOtpFor(Otp::EMAIL_VERIFICATION); // @phpstan-ignore-line
-        $this->notify(new EmailVerificationNotification()); // @phpstan-ignore-line
+        //$this->notify(new EmailVerificationNotification()); // @phpstan-ignore-line
     }
 
     public function sendPasswordResetOtp(): void
     {
         $this->generateOtpFor(Otp::PASSWORD_RESET); // @phpstan-ignore-line
-       $this->notify(new ForgotPasswordNotification()); // @phpstan-ignore-line
+       //$this->notify(new ForgotPasswordNotification()); // @phpstan-ignore-line
     }
 
     public function tenant(): BelongsTo
