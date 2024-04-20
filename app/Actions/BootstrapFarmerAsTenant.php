@@ -39,8 +39,7 @@ class BootstrapFarmerAsTenant
                 'organization_name' => $data['organization_name']
             ],
             [
-                'no_of_farms_owned' => $data['no_of_farms_owned'],
-                'capital' => $data['capital'],
+                'no_of_farms_owned' => $data['no_of_farms_owned'] ?? null,
                 'data' => json_encode($data['team_members'] ?? []),
             ]
         );
