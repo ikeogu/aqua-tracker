@@ -10,7 +10,7 @@ trait HasOtp
 {
     public function generateOtpFor(Otp $for): void
     {
-        $otp = '4242' ; //rand(1000, 9999)
+        $otp = rand(1000, 9999);
         $this->otp()->updateOrCreate([
             'user_id' => $this->id,
             'for' => $for,
