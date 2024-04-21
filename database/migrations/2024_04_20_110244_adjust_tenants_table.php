@@ -24,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('tenants', function (Blueprint $table) {
             //
+            $table->integer('capital');
         });
     }
 };
