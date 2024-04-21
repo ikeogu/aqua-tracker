@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('tenants', function (Blueprint $table) {
             //
-            $table->dropColumn(['capital']);
+            $table->string('capital')->nullable();
         });
     }
 
