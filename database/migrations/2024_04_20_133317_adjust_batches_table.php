@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('batches', function (Blueprint $table) {
             //
-            $table->dropColumn(['vendor']);
+            $table->string('vendor')->nullable();
         });
     }
 
@@ -24,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('batches', function (Blueprint $table) {
             //
+            $table->string('vendor');
         });
     }
 };

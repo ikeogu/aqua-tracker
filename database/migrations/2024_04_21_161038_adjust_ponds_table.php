@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tenants', function (Blueprint $table) {
+        Schema::table('ponds', function (Blueprint $table) {
             //
-            $table->string('capital')->nullable();
+            $table->string('feed_size')->nullable()->change();
+            $table->string('size')->nullable()->change();
         });
     }
 
@@ -22,9 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tenants', function (Blueprint $table) {
+        Schema::table('ponds', function (Blueprint $table) {
             //
-            $table->integer('capital');
+            $table->decimal('feed_size', 8,2)->change();
+            $table->bigInteger('size')->change();
         });
     }
 };
