@@ -50,7 +50,6 @@ class PurchaseController extends Controller
 
         return $this->success(
             message: 'Purchase updated successfully',
-            data: PurchaseResource::collection($purchases),
             code: HttpStatusCode::SUCCESSFUL->value
         );
 
