@@ -36,10 +36,8 @@ class PurchaseController extends Controller
         );
     }
 
-    public function update(UpdatePurchaseRequest $request, Farm $farm, Harvest $harvest, Purchase $purchase) : JsonResponse
+    public function update(UpdatePurchaseRequest $request, Purchase $purchase) : JsonResponse
     {
-        $harvest = $farm->harvests()->findOrFail($harvest->id);
-        $purchase = $harvest->purchases()->findOrFail($purchase->id);
 
         $purchase->update($request->validated());
 
@@ -51,10 +49,8 @@ class PurchaseController extends Controller
 
     }
 
-    public function destroy(Farm $farm, Harvest $harvest, Purchase $purchase) : JsonResponse
+    public function destroy( Purchase $purchase) : JsonResponse
     {
-        $harvest = $farm->harvests()->findOrFail($harvest->id);
-        $purchase = $harvest->purchases()->findOrFail($purchase->id);
 
         $purchase->delete();
 
