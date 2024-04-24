@@ -42,7 +42,7 @@ class PurchaseController extends Controller
         $purchase->update($request->validated());
 
         return $this->success(
-            message: 'Purchase created successfully',
+            message: 'Purchase updated successfully',
             data: new PurchaseResource($purchase),
             code: HttpStatusCode::SUCCESSFUL->value
         );
