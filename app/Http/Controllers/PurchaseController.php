@@ -10,6 +10,7 @@ use App\Models\Farm;
 use App\Models\Harvest;
 use App\Models\Purchase;
 use GuzzleHttp\Promise\Create;
+use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -36,14 +37,20 @@ class PurchaseController extends Controller
         );
     }
 
-    public function update(UpdatePurchaseRequest $request, Purchase $purchase) : JsonResponse
+    public function update(Request $request, Farm $farm, Harvest $harvest) : JsonResponse
     {
 
-        $purchase->update($request->validated());
+        $harvest = $farm->harvests()->find($harvest->id);
+        $purchases =  Arr::map($request->data, function($purchase) use($harvest){
+          return  Purchase::whereId($purchase['id'])->update(
+                array_merge($purchase, ['harvest_id' => $harvest->id])
+            );
+        });
+
 
         return $this->success(
             message: 'Purchase updated successfully',
-            data: new PurchaseResource($purchase),
+            data: PurchaseResource::collection($purchases),
             code: HttpStatusCode::SUCCESSFUL->value
         );
 
