@@ -42,7 +42,7 @@ Route::middleware([
     Route::apiResource('{farm}/expense', ExpenseController::class);
 
     Route::post('{farm}/harvest/{harvest}/purchase', [PurchaseController::class, 'store']);
-    Route::patch('purchase/{purchase}', [PurchaseController::class, 'update']);
+    Route::patch('{farm}/harvest/{harvest}/purchase', [PurchaseController::class, 'update']);
     Route::delete('purchase/{purchase}', [PurchaseController::class, 'destroy']);
 
     Route::get('{farm}/customers', FetchAllCustomersController::class);
