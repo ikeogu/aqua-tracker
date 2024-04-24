@@ -16,7 +16,6 @@ class Purchase extends Model
         'price_per_unit',
         'amount',
         'status',
-        'batch_id',
         'size',
         'farm_id',
         'harvest_id',
