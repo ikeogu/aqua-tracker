@@ -62,5 +62,6 @@ Route::middleware([
 
     Route::get('{farm}/beneficiaries', [BeneficiaryController::class, 'index']);
     Route::post('{farm}/beneficiary', [BeneficiaryController::class, 'store']);
+    Route::delete('{farm}/beneficiary/{beneficiary}', [BeneficiaryController::class, 'destroy']);
 
 });

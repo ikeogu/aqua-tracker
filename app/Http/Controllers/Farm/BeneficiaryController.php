@@ -63,4 +63,21 @@ class BeneficiaryController extends Controller
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }
+
+
+    public function destroy(Farm $farm,string $beneficiary) : JsonResponse
+    {
+        $beneficiary = $farm->beneficiaries()->where('harvest_customer_id', $beneficiary)->first();
+        if(!$beneficiary){
+            return $this->error(
+                message: 'Beneficiary not found',
+                code: HttpStatusCode::NOT_FOUND->value
+            );
+        }
+        $beneficiary->delete();
+        return $this->success(
+            message: 'Beneficiary deleted successfully',
+            code: HttpStatusCode::SUCCESSFUL->value
+        );
+    }
 }
