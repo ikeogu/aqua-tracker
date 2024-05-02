@@ -27,7 +27,8 @@ class HarvestResource extends JsonResource
         $data = [
             'total_harvest' => number_format($totalHarvest,2),
             'total_capital' => number_format($inventories + $expenses,2),
-             'total_profit' => number_format($totalHarvest - ($inventories + $expenses),2)
+             'total_profit' => number_format($totalHarvest - ($inventories + $expenses),2),
+             'expenses' => number_format($expenses,2),
 
         ];
 
