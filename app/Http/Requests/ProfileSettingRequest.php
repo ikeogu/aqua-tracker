@@ -23,7 +23,7 @@ class ProfileSettingRequest extends FormRequest
     {
         return [
             //
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5048',
             'first_name' => 'nullable|string',
             'last_name' => 'nullable|string',
             'email' => 'nullable|email|string',
