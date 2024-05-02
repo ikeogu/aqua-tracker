@@ -5,8 +5,6 @@ namespace App\Exports;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
@@ -15,7 +13,6 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
 
     public function __construct(private $customers)
     {
-
     }
 
     public function headings(): array
@@ -42,7 +39,7 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
 
             $purchasesData = $customer->purchases->flatMap(function ($purchase) {
                 return [
-                    ['', '', '', ''], // Empty row to separate purchases data
+                    ['', '', '', '', ''], // Empty row to separate purchases data
                     [
                         $purchase->pieces,
                         $purchase->price_per_unit,
