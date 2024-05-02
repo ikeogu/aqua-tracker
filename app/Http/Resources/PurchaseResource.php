@@ -18,7 +18,7 @@ class PurchaseResource extends JsonResource
             'id' => $this->id,
             'type' => "purchase",
             'attributes' => [
-                'pieces' => $this->pieces,
+                'pieces' => number_format($this->pieces,2),
                 'price_per_unit' => number_format($this->price_per_unit,2),
                 'amount' => $this->amount,
                 'status' => $this->status,
