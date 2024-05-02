@@ -52,9 +52,9 @@ class HarvestController extends Controller
 
 
         $data = [
-            'total_harvest' => number_format($totalHarvest,2),
-            'total_capital' => number_format($inventories + $expenses,2),
-             'total_profit' => number_format($totalHarvest - ($inventories + $expenses),2),
+            'total_harvest' => $totalHarvest,
+            'total_capital' => $inventories + $expenses,
+             'total_profit' =>  $totalHarvest - ($inventories + $expenses),2,
             'harvests' => $harvests
         ];
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Farm;
 
 use App\Enums\HttpStatusCode;
+use App\Exports\PurchaseExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
@@ -12,18 +13,35 @@ use App\Models\Harvest;
 use App\Models\HarvestCustomer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class HarvestCustomerController extends Controller
 {
 
-    public function index(Request $request, Farm $farm, Harvest $harvest) : JsonResponse
+    public function index(Request $request, Farm $farm, Harvest $harvest) : mixed
     {
         $harvest = $farm->harvests()->find($harvest->id);
         $customers = $harvest->customers()->when($request->search, function ($query) use ($request) {
             return $query->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('email', 'like', '%' . $request->search . '%')
                 ->orWhere('phone_number', 'like', '%' . $request->search . '%');
-        })->paginate($request->per_page ?? 20);
+        });
+
+
+        if ($request->has('export') && $request->export !== null) {
+            try {
+                return Excel::download(new PurchaseExport($customers), 'customers-export-' . date('Ymdhis') . '.csv');
+                //@codeCoverageIgnoreStart
+            } catch (\Throwable $exception) {
+                Log::error($exception->getMessage());
+                return $this->error(Response::HTTP_SERVICE_UNAVAILABLE)->respondWithError($exception->getMessage());
+            }
+            //@codeCoverageIgnoreEnd
+        }
+        $customers = $customers->paginate($request->per_page ?? 10);
 
         return $this->success(
             message: 'Customers retrieved successfully',
