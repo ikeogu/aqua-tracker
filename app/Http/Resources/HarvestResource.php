@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Batch;
 use App\Models\Expense;
 use App\Models\Inventory;
 use App\Models\Purchase;
@@ -22,12 +23,13 @@ class HarvestResource extends JsonResource
         $totalHarvest = Purchase::where('harvest_id', $this->id)->sum('amount');
         $inventories = Inventory::where('batch_id', $this->batch_id)->sum('amount');
         $expenses = Expense::where('splitted_for_batch->batch_id', $this->batch_id)->sum('splitted_for_batch->amount');
+        $batch = Batch::find($this->batch_id)->sum('amount_spent');
 
 
         $data = [
             'total_harvest' =>$totalHarvest,
-            'total_capital' =>$inventories + $expenses,
-             'total_profit' =>$totalHarvest - ($inventories + $expenses),
+            'total_capital' =>$inventories + $expenses + $batch,
+             'total_profit' =>$totalHarvest - ($inventories + $expenses + $batch),
              'expenses' => $expenses,
 
         ];
