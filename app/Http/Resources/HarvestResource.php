@@ -23,13 +23,13 @@ class HarvestResource extends JsonResource
         $totalHarvest = $this->purchases()->sum('amount');
         $inventories = Inventory::where('batch_id', $this->batch->id)->sum('amount');
         $expenses = Expense::where('splitted_for_batch->batch_id', $this->batch->id)->sum('splitted_for_batch->amount');
-        $batch = Batch::find($this->batch->id)->sum('amount_spent');
+        $batch = Batch::find($this->batch->id)->amount_spent;
 
 
         $data = [
             'total_harvest' =>$totalHarvest,
-            'total_capital' => $inventories + $batch,
-             'total_profit' => $totalHarvest - ($inventories + $batch),
+            'total_capital' => $inventories + $batch + $expenses,
+             'total_profit' => $totalHarvest - ($inventories + $batch + $expenses),
              'expenses' => $expenses,
 
         ];
