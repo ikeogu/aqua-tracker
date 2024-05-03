@@ -28,8 +28,8 @@ class HarvestResource extends JsonResource
 
         $data = [
             'total_harvest' =>$totalHarvest,
-            'total_capital' => $inventories + $expenses + $batch,
-             'total_profit' => $totalHarvest - ($inventories + $expenses + $batch),
+            'total_capital' => $inventories + $batch,
+             'total_profit' => $totalHarvest - ($inventories + $batch),
              'expenses' => $expenses,
 
         ];
