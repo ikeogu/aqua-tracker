@@ -6,6 +6,7 @@ use App\Enums\HttpStatusCode;
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createHarvestRequest;
+use App\Http\Requests\UpdateHarvestRequest;
 use App\Http\Resources\HarvestResource;
 use App\Models\Farm;
 use App\Models\Harvest;
@@ -100,6 +101,20 @@ class HarvestController extends Controller
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }
+
+    public function update(UpdateHarvestRequest $request,Farm $farm, Harvest $harvest) : JsonResponse
+    {
+        
+        $harvest->update($request->validated());
+
+        return $this->success(
+            message: 'Harvest updated successfully',
+            data: new HarvestResource($harvest),
+            code: HttpStatusCode::SUCCESSFUL->value
+        );
+    }
+
+
 
 
 }

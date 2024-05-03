@@ -28,7 +28,7 @@ class HarvestResource extends JsonResource
             'total_harvest' =>$totalHarvest,
             'total_capital' =>$inventories + $expenses,
              'total_profit' =>$totalHarvest - ($inventories + $expenses),
-             'expenses' =>$expenses,
+             'expenses' => $expenses,
 
         ];
 
@@ -57,7 +57,10 @@ class HarvestResource extends JsonResource
                 ],
 
                 'customers' => CustomerResource::collection($this->customers),
-
+                'total_pieces' => $this->purchases->sum('pieces'),
+                'total_amount' => $this->purchases->sum('amount'),
+                'total_size' => $this->purchases->sum('size'),
+                'total_sales' => number_format($this->purchases->sum('amount'),2),
             ],
         ];
 

@@ -6,7 +6,10 @@ use App\Enums\HttpStatusCode;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateFarmRequest;
+use App\Http\Requests\UpdateFarmRequest;
 use App\Http\Resources\FarmResource;
+use App\Jobs\DeleteFarmJob;
+use App\Models\Farm;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -62,6 +65,27 @@ class FarmController extends Controller
             data: [
                 'organizations' => $organizations
             ],
+            code: HttpStatusCode::SUCCESSFUL->value
+        );
+    }
+
+    public function update(UpdateFarmRequest $request, Farm $farm) : JsonResponse
+    {
+        $farm->update($request->validated());
+
+        return $this->success(
+            message: 'Farm updated successfully',
+            code: HttpStatusCode::SUCCESSFUL->value,
+            data: new FarmResource($farm)
+        );
+    }
+
+    public function destroy(Farm $farm) : JsonResponse
+    {
+
+        DeleteFarmJob::dispatch($farm);
+        return $this->success(
+            message: 'Farm deletion in progress',
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }
