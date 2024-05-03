@@ -152,6 +152,11 @@ class User extends Authenticatable implements HasMedia
     }
 
 
+    public function isFarmOwner(Farm $farm): bool
+    {
+        return $this->farms()->where('farm_id', $farm->id)->where('role', Role::FARM_TEAM_OWNER->value)->exists();
+    }
+
 
 
 }
