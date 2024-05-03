@@ -82,6 +82,15 @@ class FarmController extends Controller
 
     public function destroy(Farm $farm) : JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+
+        if(!$user->isFarmOwner($farm)) {
+            return $this->error(
+                message: 'Unauthorized',
+                code: HttpStatusCode::BAD_REQUEST->value
+            );
+        }
 
         DeleteFarmJob::dispatch($farm);
         return $this->success(
