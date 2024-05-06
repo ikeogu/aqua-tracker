@@ -96,18 +96,28 @@ class DashboardController extends Controller
         }
 
 
-
         $capitalPerMonth =  [];
 
         foreach ($months as $month) {
+            $capital = 0;
+            $net_profit = 0;
+            $total_expense = 0;
+
+            if (isset($inventoriesPerMonth[$month][$month], $batchesPerMonth[$month][$month])) {
+                $capital = $inventoriesPerMonth[$month][$month]->sum('amount') + $batchesPerMonth[$month][$month]->sum('amount_spent');
+                $net_profit = $farm->purchases()->whereMonth('created_at', $month)->sum('amount') - $inventoriesPerMonth[$month][$month]->sum('amount') - $batchesPerMonth[$month][$month]->sum('amount_spent');
+            }
+
+            $expenseQuery = $farm->expenses()->whereMonth('created_at', $month);
+            if ($expenseQuery->exists()) {
+                $total_expense = $expenseQuery->sum('total_amount');
+            }
 
             $capitalPerMonth[] = [
-
                 'name' => $month,
-                'capital' => $inventoriesPerMonth[$month]->sum('amount') + $batchesPerMonth[$month]->sum('amount_spent'),
-                'net_profit' => $farm->purchases()->whereMonth('created_at', $month)->sum('amount') - $inventoriesPerMonth[$month]->sum('amount') - $batchesPerMonth[$month]->sum('amount_spent'),
-                'total_expense' => $farm->expenses()->whereMonth('created_at', $month)->sum('total_amount'),
-
+                'capital' => $capital,
+                'net_profit' => $net_profit,
+                'total_expense' => $total_expense,
             ];
         }
 
