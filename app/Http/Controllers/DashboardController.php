@@ -21,14 +21,17 @@ class DashboardController extends Controller
 
         ];
 
-        $batches_id =$farm->batches()->where('status', Status::INSTOCK->value)->pluck('id');
+
+        $batchesId = $farm->batches()->where('status', Status::INSTOCK->value)->pluck('id');
+
         $farmDetails = [
-            'total_units' => $farm->ponds()->whereIn('batch_id', $batches_id)->sum('unit'),
+            'total_units' => $farm->ponds()->whereIn('batch_id', $batchesId)->sum('unit'),
             'batch' => $farm->batches()->where('status', Status::INSTOCK->value)->count(),
-            'feed_available' => $farm->inventories()->where('status', Status::INSTOCK->value)->sum('quantity') + $farm->inventories()->where('status', Status::SOLDOUT->value)->sum('left_over'),
-            'ponds' => $farm->ponds()->whereIn('batch_id', $batches_id)->count(),
-            'mortality_rate' => $farm->ponds()->whereIn('batch_id', $batches_id)->sum('mortality_rate'),
+            'feed_available' => $farm->inventories()->whereIn('status', [Status::INSTOCK->value, Status::SOLDOUT->value])->sum('quantity') + $farm->inventories()->where('status', Status::SOLDOUT->value)->sum('left_over'),
+            'ponds' => $farm->ponds()->whereIn('batch_id', $batchesId)->count(),
+            'mortality_rate' => $farm->ponds()->whereIn('batch_id', $batchesId)->sum('mortality_rate'),
         ];
+
 
         $farmDetails = $this->pieChartData($farmDetails);
 
