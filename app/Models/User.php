@@ -157,6 +157,10 @@ class User extends Authenticatable implements HasMedia
         return $this->farms()->where('farm_id', $farm->id)->where('role', Role::FARM_TEAM_OWNER->value)->exists();
     }
 
+    public function loginLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LoginLog::class, 'user_id');
+    }
 
 
 }
