@@ -14,7 +14,7 @@ class LogoutController extends Controller
     {
         $user = auth()->user();
         //continue from here
-        $user->
+        
         $request->user()->tokens()->delete();
 
 
