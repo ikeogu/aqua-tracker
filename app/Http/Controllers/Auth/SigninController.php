@@ -7,6 +7,7 @@ use App\Enums\Role;
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Models\LoginLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -35,6 +36,11 @@ class SigninController extends Controller
                 $tenant->pivot->update(['status' => Status::ACTIVE->value]);
             });
         }
+
+        LoginLog::create([
+            'user_id' => $user->id,
+            'login_at' => now(),
+        ]);
 
         return $this->success(
             message: 'User signed in successfully',
