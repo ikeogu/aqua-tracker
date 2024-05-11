@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('batches', function (Blueprint $table) {
             //
-            $table->string('vendor')->nullable();
+            $table->string('vendor')->nullable()->change();
         });
     }
 
@@ -23,9 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('batches', function (Blueprint $table) {
-            //
-	$table->string('vendor');
-
+           
+            $table->string('vendor')->change();
         });
     }
 };

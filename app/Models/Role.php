@@ -22,6 +22,8 @@ class Role extends SpatieRole
 
    // protected $casts = ['is_editable' => 'boolean'];
 
+   protected $guard_name = 'api';
+
     public function users(): BelongsToMany
     {
         return $this->morphedByMany(User::class, 'model', 'model_has_roles', 'role_id', 'model_id');

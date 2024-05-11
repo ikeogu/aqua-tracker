@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\HttpStatusCode;
+use App\Http\Resources\CustomNotificationResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -27,7 +28,7 @@ class CustomNotificationController extends Controller
 
         return $this->success(
             message: "Notification sent successfully",
-            data: $notications,
+            data: CustomNotificationResource::collection($notications)->response()->getData(true),
             code: HttpStatusCode::CREATED->value
         );
     }

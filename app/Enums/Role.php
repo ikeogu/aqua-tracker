@@ -17,6 +17,7 @@ enum Role: string
 
     case FARM_TEAM_OWNER = "FARM TEAM OWNER";
     case SUPER_ADMIN = "SUPER ADMIN";
+    case ADMIN = "ADMIN";
 
 
     public static function getRoleTextName(string|Role $role)
@@ -28,6 +29,7 @@ enum Role: string
             Role::ORGANIZATION_TEAM_MEMBER => "Organization Team Member",
             Role::FARM_TEAM_OWNER => "Farm Team Owner",
             Role::SUPER_ADMIN => "Super Admin",
+            Role::ADMIN => "Admin",
             Role::VIEW_FARMS => "View Farms",
             Role::EDIT_FARMS => "Edit Farms",
             default => null,

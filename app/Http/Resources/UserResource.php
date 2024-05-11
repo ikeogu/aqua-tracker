@@ -44,7 +44,8 @@ class UserResource extends JsonResource
                 'organization_name' => $this->tenant?->organization_name,
                 'no_of_farms_owned' => $this->tenant?->no_of_farms_owned,
                 'capital' => $this->tenant?->capital,
-                'location' => $this->tenant?->location
+                'location' => $this->tenant?->location,
+                'is_subscription_active' => ($this->tenant->subscribedPlans()->where('status', 'active')->exists()) ? true : false
             ],
             'farms' => $this->tenant?->farms->map(function ($farm) {
                 return [

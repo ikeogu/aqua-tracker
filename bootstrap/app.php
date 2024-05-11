@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\InvalidOrExpiredOtp;
+use App\Http\Middleware\CheckFarmerRole;
 use App\Http\Middleware\IdentifyAuthUserCurrentTenant;
 use App\Http\Middleware\InitializeUserPermissionsForCurrentTenant;
 use App\Http\Middleware\UserFullyOnboarded;
@@ -23,7 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('api')
                 ->prefix('admin')
                 ->group(base_path('routes/routes_includes/admin.php'));
-                
+
             Route::middleware('api')
                 ->group(base_path('routes/api.php'));
 
@@ -38,10 +39,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
 
         $middleware->appendToGroup('farmer-admin', [
+            CheckFarmerRole::class,
             UserFullyOnboarded::class,
             InitializeUserPermissionsForCurrentTenant::class,
             IdentifyAuthUserCurrentTenant::class,
-
         ]);
 
 

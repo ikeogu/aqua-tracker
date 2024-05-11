@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tenants', function (Blueprint $table) {
-            //
-            $table->string('capital')->nullable()->change();
+        Schema::create('payment_infos', function (Blueprint $table) {
+            $table->id();
+            $table->foreignUuid('tenant_id')->constrained('tenants')->onDelete('cascade');
+            $table->json('authorization');
+            $table->boolean("auto_renewal");
+            $table->timestamps();
         });
     }
 
@@ -22,9 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tenants', function (Blueprint $table) {
-            //
-            $table->integer('capital');
-        });
+        Schema::dropIfExists('payment_infos');
     }
 };
