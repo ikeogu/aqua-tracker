@@ -4,31 +4,21 @@ namespace App\Actions;
 
 use App\Enums\Role;
 use App\Enums\Status;
+use App\Models\SubscriptionPlan;
 use App\Models\User;
 use App\Models\Tenant;
+use App\Services\PaymentService;
 use PhpOffice\PhpSpreadsheet\Calculation\Token\Stack;
 
 class BootstrapFarmerAsTenant
 {
     public static function execute(User $user, array $data): Tenant
     {
-       // self::saveUserDetail($user, $data);
-
+      
         $tenant = self::bootstrapTenant($user, $data);
 
         return $tenant;
     }
-
-   /*  protected static function saveUserDetail(User $user, array $data): void
-    {
-        $user->update([
-            'first_name' => $data['profile']['first_name'],
-            'last_name' => $data['profile']['last_name'],
-            'contact' => $data['profile']['contact'],
-        ]);
-
-        $user->forceFill(['password' => $data['profile']['password']])->save();
-    } */
 
     protected static function bootstrapTenant(User $user, array $data): Tenant
     {
@@ -56,6 +46,8 @@ class BootstrapFarmerAsTenant
             'created_at' => now(),
             'updated_at' => now()
         ]);
+
+        app(PaymentService::class)->addFreePlanToTenant($tenant);
 
 
         return $tenant;

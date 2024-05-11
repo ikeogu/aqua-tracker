@@ -14,6 +14,7 @@ use App\Http\Controllers\Farm\PondController;
 use App\Http\Controllers\Farm\TaskController;
 use App\Http\Controllers\FetchAllCustomersController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\Subscription\SubscribedPlanController;
 use App\Http\Controllers\TeamMemberInvitation;
 use Illuminate\Support\Facades\Route;
 
@@ -62,5 +63,13 @@ Route::middleware([
     Route::get('{farm}/beneficiaries', [BeneficiaryController::class, 'index']);
     Route::post('{farm}/beneficiary', [BeneficiaryController::class, 'store']);
     Route::delete('{farm}/beneficiary/{beneficiary}', [BeneficiaryController::class, 'destroy']);
+
+    Route::get('billing-history', [SubscribedPlanController::class, 'billingRecords'])->name('billingRecords');
+    Route::post('upgrade-plan', [SubscribedPlanController::class, 'upgradePlan'])->name('upgrade');
+   
+    Route::post('activate-renewal', [SubscribedPlanController::class, 'activateAutoRenewal'])->name('activateAutoRenewal');
+
+
+
 
 });

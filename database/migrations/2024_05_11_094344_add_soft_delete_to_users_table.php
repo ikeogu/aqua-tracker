@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tenants', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
-            $table->string('capital')->nullable()->change();
+            $table->softDeletes();
         });
     }
 
@@ -22,9 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tenants', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
-            $table->integer('capital');
+            $table->dropSoftDeletes();
         });
     }
 };

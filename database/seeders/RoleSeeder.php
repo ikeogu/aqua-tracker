@@ -50,6 +50,11 @@ class RoleSeeder extends Seeder
                 'name' => Role::SUPER_ADMIN->value,
                 'description' => 'Can manage and info abt farm'
             ],
+            [
+                'title' => 'Admin',
+                'name' => Role::ADMIN->value,
+                'description' => 'Can mamange entire application'
+            ],
 
             [
                 'title' => 'View Farms',
@@ -67,14 +72,31 @@ class RoleSeeder extends Seeder
         $permissions = [
 
             [
-                'name' => 'view farm',
-                'description' => 'Can view farm',
-                'group' => Role::VIEW_FARMS->value,
+                'name' => 'can view',
+                'description' => 'Can view',
+                'group' => Role::ADMIN->value,
+            ],
+
+            [
+                'name' => 'can edit',
+                'description' => 'Can edit',
+                'group' => Role::ADMIN->value,
+            ],
+
+            [
+                'name' => 'can view',
+                'description' => 'Can view',
+                'group' => Role::SUPER_ADMIN->value,
             ],
             [
-                'name' => 'edit farm',
-                'description' => 'Can edit farm',
-                'group' => Role::EDIT_FARMS->value,
+                'name' => 'can edit',
+                'description' => 'Can edit',
+                'group' => Role::SUPER_ADMIN->value,
+            ],
+            [
+                'name' => 'remove',
+                'description' => 'Can remove',
+                'group' => Role::SUPER_ADMIN->value,
             ],
         ];
 
