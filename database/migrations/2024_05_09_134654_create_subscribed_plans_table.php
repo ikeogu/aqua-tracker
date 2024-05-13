@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('payment_method')->nullable();
             $table->bigInteger('amount');
             $table->integer('no_of_months');
-            $table->timestamp('start_date');
+            $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->default(now());
             $table->string('type')->nullable();
 
