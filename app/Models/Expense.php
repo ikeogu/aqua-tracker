@@ -18,6 +18,11 @@ class Expense extends Model
         'splitted_for_batch',
     ];
 
+    protected $casts = [
+        'splitted_for_batch' => 'json',
+    ];
+
+
     public function getRelationshipToPrimaryModel(): string
     {
         return 'farm';

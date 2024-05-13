@@ -8,6 +8,7 @@ use App\Models\Inventory;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class HarvestResource extends JsonResource
 {
@@ -21,9 +22,14 @@ class HarvestResource extends JsonResource
 
 
         $totalHarvest = $this->purchases()->sum('amount');
-        $inventories = Inventory::where('batch_id', $this->batch->id)->sum('amount');
-        $expenses = Expense::whereJsonContains('splitted_for_batch->batch_id', $this->batch->id)->sum('splitted_for_batch->amount');
-
+        $inventories = Inventory::where('batch_id', $this->batch_id)->sum('amount');
+        $expenses = Expense::whereJsonContains('splitted_for_batch', ['batch_id' => $this->batch_id])
+        ->get()
+        ->pluck('splitted_for_batch')
+        ->flatten();
+        $expenses = array_sum(array_filter($expenses->toArray(), function ($item) {
+            return is_int($item);
+        }));
 
         $batch = Batch::find($this->batch->id)->amount_spent;
 

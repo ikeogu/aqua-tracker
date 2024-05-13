@@ -20,7 +20,7 @@ class ExpenseResource extends JsonResource
             'attributes' => [
                 'description' => $this->description,
                 'total_amount' => $this->total_amount,
-                'splitted_for_batch' => json_decode($this->splitted_for_batch),
+                'splitted_for_batch' => $this->splitted_for_batch,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
             ],

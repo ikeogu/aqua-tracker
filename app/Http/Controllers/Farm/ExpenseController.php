@@ -19,7 +19,7 @@ class ExpenseController extends Controller
     public function store(CreateExpenseRequest $request, Farm $farm) : JsonResponse
     {
 
-        $expense = $farm->expenses()->create(array_merge($request->validated(), ['splitted_for_batch' => json_encode($request->splitted_for_batch)]));
+        $expense = $farm->expenses()->create(array_merge($request->validated(), ['splitted_for_batch' => $request->splitted_for_batch]));
 
         return $this->success(
             message: 'Expense created successfully',
