@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\createHarvestRequest;
 use App\Http\Requests\UpdateHarvestRequest;
 use App\Http\Resources\HarvestResource;
+use App\Models\Batch;
 use App\Models\Farm;
 use App\Models\Harvest;
 use App\Models\Inventory;
@@ -51,11 +52,12 @@ class HarvestController extends Controller
         $inventories = $farm->inventories()->whereIn('batch_id', $batch_ids)->sum('amount');
         $expenses = $farm->expenses()->whereIn('splitted_for_batch->batch_id', $batch_ids)->sum('splitted_for_batch->amount');
 
+        $amount_spent = Batch::whereId($batch_ids)->sum('amount_spent');
 
         $data = [
             'total_harvest' => $totalHarvest,
-            'total_capital' => $inventories + $expenses,
-             'total_profit' =>  $totalHarvest - ($inventories + $expenses),2,
+            'total_capital' => $inventories + $expenses + $amount_spent,
+             'total_profit' =>  $totalHarvest - ($inventories + $expenses + $amount_spent),
             'harvests' => $harvests
         ];
 
@@ -104,7 +106,7 @@ class HarvestController extends Controller
 
     public function update(UpdateHarvestRequest $request,Farm $farm, Harvest $harvest) : JsonResponse
     {
-        
+
         $harvest->update($request->validated());
 
         return $this->success(
