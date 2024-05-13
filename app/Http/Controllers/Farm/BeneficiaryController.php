@@ -21,8 +21,9 @@ class BeneficiaryController extends Controller
         ]);
 
         if($farm->beneficiaries()->where('harvest_customer_id', $request->harvest_customer_id)->exists()){
+            $farm->beneficiaries()->delete($request->harvest_customer_id);
             return $this->error(
-                message: 'Beneficiary already exists',
+                message: 'Beneficiary removed',
                 code: HttpStatusCode::BAD_REQUEST->value
             );
         }
