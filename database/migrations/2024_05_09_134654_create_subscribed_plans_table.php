@@ -21,7 +21,7 @@ return new class extends Migration
             $table->bigInteger('amount');
             $table->integer('no_of_months');
             $table->timestamp('start_date');
-            $table->timestamp('end_date');
+            $table->timestamp('end_date')->default(now());
             $table->string('type')->nullable();
 
             $table->timestamps();
