@@ -82,8 +82,8 @@ class UserDetailsController extends Controller
 
         $user = User::find($request->user_id);
         match($request->deactive_activate) {
-            true => $this->deactive($user->tenant),
-            false => $this->activate($user->tenant)
+            true => $this->deactive($user?->tenant),
+            false => $this->activate($user?->tenant)
         };
 
         $msg = ($request->deactive_activate) ? "Account was deactivated successfully" : "Account was activated successfully";
