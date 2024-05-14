@@ -35,7 +35,7 @@ class UserDetailsController extends Controller
             'first_name' => $user->first_name,
             'last_name' => $user->last_name,
             'email' => $user->email,
-            'organization_name' => $user->tenant->title,
+            'organization_name' => $user?->tenant?->title,
             'subscription_plan' => $currentPlan?->subscriptionPlan?->title,
             'subscription_status' =>$currentPlan?->status,
             'phone_number' => $user->phone_number
