@@ -38,7 +38,7 @@ class UserDetailsController extends Controller
             'organization_name' => $user?->tenant?->title,
             'subscription_plan' => $currentPlan?->subscriptionPlan?->title,
             'subscription_status' =>$currentPlan?->status,
-            'phone_number' => $user->phone_number,
+            'phone_number' => $user?->phone_number,
             'status' => $user->tenant?->status
         ];
 
