@@ -54,10 +54,10 @@ class UserDetailsController extends Controller
         ];
 
         $farmStatistics = [
-            'total_batches' => Batch::whereIn('farm_id', $farmsId)->count(),
-            'total_harvests' => Harvest::whereIn('farm_id', $farmsId)->count(),
-            'total_farms' => $user->tenant->farms()->count(),
-            'total_ponds' => Pond::whereIn('farm_id', $farmsId)->count()
+            'total_batches' => Batch::whereIn('farm_id', $farmsId)->count() ?? 0,
+            'total_harvests' => Harvest::whereIn('farm_id', $farmsId)->count() ?? 0,
+            'total_farms' => $user->tenant->farms()->count() ?? 0,
+            'total_ponds' => Pond::whereIn('farm_id', $farmsId)->count() ?? 0
         ];
 
         $data = [
