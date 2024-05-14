@@ -28,6 +28,7 @@ class UserDetailsController extends Controller
             'user_id' => ['required', 'exists:users,id'],
         ]);
 
+        /** @var User $user */
         $user = User::find($request->user_id);
 
         $currentPlan = currentPlan();
