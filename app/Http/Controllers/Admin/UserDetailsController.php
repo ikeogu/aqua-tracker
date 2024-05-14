@@ -43,7 +43,7 @@ class UserDetailsController extends Controller
             'status' => $user?->tenant?->status
         ];
 
-        $farmsId = $user->tenant?->farms()->get()->pluck('id');
+        $farmsId = $user?->tenant?->farms()->get()->pluck('id');
 
         $overview = [
             'capital' => Inventory::whereIn('farm_id', $farmsId)->sum('amount') + Batch::whereIn('farm_id', $farmsId)->sum('amount_spent'),
