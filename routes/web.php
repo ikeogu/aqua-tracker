@@ -19,7 +19,12 @@ Route::get('/subscribe-users', function () {
 
     foreach ($users as $user) {
         # code...
-        app(PaymentService::class)->addFreePlanToTenant($user->tenant);
+        /** @var Tenant $tenant */
+        $tenant = $user->tenant;
+        if($tenant){
+
+            app(PaymentService::class)->addFreePlanToTenant($tenant);
+        }
     }
 
     return 'users subscribed';
