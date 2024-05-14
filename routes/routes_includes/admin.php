@@ -25,6 +25,6 @@ Route::middleware(['auth:sanctum', CheckAdminRole::class])
     Route::apiResource('subscription-plan', SubscriptionPlanController::class);
     Route::get('fetch-subscribed-plan', [SubscribedPlanController::class, 'index'])->name('subscribed-plan');
     Route::get('dashboard', DashboardController::class)->name('super.admin.dasboard');
-    Route::get('user-details', UserDetailsController::class)->name('user-details');
-    Route::post('activate-deactive-account', [UserDetailsController::class, 'accountActivation'])->name('user-details');
+    Route::get('user-details/{tenant}', UserDetailsController::class)->name('user-details');
+    Route::post('activate-deactive-account/{tenant}', [UserDetailsController::class, 'accountActivation'])->name('user-details');
 });

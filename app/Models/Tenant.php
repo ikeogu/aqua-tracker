@@ -56,12 +56,12 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 
      public function users(): BelongsToMany
      {
-         return $this->belongsToMany(User::class, 'tenant_user', 'tenant_id', 'user_id')->withPivot(['status', 'role']);
+         return $this->belongsToMany(User::class, 'tenant_user')->withPivot(['status', 'role']);
      }
 
-     public function owner(): User
+     public function owner(): ?User
      {
-         return $this->users()->where('role', Role::ORGANIZATION_OWNER->value)->first();
+         return $this->users()->withTrashed()->where('role', Role::ORGANIZATION_OWNER->value)->first();
      }
 
      public function farms(): HasMany
@@ -71,7 +71,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 
      public function teamMembers(): BelongsToMany
      {
-         return $this->users()->whereIn('role', [ Role::FARM_ADMIN->value, Role::VIEW_FARMS->value, Role::EDIT_FARMS->value]);
+         return $this->users()->withTrashed()->whereIn('role', [ Role::FARM_ADMIN->value, Role::VIEW_FARMS->value, Role::EDIT_FARMS->value]);
      }
 
      public function subscribedPlans() : HasMany

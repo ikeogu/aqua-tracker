@@ -5,6 +5,8 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use function App\Helpers\currentPlan;
+
 class DashboardDataResource extends JsonResource
 {
     /**
@@ -18,10 +20,11 @@ class DashboardDataResource extends JsonResource
             'id' => $this->id,
             'name' => $this->first_name . ' '. $this->last_name,
             'email' => $this->email,
-            "subscription_plan" => 'free',
+            "subscription_plan" => currentPlan()?->subscriptionPlan?->title,
             'created_at' => $this->created_at,
             'last_seen' => $this?->loginLogs()?->latest()?->first()?->login_at,
-            'status' => $this->tenant?->status
+            'status' => $this->tenant?->status,
+            'tenant_id' => $this->tenant?->id
         ];
     }
 }

@@ -24,7 +24,7 @@ class SubscriptionPlanResource extends JsonResource
                 'duration' => $this->duration,
                 "type" => $this->type,
                 "discount" => $this->discount,
-                "limited_to" => json_decode($this->limited_to)
+                "limited_to" => is_string($this->limited_to)  ? json_decode($this->limited_to) : $this->limited_to
             ]
         ];
     }
