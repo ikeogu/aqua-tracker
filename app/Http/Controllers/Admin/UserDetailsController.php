@@ -32,14 +32,14 @@ class UserDetailsController extends Controller
 
         $currentPlan = currentPlan();
         $details = [
-            'first_name' => $user->first_name,
-            'last_name' => $user->last_name,
-            'email' => $user->email,
+            'first_name' => $user?->first_name,
+            'last_name' => $user?->last_name,
+            'email' => $user?->email,
             'organization_name' => $user?->tenant?->title,
             'subscription_plan' => $currentPlan?->subscriptionPlan?->title,
             'subscription_status' =>$currentPlan?->status,
             'phone_number' => $user->phone_number,
-            'status' => $user->tenant->status
+            'status' => $user->tenant?->status
         ];
 
         $farmsId = $user->tenant?->farms()->get()->pluck('id');
