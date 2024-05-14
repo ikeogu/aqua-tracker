@@ -41,7 +41,7 @@ class UserDetailsController extends Controller
             'phone_number' => $user->phone_number
         ];
 
-        $farmsId = $user->tenant->farms()->get()->pluck('id');
+        $farmsId = $user->tenant?->farms()->get()->pluck('id');
 
         $overview = [
             'capital' => Inventory::whereIn('farm_id', $farmsId)->sum('amount') + Batch::whereIn('farm_id', $farmsId)->sum('amount_spent'),
