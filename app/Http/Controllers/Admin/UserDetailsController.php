@@ -39,7 +39,7 @@ class UserDetailsController extends Controller
             'subscription_plan' => $currentPlan?->subscriptionPlan?->title,
             'subscription_status' =>$currentPlan?->status,
             'phone_number' => $user?->phone_number,
-            'status' => $user->tenant?->status
+            'status' => $user?->tenant?->status
         ];
 
         $farmsId = $user->tenant?->farms()->get()->pluck('id');
