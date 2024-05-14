@@ -21,6 +21,11 @@ class SubscriptionPlan extends Model
         "limited_to"
     ];
 
+    protected $casts = [
+        'limited_to' => 'json',
+    ];
+
+
 
     public function applyDiscount(int $no_of_months = 1) : int
     {
