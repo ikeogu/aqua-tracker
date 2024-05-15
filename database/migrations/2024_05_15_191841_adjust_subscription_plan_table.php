@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('subscription_plans', function (Blueprint $table) {
             //
-            $table->string('type');
+          
             $table->string('description')->nullable()->change();
             $table->bigInteger('monthly_price')->default(0)->change();
             $table->integer('duration')->nullable(1)->change();
