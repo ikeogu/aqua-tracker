@@ -23,13 +23,13 @@ class CreateSubscriptionPlanRequest extends FormRequest
     {
         return [
             //
-            'title' => ['required', 'string', 'unique:subscription_plans,title'],
-            'description' => ['required', 'string'],
-            'monthly_price' => ['required', 'numeric'],
-            'duration' => ['required', 'numeric'],
-            'type' => ['required', 'string', 'in:free,premium'],
+            'title' => ['nullable', 'string', 'unique:subscription_plans,title'],
+            'description' => ['nullable', 'string'],
+            'monthly_price' => ['nullable', 'numeric'],
+            'duration' => ['nullable', 'numeric'],
+            'type' => ['nullable', 'string', 'in:free,paid'],
             'discount' => ['nullable', 'numeric'],
-            'limited_to' => ['required']
+            'limited_to' => ['nullable']
         ];
     }
 }
