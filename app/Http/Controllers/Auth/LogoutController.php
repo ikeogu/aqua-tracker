@@ -15,7 +15,7 @@ class LogoutController extends Controller
     {
         $user = auth()->user();
         //continue from here
-        LoginLog::where('user_id', $user->id)->lastest()->first()->update(['login_at' => now()]);
+        LoginLog::where('user_id', $user->id)->latest()->first()->update(['login_at' => now()]);
 
         $request->user()->tokens()->delete();
 
