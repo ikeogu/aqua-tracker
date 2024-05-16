@@ -20,9 +20,14 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
         return [
             'S/N',
             'Name',
-            'Email',
+            'Payment Status',
             'Total Amount',
-            'Product',
+            'Price',
+            'Size',
+            'Pieces',
+            'Amount',
+            'status'
+
 
         ];
     }
@@ -33,7 +38,8 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
             $customerData = [
                 $key + 1,
                 $customer->name,
-                $customer->email,
+                ($customer->purchases->count() == 0) ? '' :
+                         ((($customer->purchases->where('status', 'paid')->count() == $customer->purchases->count())) ? 'completed' : 'incomplete'),
                 $customer->purchases->sum('amount'),
             ];
 
@@ -45,11 +51,12 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
                         '',
                         '',
                         '',
-                        $purchase->pieces,
                         $purchase->price_per_unit,
                         $purchase->size,
+                        $purchase->pieces,
                         $purchase->amount,
                         $purchase->status
+
                     ],
                 ];
             });
