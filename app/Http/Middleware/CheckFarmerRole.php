@@ -17,20 +17,21 @@ class CheckFarmerRole
      */
     public function handle(Request $request, Closure $next): Response
     {
-         /** @var User $user */
-         $user = Auth::user();
+        /** @var User $user */
+        $user = Auth::user();
 
-         if (!$user || !$user->hasAnyRole([
-             Role::FARM_ADMIN->value,
-             Role::FARM_EMPLOYEE->value,
-             Role::FARM_TEAM_OWNER->value,
-             Role::VIEW_FARMS->value,
-             Role::ORGANIZATION_OWNER->value,
-             Role::ORGANIZATION_TEAM_MEMBER->value,
+        $allowedRoles = [
+            Role::FARM_ADMIN,
+            Role::FARM_EMPLOYEE,
+            Role::FARM_TEAM_OWNER,
+            Role::VIEW_FARMS,
+            Role::ORGANIZATION_OWNER,
+            Role::ORGANIZATION_TEAM_MEMBER,
+        ];
 
-             ])) {
-             abort(403, 'Unauthorized.');
-         }
+        if (!$user || !$user->hasAnyRole($allowedRoles)) {
+            abort(403, 'Unauthorized access.');
+        }
         return $next($request);
     }
 }
