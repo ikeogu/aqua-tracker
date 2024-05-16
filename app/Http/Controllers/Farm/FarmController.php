@@ -46,8 +46,10 @@ class FarmController extends Controller
                 'id' => $tenant->id,
                 'type' => 'tenant',
                 'attributes' => [
+                    'tenant_id' => $tenant->id,
                     'organization_name' => $tenant->organization_name,
                     'no_of_farms_owned' => $tenant->no_of_farms_owned,
+
                   //  'capital' => $tenant->capital
                 ],
                 'farms' => $tenant->farms->map(function ($farm) {
