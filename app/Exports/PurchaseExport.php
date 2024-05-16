@@ -41,6 +41,9 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
                 return [
                     ['', '', '', '', ''], // Empty row to separate purchases data
                     [
+                        '',
+                        '',
+                        '',
                         $purchase->pieces,
                         $purchase->price_per_unit,
                         $purchase->size,
@@ -50,7 +53,7 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
                 ];
             });
 
-            return [$customerData, $purchasesData];
+            return [$customerData, $purchasesData->prepend('')];
         });
     }
 
