@@ -53,7 +53,7 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
                 ];
             });
 
-            return array_merge([$customerData], $purchasesData->prepend(''));
+            return array_merge([$customerData], $purchasesData->prepend('')->toArray());
         });
     }
 
