@@ -44,6 +44,7 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
                         '',
                         '',
                         '',
+                        '',
                         $purchase->pieces,
                         $purchase->price_per_unit,
                         $purchase->size,
