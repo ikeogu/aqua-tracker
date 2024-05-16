@@ -21,7 +21,6 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
             'S/N',
             'Name',
             'Payment Status',
-            'Total Amount',
             'Price',
             'Size',
             'Pieces',
@@ -48,10 +47,10 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
                         '',
                         '',
                         '',
-                        number_format($purchase->price_per_unit,2),
+                        number_format($purchase->price_per_unit),
                         $purchase->size,
                         $purchase->pieces,
-                        number_format($purchase->amount,2),
+                        number_format($purchase->amount),
                         $purchase->status
 
                     ],
@@ -61,7 +60,14 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
             });
 
             $totalAmount =  [
-                number_format($customer->purchases->sum('amount'),2),
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                number_format($customer->purchases->sum('amount')),
+                ['', '', '', '', '']
             ];
 
             return [$customerData, $purchasesData, $totalAmount];
