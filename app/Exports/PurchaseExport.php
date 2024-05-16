@@ -27,8 +27,6 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
             'Pieces',
             'Amount',
             'status'
-
-
         ];
     }
 
@@ -38,30 +36,35 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
             $customerData = [
                 $key + 1,
                 $customer->name,
-                ($customer->purchases->count() == 0) ? '' :
-                         ((($customer->purchases->where('status', 'paid')->count() == $customer->purchases->count())) ? 'completed' : 'incomplete'),
-                $customer->purchases->sum('amount'),
+                ($customer->purchases->count() == 0) ? '' : ((($customer->purchases->where('status', 'paid')->count() == $customer->purchases->count())) ? 'completed' : 'incomplete'),
+
             ];
 
             $purchasesData = $customer->purchases->flatMap(function ($purchase) {
                 return [
-                    ['', '', '', '', ''], // Empty row to separate purchases data
+                     // Empty row to separate purchases data
                     [
                         '',
                         '',
                         '',
                         '',
-                        $purchase->price_per_unit,
+                        number_format($purchase->price_per_unit,2),
                         $purchase->size,
                         $purchase->pieces,
-                        $purchase->amount,
+                        number_format($purchase->amount,2),
                         $purchase->status
 
                     ],
+
+                    ['', '', '', '', '']
                 ];
             });
 
-            return [$customerData, $purchasesData];
+            $totalAmount =  [
+                number_format($customer->purchases->sum('amount'),2),
+            ];
+
+            return [$customerData, $purchasesData, $totalAmount];
         });
     }
 
