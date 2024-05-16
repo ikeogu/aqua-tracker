@@ -63,8 +63,8 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
                 '',
                 '',
                 '',
-                '',
-                '',
+                $customer->purchases->sum('size'),
+                $customer->purchases->sum('pieces'),
                 number_format($customer->purchases->sum('amount')),
 
             ];
