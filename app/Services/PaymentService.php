@@ -44,12 +44,14 @@ class PaymentService
 
     public function upgradeUserPlan(Request $request, User $user) : array
     {
-        $subscriptionPlan = SubscriptionPlan::where('type', 'premium')->latest()->first();
+        $subscriptionPlan = SubscriptionPlan::where('type', 'paid')->latest()->first();
 
         $existingPlan = SubscribedPlan::where('tenant_id', $user->tenant->id)->latest()->first();
 
-        $newStartsAt = $existingPlan ? $existingPlan->expires_at : now();
-        $newExpiresAt = $newStartsAt->addMonths(intval($request->no_of_months));
+        $newStartsAt = ($existingPlan?->expires_at) ? $existingPlan?->expires_at : now();
+
+
+        $newExpiresAt = $newStartsAt->addMonths($request->no_of_months);
 
         $subscribedPlan = SubscribedPlan::create([
             'subscription_plan_id' => $subscriptionPlan->id,
