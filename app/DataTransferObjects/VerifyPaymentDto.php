@@ -17,9 +17,8 @@ class VerifyPaymentDto extends Data
 
     public static function create(array $data) : self {
         return VerifyPaymentDto::from([
-            'reference' => $data['status'],
+            'reference' => $data['status'] ,
             'reference' => $data['data']['reference'],
-            "status" => $data['data']['status'],
             'channel' => $data['data']['channel'],
             'authorization' => $data['data']['authorization'],
         ]);

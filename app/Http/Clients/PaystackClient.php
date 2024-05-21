@@ -15,14 +15,12 @@ class PaystackClient extends PendingRequest
         $response = $this->post("/transaction/initialize", $data);
 
         return $response->json();
-        
+
     }
 
     public function verifyTransaction(string $reference): mixed
 
     {
-
-        $response = $this->get("/transaction/verify/$reference");
 
         try {
 

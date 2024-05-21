@@ -54,7 +54,7 @@ class PaymentService
         $newExpiresAt = $newStartsAt->addMonths($request->no_of_months);
 
         $subscribedPlan = SubscribedPlan::create([
-            'subscription_plan_id' => $subscriptionPlan->id,
+            'subscription_plan_id' => $subscriptionPlan?->id,
             'tenant_id' => $user->tenant->id,
             'no_of_months' =>  $request->no_of_months,
             'reference' => uniqid(),

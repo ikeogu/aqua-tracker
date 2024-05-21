@@ -15,6 +15,8 @@ use App\Services\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Validator;
+use phpDocumentor\Reflection\PseudoTypes\False_;
+use Ramsey\Uuid\Builder\FallbackBuilder;
 use Spatie\QueryBuilder\QueryBuilder;
 
 use function App\Helpers\currentPlan;
@@ -80,6 +82,11 @@ class SubscribedPlanController extends Controller
 
         $response = $this->paystackClient->verifyTransaction($request->reference);
 
+        if(array_key_exists('status', $response) && $response['status'] === false){
+            return $this->error(
+                'Payment was not completed'
+            );
+        }
 
         $payment = SubscribedPlan::where('reference', $response->reference)->first();
 
