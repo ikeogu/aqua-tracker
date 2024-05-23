@@ -22,6 +22,9 @@ class Purchase extends Model
         'harvest_customer_id',
     ];
 
+    protected $casts = [
+        'size' => 'float'
+    ];
 
 
     public function farm()

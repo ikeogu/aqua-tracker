@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UpdateTrackerStatusJob implements ShouldQueue
 {
@@ -29,25 +30,25 @@ class UpdateTrackerStatusJob implements ShouldQueue
     public function handle(): void
     {
         $tasks = Task::where('status',Status::PENDING->value)->get();
-
+        Log::info(":::::::: RUn Task Jobs");
         $tasks->each(function ($task) {
 
             if ($task->due_date < now()) {
-
+                Log::info(":::::::: task over");
                 $task->update(['status' => Status::OVERDUE->value]);
                 $task->farm->owner->notify(new TaskNotification($task, Status::OVERDUE->value));
 
             }
 
             if ($task->due_date < now() && $task->repeat) {
-
+                Log::info(":::::::: task not due");
                 $task->update(['status' => Status::PENDING->value]);
 
 
             }
 
             if($task->due_date > now()) {
-
+                Log::info(":::::::: task due now");
                 $task->update(['status' => Status::DUE->value]);
                 $task->farm->owner->notify(new TaskNotification($task, Status::DUE->value));
 
@@ -61,9 +62,9 @@ class UpdateTrackerStatusJob implements ShouldQueue
             }
 
             $reminderTimes = ['1 day', '3 days', '7 days', '14 days', '30 days', '1 hr', '30 mins', '15 mins', '5 mins', '1 min'];
-
+            Log::info(":::::::: task reminder");
             foreach ($reminderTimes as $reminderTime) {
-
+                Log::debug($reminderTime);
                 if ($task->due_date->sub($reminderTime) == now()) {
 
                     $task->farm->owner->notify(new TaskNotification($task, 'pending', $reminderTime));

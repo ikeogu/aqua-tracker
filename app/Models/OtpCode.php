@@ -19,7 +19,7 @@ class OtpCode extends Model
     ];
 
 
-    protected array $cast = [
+    protected array $casts = [
         'for' => Otp::class,
         'expires_at' => 'datetime',
     ];

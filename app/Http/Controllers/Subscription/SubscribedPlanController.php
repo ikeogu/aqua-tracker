@@ -28,26 +28,24 @@ class SubscribedPlanController extends Controller
     public function __construct(
         public PaymentService $paymentService,
         public PaystackClient $paystackClient
-    )
-    {
-
+    ) {
     }
 
-    public function index(Request $request) : JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $subscribedPlans = QueryBuilder::for(SubscribedPlan::class)
-        ->allowedFilters(['type','duration'])
-        ->latest()
-        ->paginate($request->per_page ?: 10);
+            ->allowedFilters(['type', 'duration'])
+            ->latest()
+            ->paginate($request->per_page ?: 10);
 
         return $this->success(
-            message:"Subscribed plans",
+            message: "Subscribed plans",
             data: SubscribedPlanResource::collection($subscribedPlans)->response()->getData(true),
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }
 
-    public function upgradePlan(Request $request) : JsonResponse
+    public function upgradePlan(Request $request): JsonResponse
     {
         $user = auth()->user();
 
@@ -55,26 +53,25 @@ class SubscribedPlanController extends Controller
             'no_of_months' => ['required', 'in:1,3,6,12']
         ]);
 
-    /*     if(SubscribedPlan::where('tenant_id', $user->tenant->id)->where('type','!=', 'free')->where('status', 'active')->exists()){
+        /*     if(SubscribedPlan::where('tenant_id', $user->tenant->id)->where('type','!=', 'free')->where('status', 'active')->exists()){
             return $this->error("You have a subscription still running");
         } */
 
         //SubscribedPlan::where('tenant_id', $user->tenant->id)->where('status', 'active')->first()->update(['status', 'expired']);
 
-        $paystackData =  $this->paymentService->upgradeUserPlan($request,$user);
+        $paystackData =  $this->paymentService->upgradeUserPlan($request, $user);
 
         return $this->success(
-            message:"Payment in progress",
-            data:[
+            message: "Payment in progress",
+            data: [
                 'paystack_data' => $paystackData
             ],
             code: HttpStatusCode::SUCCESSFUL->value
         );
-
     }
 
 
-    public function verifyPayment(Request $request) : JsonResponse
+    public function verifyPayment(Request $request): JsonResponse
     {
         $request->validate(
             ['reference' => ['required', 'string', 'exists:subscribed_plans,reference']]
@@ -82,7 +79,7 @@ class SubscribedPlanController extends Controller
 
         $response = $this->paystackClient->verifyTransaction($request->reference);
 
-        if(array_key_exists('status', $response) && $response['status'] === false){
+        if (array_key_exists('status', $response) && $response['status'] === false) {
             return $this->error(
                 'Payment was not completed'
             );
@@ -96,8 +93,8 @@ class SubscribedPlanController extends Controller
             'auto_renewal' => false
         ]);
 
-       $payment->update([
-            'status' =>'active',
+        $payment->update([
+            'status' => 'active',
             'payment_method' => $response->channel,
 
         ]);
@@ -105,22 +102,23 @@ class SubscribedPlanController extends Controller
         $payment->tenant->user->notify(new PaymentInfoNotification($payment));
 
         return $this->success(
-            message:"Payment successful",
-            data:null,
+            message: "Payment successful",
+            data: null,
             code: HttpStatusCode::SUCCESSFUL->value
         );
-
-
     }
 
 
-    public function billingRecords(Request $request) : JsonResponse
+    public function billingRecords(Request $request): JsonResponse
     {
         $user = auth()->user();
 
         $tenant = $user->tenant;
 
-        $subscribedPlans = $tenant->subscribedPlans()->latest()->paginate($request->per_page ?: 20);
+        $subscribedPlans = QueryBuilder::for(SubscribedPlan::class)
+            ->where('tenant_id', $tenant->id)
+            ->allowedFilters(['payment_method', 'type', 'status'])
+            ->latest()->paginate($request->per_page ?: 10);
 
         $paymentInfo = PaymentInfo::where('tenant_id', $tenant->id)->latest()->first();
         $authorization  = json_decode($paymentInfo?->authorization);
@@ -146,15 +144,14 @@ class SubscribedPlanController extends Controller
         ];
 
         return $this->success(
-            message:"Transaction history retrieved",
-            data:$data,
+            message: "Transaction history retrieved",
+            data: $data,
             code: HttpStatusCode::SUCCESSFUL->value
         );
+    }
 
-     }
-
-     public function activateAutoRenewal(Request $request) : JsonResponse
-     {
+    public function activateAutoRenewal(Request $request): JsonResponse
+    {
         $request->validate([
             'payment_info_id' => ['required', 'exists:payment_infos,id'],
             'activate_autorenew' => ['required', 'boolean']
@@ -163,8 +160,8 @@ class SubscribedPlanController extends Controller
         $paymentInfo->update(['auto_renewal' => $request->activate_autorenew]);
 
         return $this->success(
-            message:"Success",
+            message: "Success",
             code: HttpStatusCode::SUCCESSFUL->value
         );
-     }
+    }
 }

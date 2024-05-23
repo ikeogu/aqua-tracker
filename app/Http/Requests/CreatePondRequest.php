@@ -29,10 +29,11 @@ class CreatePondRequest extends FormRequest
             "holding_capacity" => ["required", "numeric"],
             "unit" => ["required", "numeric"],
             "size" => ["required", "numeric"],
+            "unit_size" => ["required", "string", 'in:kg,g'],
             "feed_size" => ["required", "numeric"],
             "mortality_rate" => ["required", "numeric"],
             "batch_id" => ["required", "exists:batches,id"],
-    
+
         ];
     }
 }
