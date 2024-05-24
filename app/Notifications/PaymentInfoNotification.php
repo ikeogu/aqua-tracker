@@ -47,6 +47,7 @@ class PaymentInfoNotification extends Notification
                 [
                     'subscribedPlan' => $this->subscribedPlan,
                     'organization' => $this->subscribedPlan->tenant->title,
+                    'user' => $notifiable
 
                 ]
             );
