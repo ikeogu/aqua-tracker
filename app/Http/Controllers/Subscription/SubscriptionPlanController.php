@@ -69,4 +69,15 @@ class SubscriptionPlanController extends Controller
             code:HttpStatusCode::SUCCESSFUL->value
         );
     }
+
+    public function getPremiumPlan() : JsonResponse
+    {
+        $subscriptionPlan = SubscriptionPlan::where('type', 'paid')->first();
+        
+        return $this->success(
+            message:"subscription retrieved",
+            data: new SubscriptionPlanResource($subscriptionPlan),
+            code:HttpStatusCode::SUCCESSFUL->value
+        );
+    }
 }

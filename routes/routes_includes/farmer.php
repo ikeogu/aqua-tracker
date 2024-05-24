@@ -16,7 +16,9 @@ use App\Http\Controllers\FetchAllCustomersController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\Subscription\SubscribedPlanController;
+use App\Http\Controllers\Subscription\SubscriptionPlanController;
 use App\Http\Controllers\TeamMemberInvitation;
+use App\Models\SubscriptionPlan;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([
@@ -70,6 +72,7 @@ Route::middleware([
     Route::post('upgrade-plan', [SubscribedPlanController::class, 'upgradePlan'])->name('upgrade');
 
     Route::post('activate-renewal', [SubscribedPlanController::class, 'activateAutoRenewal'])->name('activateAutoRenewal');
+    Route::get('get-premium-plan', [SubscriptionPlanController::class, 'getPremiumPlan']);
 
 
 
