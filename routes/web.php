@@ -36,7 +36,7 @@ Route::get('/subscribe-users', function () {
             'description' => 'All the feature',
             'monthly_price' => 3500,
             'duration' => 1,
-            "type" => 'premium',
+            "type" => 'paid',
             "discount" => 20,
             "limited_to" => [
                 'unlimited'
