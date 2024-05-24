@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Enums\HttpStatusCode;
 use App\Enums\Role;
 use App\Http\Requests\UpdateOrganazationRequest;
+use App\Models\Farm;
+use App\Models\SubscribedPlan;
 use App\Models\Tenant;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,5 +38,18 @@ class OrganizationController extends Controller
         );
 
 
+    }
+
+    public function checkSubscription(Farm $farm) : JsonResponse
+    {
+        $response = SubscribedPlan::where('tenant_id', $farm->tenant->id)->where('status', 'active')->exists();
+
+        return $this->success(
+            message: 'Organization subscription status',
+            data: [
+                'active_subscription' => $response
+            ],
+            code: HttpStatusCode::SUCCESSFUL->value
+        );
     }
 }

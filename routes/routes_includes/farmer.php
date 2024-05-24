@@ -13,6 +13,7 @@ use App\Http\Controllers\Farm\InventoryController;
 use App\Http\Controllers\Farm\PondController;
 use App\Http\Controllers\Farm\TaskController;
 use App\Http\Controllers\FetchAllCustomersController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\Subscription\SubscribedPlanController;
 use App\Http\Controllers\TeamMemberInvitation;
@@ -23,6 +24,7 @@ Route::middleware([
     'farmer-admin', // This middleware group is defined in bootstrap/app.php
 ])->group(function () {
 
+    Route::get('{farm}/check-subscription-status', [OrganizationController::class, 'checkSubscription']);
     Route::group(['prefix' => 'farms'], function () {
         Route::get('/', [FarmController::class, 'index']);
         Route::post('/', [FarmController::class, 'store']);
@@ -66,7 +68,7 @@ Route::middleware([
 
     Route::get('billing-history', [SubscribedPlanController::class, 'billingRecords'])->name('billingRecords');
     Route::post('upgrade-plan', [SubscribedPlanController::class, 'upgradePlan'])->name('upgrade');
-   
+
     Route::post('activate-renewal', [SubscribedPlanController::class, 'activateAutoRenewal'])->name('activateAutoRenewal');
 
 
