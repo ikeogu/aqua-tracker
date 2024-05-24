@@ -79,7 +79,7 @@ class SubscribedPlanController extends Controller
 
         $response = $this->paystackClient->verifyTransaction($request->reference);
 
-        if (array_key_exists('status', $response) && $response['status'] === false) {
+        if ($response->status === false) {
             return $this->error(
                 'Payment was not completed'
             );
