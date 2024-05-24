@@ -18,11 +18,11 @@ class PurchaseResource extends JsonResource
             'id' => $this->id,
             'type' => "purchase",
             'attributes' => [
-                'pieces' => intval($this->pieces),
-                'price_per_unit' => intval($this->price_per_unit),
+                'pieces' => $this->pieces,
+                'price_per_unit' => $this->price_per_unit,
                 'amount' => $this->amount,
                 'status' => $this->status,
-                'size' => intval($this->size),
+                'size' => $this->size,
             ],
 
         ];

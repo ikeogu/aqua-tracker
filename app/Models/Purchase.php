@@ -23,7 +23,9 @@ class Purchase extends Model
     ];
 
     protected $casts = [
-        'size' => 'float'
+        'size' => 'float',
+        'pieces' => 'float',
+        'price_per_unit' => 'float'
     ];
 
 
