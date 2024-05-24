@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\Role;
+use App\Models\Role as ModelsRole;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -26,7 +27,8 @@ class DatabaseSeeder extends Seeder
             'fully_onboarded' => true
         ]);
 
-        $user->assignRole(Role::SUPER_ADMIN->value);
+        $role =ModelsRole::where('name',Role::SUPER_ADMIN->value)->first();
+        $user->assignRole($role);
 
        $this->call(
             RoleSeeder::class,
