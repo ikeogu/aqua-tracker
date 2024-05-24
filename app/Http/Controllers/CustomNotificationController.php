@@ -28,7 +28,10 @@ class CustomNotificationController extends Controller
 
         return $this->success(
             message: "Notification sent successfully",
-            data: CustomNotificationResource::collection($notications)->response()->getData(true),
+            data: [
+                'unread' => $user->unreadNotifications()->count(),
+                CustomNotificationResource::collection($notications)->response()->getData(true)
+            ],
             code: HttpStatusCode::CREATED->value
         );
     }
