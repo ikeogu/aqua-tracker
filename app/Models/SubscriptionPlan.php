@@ -29,6 +29,24 @@ class SubscriptionPlan extends Model
 
     public function applyDiscount(int $no_of_months = 1) : int
     {
-        return ($this->discount > 0 ) ? (($this->monthly_price * $no_of_months) *  ($this->discount /100)) : ($this->monthly_price * $no_of_months);
+
+        $amount =  ($this->discount > 0 && $no_of_months > 1 ) ? $this->calculateTotalPrice($no_of_months) : ($this->monthly_price * $no_of_months);
+
+        return $this->convertNairaToKobo($amount);
+    }
+
+    public function calculateTotalPrice($no_of_months)
+    {
+        $total_price = $this->monthly_price * $no_of_months;
+        $discount_amount = $total_price * ($this->discount / 100);
+        $final_price = $total_price - $discount_amount;
+
+        return $final_price;
+    }
+
+
+    function convertNairaToKobo($amountInNaira) {
+        return $amountInNaira * 100;
     }
 }
+

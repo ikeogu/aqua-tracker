@@ -59,7 +59,7 @@ class PaymentService
             'no_of_months' =>  $request->no_of_months,
             'reference' => uniqid(),
             'status' => 'pending',
-            'amount' => $subscriptionPlan->applyDiscount($request->no_of_months),
+            'amount' => $subscriptionPlan->applyDiscount($request->no_of_months) / 100,
             'start_date' => $newStartsAt,
             'end_date' => $newExpiresAt,
             'payment_method' => 'N/A',
