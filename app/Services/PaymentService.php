@@ -25,7 +25,7 @@ class PaymentService
         $subscriptionPlan = SubscriptionPlan::where('type', 'free')->latest()->first();
 
         $newStartsAt =  now();
-        $newExpiresAt = $newStartsAt->addMonths($subscriptionPlan->duration);
+        $newExpiresAt = $newStartsAt->addMonths($subscriptionPlan?->duration);
        $subscribedPlan = SubscribedPlan::create([
             'subscription_plan_id' => $subscriptionPlan->id,
             'status' => 'active',
