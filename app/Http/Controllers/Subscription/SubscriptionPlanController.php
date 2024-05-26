@@ -73,10 +73,20 @@ class SubscriptionPlanController extends Controller
     public function getPremiumPlan() : JsonResponse
     {
         $subscriptionPlan = SubscriptionPlan::where('type', 'paid')->first();
-        
+
+        $durations = [
+            '1month' => $subscriptionPlan->applyDiscount(1) / 100,
+            '3months' => $subscriptionPlan->applyDiscount(3) / 100,
+            '6months' => $subscriptionPlan->applyDiscount(6) / 100,
+            '12months' => $subscriptionPlan->applyDiscount(1) / 100
+        ];
+
         return $this->success(
             message:"subscription retrieved",
-            data: new SubscriptionPlanResource($subscriptionPlan),
+            data: [
+                'subscription' => new SubscriptionPlanResource($subscriptionPlan),
+                'durations' => $durations
+            ],
             code:HttpStatusCode::SUCCESSFUL->value
         );
     }
