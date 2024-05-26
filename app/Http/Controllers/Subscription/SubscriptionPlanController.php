@@ -74,12 +74,17 @@ class SubscriptionPlanController extends Controller
     {
         $subscriptionPlan = SubscriptionPlan::where('type', 'paid')->first();
 
-        $durations = [
-            '1month' => $subscriptionPlan->applyDiscount(1) / 100,
-            '3months' => $subscriptionPlan->applyDiscount(3) / 100,
-            '6months' => $subscriptionPlan->applyDiscount(6) / 100,
-            '12months' => $subscriptionPlan->applyDiscount(1) / 100
-        ];
+        $durationsArray = [1, 3, 6, 12];
+        $durations = [];
+
+        foreach ($durationsArray as $duration) {
+            $durations[] =  [
+                'title' => "{$duration} month" . ($duration > 1 ? 's' : ''),
+                'amount' => number_format($subscriptionPlan->applyDiscount($duration) / 100),
+                'discount' => $subscriptionPlan->discount,
+                'monthly_price' => number_format($subscriptionPlan->monthly_price)
+            ];
+        }
 
         return $this->success(
             message:"subscription retrieved",
