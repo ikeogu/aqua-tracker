@@ -4,13 +4,34 @@ use App\Enums\Role;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
 use App\Services\PaymentService;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use App\Models\Role as ModelsRole;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+
+
+Route::get('/create-admin', function () {
+    $user = User::updateOrCreate([
+        'first_name' => 'Super Admin',
+        "last_name" => "User",
+        'email' => 'aquatrack.services@gmail.com',
+   ],
+    [
+        'password' => Hash::make('@Biology29'),
+        'email_verified_at' => now(),
+        'fully_onboarded' => true
+    ]);
+
+    $role =ModelsRole::where('name',Role::SUPER_ADMIN->value)->first();
+    $user->assignRole($role);
+
+});
+
 
 
 Route::get('/subscribe-users', function () {
