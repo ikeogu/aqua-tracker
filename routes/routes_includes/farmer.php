@@ -36,6 +36,7 @@ Route::middleware([
 
 
     Route::apiResource('{farm}/batch', BatchController::class);
+    Route::get('{farm}/fetch-all-batches', [BatchController::class, 'getBatches']);
     Route::apiResource('{farm}/pond', PondController::class);
     Route::get('ponds/{farm}/farm-statistics', [PondController::class, 'farmStatictics']);
 

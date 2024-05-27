@@ -46,15 +46,51 @@ class BatchController extends Controller
                 ->orWhere('status', 'like', '%'. $request->search . '%')
                 ->orWhere('date', 'like', '%'. $request->search . '%');
 
-        })->paginate($request->per_page ?? 20);
+        })->get();
 
         return $this->success(
-            message:"Batch returned Successfully",
+            message:"batches retrived",
             data: BatchResource::collection($batches),
-            code: HttpStatusCode::SUCCESSFUL->value
+            code:200
         );
 
+
     }
+
+    public function getBatches(Request $request, Farm $farm): JsonResponse
+    {
+
+        $batches = QueryBuilder::for(Batch::class)
+        ->where('farm_id', $farm->id)
+        ->allowedFilters(['fish_specie', 'fish_type', 'date','status'])
+        ->when($request->search && !empty($request->search), function(Builder $query) use($request){
+            return $query->where('name', 'like', '%'. $request->search . '%')
+                ->orWhere('unit_purchase', 'like', '%'. $request->search . '%')
+                ->orWhere('price_per_unit', 'like', '%'. $request->search . '%')
+                ->orWhere('amount_spent', 'like', '%'. $request->search . '%')
+                ->orWhere('vendor', 'like', '%'. $request->search . '%')
+                ->orWhere('status', 'like', '%'. $request->search . '%')
+                ->orWhere('date', 'like', '%'. $request->search . '%');
+
+        })->paginate($request->per_page ?? 10);
+
+        $response = BatchResource::collection($batches)->response()->getData(true);
+        $data = $response['data'];
+        $links = $response['links'];
+        $meta = $response['meta'];
+
+        return response()->json([
+            'message' => "Batches retrived successfully",
+            'status' => 200,
+            'data' => $data,
+            'links' => $links,
+            'meta' => $meta,
+        ]);
+
+
+    }
+
+
 
 
 
