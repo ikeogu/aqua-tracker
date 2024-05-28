@@ -21,10 +21,11 @@ class SubscriptionPlanResource extends JsonResource
                 'title' => $this->title,
                 'description' => $this->description,
                 'monthly_price' => $this->monthly_price,
+                'yearly_price' => $this->monthly_price * 12,
                 'duration' => $this->duration,
                 "type" => $this->type,
                 "discount" => $this->discount,
-                "best_value" =>   ($this->monthly_price * ($this->discount/100)) * 12,
+                "best_value" =>  $this->applyDiscount(12) ,
                 "limited_to" => is_string($this->limited_to)  ? json_decode($this->limited_to) : $this->limited_to
             ]
         ];

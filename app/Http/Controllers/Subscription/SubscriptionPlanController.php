@@ -74,23 +74,10 @@ class SubscriptionPlanController extends Controller
     {
         $subscriptionPlan = SubscriptionPlan::where('type', 'paid')->first();
 
-        $durationsArray = [1, 3, 6, 12];
-        $durations = [];
-
-        foreach ($durationsArray as $duration) {
-            $durations[] =  [
-                'title' => "{$duration} month" . ($duration > 1 ? 's' : ''),
-                'amount' => number_format($subscriptionPlan->applyDiscount($duration) / 100),
-                'discount' => $subscriptionPlan->discount,
-                'monthly_price' => number_format($subscriptionPlan->monthly_price)
-            ];
-        }
-
         return $this->success(
             message:"subscription retrieved",
             data: [
                 'subscription' => new SubscriptionPlanResource($subscriptionPlan),
-                'durations' => $durations
             ],
             code:HttpStatusCode::SUCCESSFUL->value
         );
