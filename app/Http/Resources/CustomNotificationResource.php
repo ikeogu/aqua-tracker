@@ -20,7 +20,7 @@ class CustomNotificationResource extends JsonResource
             'type' => 'notifications',
             "attributes" => [
                 'title' => $this->data['title'],
-                'body' => $this->data['message'] ,
+                'body' => $this->data['message'] ?? $this->data['body'] ,
                 'readAt' => !empty($this->read_at) ? true : false,
                 'created_at' => $this->created_at
             ]
