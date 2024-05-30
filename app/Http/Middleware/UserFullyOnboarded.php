@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\Role;
 use App\Traits\RespondsWithHttpStatus;
 use Closure;
 use Illuminate\Http\Request;
@@ -24,10 +25,19 @@ class UserFullyOnboarded
          setPermissionsTeamId(0);
 
 
-         if (!$user->fully_onboarded) {
+         if (!$user->fully_onboarded && !$user->hasAnyRole([Role::EDIT_FARMS->value, Role::FARM_ADMIN->value, Role::VIEW_FARMS->value])) {
             return $this->error(
                 message: 'User is yet to onboard!',
                 error: 'creator_onboarding',
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
+
+
+        if (!$user->team_member_onboarded && $user->hasAnyRole([Role::EDIT_FARMS->value, Role::FARM_ADMIN->value, Role::VIEW_FARMS->value])) {
+            return $this->error(
+                message: 'User is yet to complete team member onboarding!',
+                error: 'team_member_onboarding',
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }

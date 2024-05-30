@@ -6,7 +6,7 @@ use App\Traits\EnumValues;
 
 enum Role: string
 {
-    use EnumValues;
+    use EnumValues; 
 
     case FARM_EMPLOYEE = "FARM EMPLOYEE";
     case ORGANIZATION_OWNER = "ORGANIZATION OWNER";

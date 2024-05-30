@@ -32,6 +32,7 @@ class SigninController extends Controller
 
         if($user->hasAnyRole([Role::EDIT_FARMS->value, Role::FARM_ADMIN->value, Role::VIEW_FARMS->value])){
             $user->load('tenants');
+            $user->update(['team_member_onboarded' => true]);
             $user->tenants->each(function($tenant){
                 $tenant->pivot->update(['status' => Status::ACTIVE->value]);
             });
