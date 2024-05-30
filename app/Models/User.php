@@ -38,6 +38,7 @@ class User extends Authenticatable implements HasMedia
         'email',
         'password',
         'fully_onboarded',
+        'team_member_onboarded',
         'tenant_id',
         'phone_number',
     ];
@@ -62,7 +63,8 @@ class User extends Authenticatable implements HasMedia
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'fully_onboarded' => 'boolean'
+            'fully_onboarded' => 'boolean',
+            'team_member_onboarded' => 'boolean'
         ];
     }
 

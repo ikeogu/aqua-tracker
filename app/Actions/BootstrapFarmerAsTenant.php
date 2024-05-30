@@ -14,7 +14,7 @@ class BootstrapFarmerAsTenant
 {
     public static function execute(User $user, array $data): Tenant
     {
-      
+
         $tenant = self::bootstrapTenant($user, $data);
 
         return $tenant;
@@ -36,7 +36,8 @@ class BootstrapFarmerAsTenant
 
         $user->forceFill([
             'fully_onboarded' => true,
-            'tenant_id' => $tenant->id
+            'tenant_id' => $tenant->id,
+            'team_member_onboarded' => true,
 
             ])->save();
 

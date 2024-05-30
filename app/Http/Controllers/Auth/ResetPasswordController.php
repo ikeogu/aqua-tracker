@@ -24,7 +24,7 @@ class ResetPasswordController extends Controller
 
 
         $user->update([
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->input('password')),
         ]);
 
         return $this->success(

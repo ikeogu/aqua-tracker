@@ -28,8 +28,8 @@ class TeamMemberInvitation
             $user = User::firstOrCreate(['email' => $email], [
                 'status' => Status::PENDING->value,
                 'password' => Hash::make($pwd),
-                'fully_onboarded' => true,
-                'tenant_id' => $tenant->id,
+                'fully_onboarded' => false,
+                'team_member_onboarded' => true,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);

@@ -22,9 +22,9 @@ class UserFullyOnboarded
          $user = $request->user();
 
          setPermissionsTeamId(0);
-       
 
-         if (!$user?->fully_onboarded) {
+
+         if (!$user->fully_onboarded || !$user->team_member_onboarded) {
             return $this->error(
                 message: 'User is yet to onboard!',
                 error: 'creator_onboarding',
