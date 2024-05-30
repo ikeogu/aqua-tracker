@@ -44,7 +44,7 @@ class BatchController extends Controller
                 ->orWhere('amount_spent', 'like', '%'. $request->search . '%')
                 ->orWhere('vendor', 'like', '%'. $request->search . '%')
                 ->orWhere('status', 'like', '%'. $request->search . '%')
-                ->orWhere('date', 'like', '%'. $request->search . '%');
+                ->orWhere('date_purchased', 'like', '%'. $request->search . '%');
 
         })->get();
 
