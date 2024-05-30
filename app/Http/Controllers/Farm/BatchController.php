@@ -9,7 +9,7 @@ use App\Http\Requests\UpdateBatchRequest;
 use App\Http\Resources\BatchResource;
 use App\Models\Batch;
 use App\Models\Farm;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;

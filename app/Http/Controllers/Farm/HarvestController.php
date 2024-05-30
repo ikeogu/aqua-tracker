@@ -14,7 +14,7 @@ use App\Models\Farm;
 use App\Models\Harvest;
 use App\Models\Inventory;
 use App\Models\Purchase;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -24,7 +24,7 @@ class HarvestController extends Controller
     //
     public function index(Request $request, Farm $farm): JsonResponse
     {
-        $harvests = $farm->harvests()->when($request->search, function ($query) use ($request) {
+        $harvests = $farm->harvests()->when($request->search, function (Builder $query) use ($request) {
             return $query->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('consultant', 'like', '%' . $request->search . '%')
                 ->orWhereHas('batch', function (Builder $query) use ($request) {

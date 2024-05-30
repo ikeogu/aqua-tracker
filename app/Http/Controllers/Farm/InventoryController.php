@@ -12,6 +12,7 @@ use App\Models\Farm;
 use App\Models\Inventory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class InventoryController extends Controller
 {
@@ -32,7 +33,7 @@ class InventoryController extends Controller
 
     public function index(Request $request, Farm $farm) : JsonResponse
     {
-        $inventories = $farm->inventories()->when($request->search, function ($query) use ($request) {
+        $inventories = $farm->inventories()->when($request->search, function (Builder $query) use ($request) {
             return $query->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('description', 'like', '%' . $request->search . '%')
                 ->orWhere('quantity', 'like', '%' . $request->search . '%')
