@@ -36,7 +36,7 @@ class BatchController extends Controller
 
         $batches = QueryBuilder::for(Batch::class)
         ->where('farm_id', $farm->id)
-        ->allowedFilters(['fish_specie', 'fish_type', 'date','status'])
+        ->allowedFilters(['fish_specie', 'fish_type', 'date_purchased','status'])
         ->when($request->search && !empty($request->search), function(Builder $query) use($request){
             return $query->where('name', 'like', '%'. $request->search . '%')
                 ->orWhere('unit_purchase', 'like', '%'. $request->search . '%')
