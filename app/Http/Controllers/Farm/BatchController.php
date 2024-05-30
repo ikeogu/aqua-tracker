@@ -62,7 +62,7 @@ class BatchController extends Controller
 
         $batches = QueryBuilder::for(Batch::class)
         ->where('farm_id', $farm->id)
-        ->allowedFilters(['fish_specie', 'fish_type', 'date','status'])
+        ->allowedFilters(['fish_specie', 'fish_type', 'date_purchased','status'])
         ->when($request->search && !empty($request->search), function(Builder $query) use($request){
             return $query->where('name', 'like', '%'. $request->search . '%')
                 ->orWhere('unit_purchase', 'like', '%'. $request->search . '%')
@@ -70,7 +70,7 @@ class BatchController extends Controller
                 ->orWhere('amount_spent', 'like', '%'. $request->search . '%')
                 ->orWhere('vendor', 'like', '%'. $request->search . '%')
                 ->orWhere('status', 'like', '%'. $request->search . '%')
-                ->orWhere('date', 'like', '%'. $request->search . '%');
+                ->orWhere('date_purchased', 'like', '%'. $request->search . '%');
 
         })->paginate($request->per_page ?? 10);
 
