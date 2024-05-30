@@ -46,7 +46,7 @@ class BatchController extends Controller
                 ->orWhere('status', 'like', '%'. $request->search . '%')
                 ->orWhere('date_purchased', 'like', '%'. $request->search . '%');
 
-        })->get();
+        })->latest()->get();
 
         return $this->success(
             message:"batches retrived",
@@ -72,7 +72,9 @@ class BatchController extends Controller
                 ->orWhere('status', 'like', '%'. $request->search . '%')
                 ->orWhere('date_purchased', 'like', '%'. $request->search . '%');
 
-        })->paginate($request->per_page ?? 10);
+        })->
+        latest()->
+        paginate($request->per_page ?? 10);
 
         $response = BatchResource::collection($batches)->response()->getData(true);
         $data = $response['data'];

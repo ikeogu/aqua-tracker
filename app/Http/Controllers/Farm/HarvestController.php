@@ -31,7 +31,8 @@ class HarvestController extends Controller
                     $query->where('name', 'like', '%' . $request->search . '%');
                 });
         })
-            ->paginate($request->per_page ?? 20)
+
+            ->latest()->paginate($request->per_page ?? 20)
             ->through(function ($harvest) {
                 return [
                     'id' => $harvest->id,

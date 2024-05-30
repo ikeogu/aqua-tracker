@@ -21,7 +21,7 @@ class PondController extends Controller
     {
 
         $ponds= $farm->ponds()->latest()
-            ->paginate($request->per_page ?? 20);
+            ->latest()->paginate($request->per_page ?? 20);
 
         return $this->success(
             message:"Ponds fetched Successfully",

@@ -41,7 +41,7 @@ class HarvestCustomerController extends Controller
             }
             //@codeCoverageIgnoreEnd
         }
-        $customers = $customers->paginate($request->per_page ?? 10);
+        $customers = $customers->latest()->paginate($request->per_page ?? 10);
 
         return $this->success(
             message: 'Customers retrieved successfully',

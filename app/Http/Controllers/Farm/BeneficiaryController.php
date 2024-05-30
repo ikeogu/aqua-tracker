@@ -49,7 +49,7 @@ class BeneficiaryController extends Controller
                         ->orWhere('phone', 'like', '%' . $request->search . '%')
                         ->orWhere('email', 'like', '%' . $request->search . '%');
                 });
-        })->get()->map(function ($beneficiary) {
+        })->latest()->get()->map(function ($beneficiary) {
             return [
                 'id' => $beneficiary->harvestCustomer->id,
                 'name' => $beneficiary->harvestCustomer->name,

@@ -57,7 +57,7 @@ class ExpenseController extends Controller
         $expenses = $farm->expenses()->when($request->search, function ($query) use ($request) {
             return $query->where('description', 'like', '%' . $request->search . '%')
                 ->orWhere('total_amount', 'like', '%' . $request->search . '%');
-        })->paginate($request->per_page ?? 20);
+        })->latest()->paginate($request->per_page ?? 20);
 
         return $this->success(
             message: 'Expenses retrieved successfully',
