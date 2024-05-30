@@ -24,7 +24,7 @@ class UserFullyOnboarded
          setPermissionsTeamId(0);
 
 
-         if (!$user->fully_onboarded || !$user->team_member_onboarded) {
+         if (!$user->fully_onboarded) {
             return $this->error(
                 message: 'User is yet to onboard!',
                 error: 'creator_onboarding',
