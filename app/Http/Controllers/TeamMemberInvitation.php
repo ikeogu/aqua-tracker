@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Actions\TeamMemberInvitation as ActionsTeamMemberInvitation;
 use App\Enums\HttpStatusCode;
+use App\Http\Resources\UserResource;
 use App\Models\Role;
+use App\Models\User;
+use BootstrapTeamMember;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -110,6 +113,17 @@ class TeamMemberInvitation extends Controller
 
         return $this->success(
             message: "Team member deleted successfully",
+            code: HttpStatusCode::SUCCESSFUL->value
+        );
+    }
+
+    public function onboardTeamMember(Request $request, User $user) :  JsonResponse
+    {
+        BootstrapTeamMember::execute($user, $request);
+
+        return $this->success(
+            message: "Team member onbaorded successfully",
+            data: new UserResource($user),
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }

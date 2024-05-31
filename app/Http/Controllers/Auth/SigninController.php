@@ -30,14 +30,6 @@ class SigninController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        if($user->hasAnyRole([Role::EDIT_FARMS->value, Role::FARM_ADMIN->value, Role::VIEW_FARMS->value])){
-            $user->load('tenants');
-            $user->update(['team_member_onboarded' => true]);
-            $user->tenants->each(function($tenant){
-                $tenant->pivot->update(['status' => Status::ACTIVE->value]);
-            });
-        }
-
         LoginLog::create([
             'user_id' => $user->id,
             'login_at' => now(),

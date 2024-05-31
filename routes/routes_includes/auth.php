@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SigninController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\TeamMemberInvitation;
 use Illuminate\Support\Facades\Route;
 
 
@@ -32,7 +33,7 @@ Route::middleware('auth:sanctum')
 
         //ONBOARDING
         Route::post('/onboarding/farm-owner', FarmerOnboardingController::class)->name('farmer.onboarding')->middleware('verified');
-       // Route::post('/onboarding/team-member', TeamMemberOnboardingController::class)->name('team-member.onboarding');
+        Route::post('/onboarding/team-member', [TeamMemberInvitation::class, 'onboardTeamMember'])->name('team-member.onboarding');
 
         Route::get('/user', function () {
             return new \App\Http\Resources\UserResource(auth()->user());
