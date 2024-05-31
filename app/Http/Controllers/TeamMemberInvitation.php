@@ -16,7 +16,7 @@ class TeamMemberInvitation extends Controller
 {
     //
 
-    public function __invoke(Request $request) : JsonResponse
+    public function __invoke(Request $request): JsonResponse
 
     {
         $request->validate([
@@ -33,10 +33,9 @@ class TeamMemberInvitation extends Controller
             message: "Invitation sent successfully",
             code: HttpStatusCode::CREATED->value
         );
-
     }
 
-    public function listTeamMembers(Request $request) : JsonResponse
+    public function listTeamMembers(Request $request): JsonResponse
     {
         /** @var Tenant $tenant */
         $tenant = auth()->user()->tenant;
@@ -62,7 +61,7 @@ class TeamMemberInvitation extends Controller
         );
     }
 
-    public function updateTeamMember(Request $request,string $teamMemberId) : JsonResponse
+    public function updateTeamMember(Request $request, string $teamMemberId): JsonResponse
     {
         $request->validate([
             'first_name' => 'nullable|string',
@@ -77,8 +76,8 @@ class TeamMemberInvitation extends Controller
         $tenant = auth()->user()->tenant;
 
         $teamMember = $tenant->teamMembers()->where('user_id', $teamMemberId)->first();
-         /** @var Role $role */
-         $role = Role::find($request->role);
+        /** @var Role $role */
+        $role = Role::find($request->role);
 
         $teamMember->update($request->only(['first_name', 'last_name', 'email', 'phone_number']));
         $teamMember->pivot->update([
@@ -98,7 +97,7 @@ class TeamMemberInvitation extends Controller
         );
     }
 
-    public function deleteTeamMember(string $teamMemberId) : JsonResponse
+    public function deleteTeamMember(string $teamMemberId): JsonResponse
     {
 
         /** @var Tenant $tenant */
@@ -107,7 +106,7 @@ class TeamMemberInvitation extends Controller
         $teamMember = $tenant->teamMembers()->where('users.id', $teamMemberId)->first();
         $tenant->teamMembers()->detach($teamMemberId);
 
-        if(DB::table('tenant_user')->where('user_id', $teamMemberId)->count() === 0){
+        if (DB::table('tenant_user')->where('user_id', $teamMemberId)->count() === 0) {
             $teamMember->delete();
         }
 
@@ -117,8 +116,10 @@ class TeamMemberInvitation extends Controller
         );
     }
 
-    public function onboardTeamMember(Request $request, User $user) :  JsonResponse
+    public function onboardTeamMember(Request $request): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
         BootstrapTeamMember::execute($user, $request);
 
         return $this->success(
