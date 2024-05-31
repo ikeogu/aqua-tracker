@@ -29,7 +29,7 @@ class TeamMemberInvitation
                 'status' => Status::PENDING->value,
                 'password' => Hash::make($pwd),
                 'fully_onboarded' => false,
-                'team_member_onboarded' => true,
+                'team_member_onboarded' => false,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
