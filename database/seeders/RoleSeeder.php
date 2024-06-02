@@ -206,7 +206,7 @@ class RoleSeeder extends Seeder
                 ]
             );
 
-            if ($role['name'] === Role::VIEW_FARMS->value || $role['name'] === Role::EDIT_FARMS->value) {
+          //  if ($role['name'] === Role::VIEW_FARMS->value || $role['name'] === Role::EDIT_FARMS->value) {
                 $mappedPermissions = collect($permissions)->filter(function ($permission) use ($role) {
 
                     return $permission['group'] === $role['name'];
@@ -215,7 +215,7 @@ class RoleSeeder extends Seeder
                 });
 
                 $role->syncPermissions($mappedPermissions);
-            }
+           // }
         });
     }
 }
