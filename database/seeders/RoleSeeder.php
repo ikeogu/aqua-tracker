@@ -186,7 +186,10 @@ class RoleSeeder extends Seeder
 
         collect($permissions)->map(function (array $permission) {
             Permission::updateOrCreate(
-                ['name' => $permission['name']],
+                [
+                    'name' => $permission['name'],
+                    'group' => $permission['group']
+                ],
                 [
                     'description' => $permission['description'],
                     'group' => $permission['group']
@@ -206,16 +209,16 @@ class RoleSeeder extends Seeder
                 ]
             );
 
-          //  if ($role['name'] === Role::VIEW_FARMS->value || $role['name'] === Role::EDIT_FARMS->value) {
-                $mappedPermissions = collect($permissions)->filter(function ($permission) use ($role) {
+            //  if ($role['name'] === Role::VIEW_FARMS->value || $role['name'] === Role::EDIT_FARMS->value) {
+            $mappedPermissions = collect($permissions)->filter(function ($permission) use ($role) {
 
-                    return $permission['group'] === $role['name'];
-                })->map(function ($permission) {
-                    return $permission['name'];
-                });
+                return $permission['group'] === $role['name'];
+            })->map(function ($permission) {
+                return $permission['name'];
+            });
 
-                $role->syncPermissions($mappedPermissions);
-           // }
+            $role->syncPermissions($mappedPermissions);
+            // }
         });
     }
 }
