@@ -37,7 +37,7 @@ Route::get('/create-admin', function () {
 Route::get('/subscribe-users', function () {
 
 
-    SubscriptionPlan::updateOrCreate(
+   /*  SubscriptionPlan::updateOrCreate(
         ['title' => 'Basic Plan'],
         [
             'description' => 'Just basic plan',
@@ -55,7 +55,7 @@ Route::get('/subscribe-users', function () {
         ['title' => 'Premuium Plan'],
         [
             'description' => 'All the feature',
-            'monthly_price' => 3500,
+            'monthly_price' => 2500,
             'duration' => 1,
             "type" => 'paid',
             "discount" => 20,
@@ -63,7 +63,7 @@ Route::get('/subscribe-users', function () {
                 'unlimited'
             ]
         ]
-    );
+    ); */
 
     /** @var User $users */
     $users = User::whereRelation('roles', 'name',  Role::ORGANIZATION_OWNER->value)->get();
