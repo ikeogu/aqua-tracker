@@ -23,14 +23,6 @@ class EmployeeController extends Controller
 
     public function index(Request $request, Farm $farm)
     {
-        /** @var User $user */
-        $user = auth()->user();
-        if ($user->cannot('view')) {
-            return $this->error(
-                message: "unathourized area.",
-                code: HttpStatusCode::FORBIDDEN->value
-            );
-        }
 
         $employees = $farm->users()->where('role', '!=', 'FARM_TEAM_OWNER')
             ->when($request->search, function ($query) use ($request) {
@@ -54,7 +46,7 @@ class EmployeeController extends Controller
 
          /** @var User $user */
          $user = auth()->user();
-         if ($user->cannot('create')) {
+         if ($user->hasRole([Role::VIEW_FARMS->value])) {
              return $this->error(
                  message: "unathourized area.",
                  code: HttpStatusCode::FORBIDDEN->value
@@ -87,7 +79,7 @@ class EmployeeController extends Controller
     {
          /** @var User $user */
          $user = auth()->user();
-         if ($user->cannot('edit')) {
+         if ($user->hasRole([Role::VIEW_FARMS->value])) {
              return $this->error(
                  message: "unathourized area.",
                  code: HttpStatusCode::FORBIDDEN->value
@@ -111,7 +103,7 @@ class EmployeeController extends Controller
     {
          /** @var User $user */
          $user = auth()->user();
-         if ($user->cannot('delete')) {
+         if ($user->hasRole([Role::VIEW_FARMS->value])) {
              return $this->error(
                  message: "unathourized area.",
                  code: HttpStatusCode::FORBIDDEN->value

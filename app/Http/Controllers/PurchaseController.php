@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\Role;
 use App\Http\Requests\CreatePurchaseRequest;
 use App\Http\Requests\UpdatePurchaseRequest;
 use App\Http\Resources\PurchaseResource;
@@ -74,7 +75,7 @@ class PurchaseController extends Controller
     {
          /** @var User $user */
          $user = auth()->user();
-         if ($user->cannot('delete')) {
+         if ($user->hasRole(Role::VIEW_FARMS->value)) {
              return $this->error(
                  message: "unathourized area.",
                  code: HttpStatusCode::FORBIDDEN->value

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Farm;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CustomerResource;
 use App\Models\Farm;
@@ -17,7 +18,7 @@ class BeneficiaryController extends Controller
     {
          /** @var User $user */
          $user = auth()->user();
-         if ($user->cannot('create')) {
+         if ($user->hasRole(Role::VIEW_FARMS->value)) {
              return $this->error(
                  message: "unathourized area.",
                  code: HttpStatusCode::FORBIDDEN->value

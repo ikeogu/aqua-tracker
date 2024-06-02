@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Farm;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\Role;
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateInventoryRequest;
@@ -21,7 +22,7 @@ class InventoryController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->cannot('create')) {
+        if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "unathourized area.",
                 code: HttpStatusCode::FORBIDDEN->value
@@ -41,14 +42,7 @@ class InventoryController extends Controller
 
     public function index(Request $request, Farm $farm): JsonResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
-        if ($user->cannot('view')) {
-            return $this->error(
-                message: "unathourized area.",
-                code: HttpStatusCode::FORBIDDEN->value
-            );
-        }
+
         $inventories = $farm->inventories()->when($request->search, function (Builder $query) use ($request) {
             return $query->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('description', 'like', '%' . $request->search . '%')
@@ -67,14 +61,7 @@ class InventoryController extends Controller
 
     public function show(Farm $farm, Inventory $inventory): JsonResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
-        if ($user->cannot('view')) {
-            return $this->error(
-                message: "unathourized area.",
-                code: HttpStatusCode::FORBIDDEN->value
-            );
-        }
+
         $inventory = $farm->inventories()->find($inventory->id);
 
         if (!$inventory) {
@@ -95,7 +82,7 @@ class InventoryController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->cannot('edit')) {
+        if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "unathourized area.",
                 code: HttpStatusCode::FORBIDDEN->value
@@ -123,7 +110,7 @@ class InventoryController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->cannot('delete')) {
+        if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "unathourized area.",
                 code: HttpStatusCode::FORBIDDEN->value

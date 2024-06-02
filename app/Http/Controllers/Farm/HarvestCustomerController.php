@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Farm;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\Role;
 use App\Exports\PurchaseExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateCustomerRequest;
@@ -23,14 +24,7 @@ class HarvestCustomerController extends Controller
 
     public function index(Request $request, Farm $farm, Harvest $harvest): mixed
     {
-        /** @var User $user */
-        $user = auth()->user();
-        if ($user->cannot('view')) {
-            return $this->error(
-                message: "unathourized area.",
-                code: HttpStatusCode::FORBIDDEN->value
-            );
-        }
+       
         $harvest = $farm->harvests()->find($harvest->id);
         $customers = $harvest->customers()->when($request->search, function ($query) use ($request) {
             return $query->where('name', 'like', '%' . $request->search . '%')
@@ -60,14 +54,7 @@ class HarvestCustomerController extends Controller
 
     public function show(Farm $farm, Harvest $harvest, HarvestCustomer $customer): JsonResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
-        if ($user->cannot('view')) {
-            return $this->error(
-                message: "unathourized area.",
-                code: HttpStatusCode::FORBIDDEN->value
-            );
-        }
+
         $harvest = $farm->harvests()->find($harvest->id);
         $customer = $harvest->customers()->find($customer->id);
 
@@ -89,7 +76,7 @@ class HarvestCustomerController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->cannot('create')) {
+        if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "unathourized area.",
                 code: HttpStatusCode::FORBIDDEN->value
@@ -112,7 +99,7 @@ class HarvestCustomerController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->cannot('edit')) {
+        if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "unathourized area.",
                 code: HttpStatusCode::FORBIDDEN->value

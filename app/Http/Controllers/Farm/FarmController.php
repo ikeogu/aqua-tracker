@@ -21,7 +21,7 @@ class FarmController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->cannot('create')) {
+        if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "unathourized area.",
                 code: HttpStatusCode::FORBIDDEN->value
@@ -47,14 +47,7 @@ class FarmController extends Controller
 
     public function index(Request $request)
     {
-        /** @var User $user */
-        $user = auth()->user();
-        if ($user->cannot('view')) {
-            return $this->error(
-                message: "unathourized area.",
-                code: HttpStatusCode::FORBIDDEN->value
-            );
-        }
+
         $tenants = $request->user()->tenants;
 
         $organizations = $tenants->map(function ($tenant) {
@@ -91,7 +84,7 @@ class FarmController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->cannot('edit')) {
+        if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "unathourized area.",
                 code: HttpStatusCode::FORBIDDEN->value

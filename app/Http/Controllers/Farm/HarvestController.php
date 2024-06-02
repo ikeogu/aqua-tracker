@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Farm;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\Role;
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createHarvestRequest;
@@ -24,14 +25,7 @@ class HarvestController extends Controller
     //
     public function index(Request $request, Farm $farm): JsonResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
-        if ($user->cannot('view')) {
-            return $this->error(
-                message: "unathourized area.",
-                code: HttpStatusCode::FORBIDDEN->value
-            );
-        }
+       
         $harvests = $farm->harvests()->when($request->search, function (Builder $query) use ($request) {
             return $query->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('consultant', 'like', '%' . $request->search . '%')
@@ -99,14 +93,8 @@ class HarvestController extends Controller
 
     public function show(Farm $farm, Harvest $harvest): JsonResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
-        if ($user->cannot('view')) {
-            return $this->error(
-                message: "unathourized area.",
-                code: HttpStatusCode::FORBIDDEN->value
-            );
-        }
+
+
         $harvest = $farm->harvests()->find($harvest->id);
 
         if (!$harvest) {
@@ -127,7 +115,7 @@ class HarvestController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->cannot('create')) {
+        if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "unathourized area.",
                 code: HttpStatusCode::FORBIDDEN->value
@@ -152,7 +140,7 @@ class HarvestController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->cannot('edit')) {
+        if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "unathourized area.",
                 code: HttpStatusCode::FORBIDDEN->value

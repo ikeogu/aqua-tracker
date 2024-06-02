@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\Role;
 use App\Services\DeleteAllService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class DeleteAllController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->cannot('delete')) {
+        if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "unathourized area.",
                 code: HttpStatusCode::FORBIDDEN->value

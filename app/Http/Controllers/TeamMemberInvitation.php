@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\TeamMemberInvitation as ActionsTeamMemberInvitation;
 use App\Enums\HttpStatusCode;
+use App\Enums\Role as EnumsRole;
 use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
@@ -21,7 +22,7 @@ class TeamMemberInvitation extends Controller
     {
          /** @var User $user */
          $user = auth()->user();
-         if ($user->cannot('create')) {
+         if ($user->hasAnyRole([EnumsRole::VIEW_FARMS->value, EnumsRole::EDIT_FARMS->value])) {
              return $this->error(
                  message: "unathourized area.",
                  code: HttpStatusCode::FORBIDDEN->value
@@ -75,7 +76,7 @@ class TeamMemberInvitation extends Controller
     {
          /** @var User $user */
          $user = auth()->user();
-         if ($user->cannot('edit')) {
+         if ($user->hasAnyRole([EnumsRole::VIEW_FARMS->value, EnumsRole::EDIT_FARMS->value])) {
              return $this->error(
                  message: "unathourized area.",
                  code: HttpStatusCode::FORBIDDEN->value
@@ -120,7 +121,7 @@ class TeamMemberInvitation extends Controller
 
          /** @var User $user */
          $user = auth()->user();
-         if ($user->cannot('delete')) {
+         if ($user->hasAnyRole([EnumsRole::VIEW_FARMS->value, EnumsRole::EDIT_FARMS->value])) {
              return $this->error(
                  message: "unathourized area.",
                  code: HttpStatusCode::FORBIDDEN->value
