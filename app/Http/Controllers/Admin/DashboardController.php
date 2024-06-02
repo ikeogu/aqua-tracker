@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DashboardDataResource;
+use App\Http\Resources\UserResource;
 use App\Models\LoginLog;
 use App\Models\SubscribedPlan;
 use App\Models\User;
@@ -22,6 +23,7 @@ use App\Models\Purchase;
 use App\Models\SubscriptionPlan;
 use App\Models\Task;
 use App\Models\Tenant;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -70,6 +72,9 @@ class DashboardController extends Controller
 
             ->paginate($request->per_page ?? 10);
 
+        Log::info("::::::: Admin users :::::::");
+        Log::debug(['users' => $users]);
+
         $lastSeen = match ($request->input('duration')) {
             'today' => ['start_date' => Carbon::now()->startOfDay(), 'end_date' => now()->endOfDay()],
             'yesterday' => ['start_date' => Carbon::now()->subDay()->startOfDay(), 'end_date' => now()->endOfDay()],
@@ -77,6 +82,7 @@ class DashboardController extends Controller
             'thirty_days' => ['start_date' => now()->subDays(30)->addDay()->startOfDay(), 'end_date' => now()->endOfDay()],
             default => ['start_date' => Carbon::now()->startOfDay(), 'end_date' => now()->endOfDay()]
         };
+
 
 
         $cardDetails = [
@@ -96,7 +102,7 @@ class DashboardController extends Controller
 
         $data = [
             'card_data' => $cardDetails,
-            'users' => DashboardDataResource::collection($users)->response()->getData(true)
+            'users' => DashboardDataResource::collection($users)->response()->getData()
         ];
 
         return $this->success(
