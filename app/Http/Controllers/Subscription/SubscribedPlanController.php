@@ -93,8 +93,10 @@ class SubscribedPlanController extends Controller
             'auto_renewal' => false
         ]);
 
+
+
         $payment->update([
-            'status' => 'active',
+            'status' => Carbon::parse($payment->start_date)->isSameDay(Carbon::now()) ? 'active' : 'inactive',
             'payment_method' => $response->channel,
 
         ]);

@@ -47,7 +47,10 @@ class UpdateSubscriptionJob implements ShouldQueue
                 }
 
                 if(Carbon::parse($query->end_date)->lessThan($oneDayAgo)){
+                    $query->status = 'expired';
+                    $query->save();
                     $query->tenant->user->notify(new SubscriptionExpiredNotification());
+
                 }
             });
 

@@ -73,7 +73,7 @@ class DashboardController extends Controller
 
             ->paginate($request->per_page ?? 10);
 
-       
+
         $lastSeen = match ($request->input('duration')) {
             'today' => ['start_date' => Carbon::now()->startOfDay(), 'end_date' => now()->endOfDay()],
             'yesterday' => ['start_date' => Carbon::now()->subDay()->startOfDay(), 'end_date' => now()->endOfDay()],
@@ -96,7 +96,6 @@ class DashboardController extends Controller
             'inactive_users' => $this->frequentUsers($lastSeen['start_date'], $lastSeen['end_date'])['inactive_users'],
 
         ];
-
 
 
         $data = [
