@@ -192,7 +192,6 @@ class RoleSeeder extends Seeder
                 ],
                 [
                     'description' => $permission['description'],
-                    'group' => $permission['group']
                 ]
             );
         });
