@@ -23,7 +23,7 @@ class DashboardDataResource extends JsonResource
             'email' => $this->email,
             "subscription_plan" => $this->tenant->subscribedPlans()->where('status', 'active')->first()->title ?? 'inactive',
             'created_at' => $this->created_at,
-            'last_seen' => $this->loginLogs()->latest()->first()->login_at,
+            'last_seen' => $this->loginLogs()->latest()->first()?->login_at,
             'status' => $this->tenant->status,
             'tenant_id' => $this->tenant->id
         ];
