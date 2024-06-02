@@ -131,7 +131,7 @@ class RoleSeeder extends Seeder
             }
             $mappedPermissions = collect($permissions)->filter(function ($permission) use ($role) {
 
-                return $permission['group'] === 'all';
+                return $permission;
             })->map(function ($permission) {
                 return $permission['name'];
             });
