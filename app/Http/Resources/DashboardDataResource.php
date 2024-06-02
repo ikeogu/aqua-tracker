@@ -21,11 +21,11 @@ class DashboardDataResource extends JsonResource
             'id' => $this->id,
             'name' => $this->first_name . ' '. $this->last_name,
             'email' => $this->email,
-            "subscription_plan" => SubscribedPlan::where('tenant_id',$this->tenant?->id )->where('status', 'active')->first()?->title ?? 'inactive',
+            "subscription_plan" => $this->tenant->subscribedPlans()->where('status', 'active')->first()->title ?? 'inactive',
             'created_at' => $this->created_at,
-            'last_seen' => $this?->loginLogs()?->latest()?->first()?->login_at,
-            'status' => $this->tenant?->status,
-            'tenant_id' => $this->tenant?->id
+            'last_seen' => $this->loginLogs()->latest()->first()->login_at,
+            'status' => $this->tenant->status,
+            'tenant_id' => $this->tenant->id
         ];
     }
 }

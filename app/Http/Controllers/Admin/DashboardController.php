@@ -69,6 +69,7 @@ class DashboardController extends Controller
                     }),
                 };
             })
+            ->latest()
 
             ->paginate($request->per_page ?? 10);
 
