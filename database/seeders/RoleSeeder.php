@@ -71,114 +71,25 @@ class RoleSeeder extends Seeder
 
         $permissions = [
 
-            [
-                'name' => 'view',
-                'description' => 'view',
-                'group' => Role::ADMIN->value,
-            ],
-
-            [
-                'name' => 'edit',
-                'description' => 'edit',
-                'group' => Role::ADMIN->value,
-            ],
 
             [
                 'name' => 'view',
-                'description' => 'view',
-                'group' => Role::SUPER_ADMIN->value,
-            ],
-            [
-                'name' => 'edit',
-                'description' => 'edit',
-                'group' => Role::SUPER_ADMIN->value,
-            ],
-            [
-                'name' => 'remove',
-                'description' => 'remove',
-                'group' => Role::SUPER_ADMIN->value,
-            ],
-            [
-                'name' => 'view',
-                'group' => Role::VIEW_FARMS->value,
+                'group' => 'all',
                 'description' => 'view farms'
             ],
             [
                 'name' => 'edit',
-                'group' => Role::EDIT_FARMS->value,
-                'description' => 'edit farms'
-            ],
-            [
-                'name' => 'create',
-                'group' => Role::EDIT_FARMS->value,
-                'description' => 'edit farms'
-            ],
-            [
-                'name' => 'view',
-                'group' => Role::EDIT_FARMS->value,
-                'description' => 'edit farms'
-            ],
-            // farm admin
-            [
-                'name' => 'view',
-                'group' => Role::FARM_ADMIN->value,
-                'description' => 'view farms'
-            ],
-            [
-                'name' => 'edit',
-                'group' => Role::FARM_ADMIN->value,
+                'group' => 'few',
                 'description' => 'edit in farm'
             ],
             [
                 'name' => 'create',
-                'group' => Role::FARM_ADMIN->value,
+                'group' => 'few',
                 'description' => 'create in farm'
             ],
             [
                 'name' => 'delete',
-                'group' => Role::FARM_ADMIN->value,
-                'description' => 'delete in farm'
-            ],
-            // farm owner
-            [
-                'name' => 'view',
-                'group' => Role::ORGANIZATION_OWNER->value,
-                'description' => 'view farms'
-            ],
-            [
-                'name' => 'edit',
-                'group' => Role::ORGANIZATION_OWNER->value,
-                'description' => 'edit in farm'
-            ],
-            [
-                'name' => 'create',
-                'group' => Role::ORGANIZATION_OWNER->value,
-                'description' => 'create in farm'
-            ],
-            [
-                'name' => 'delete',
-                'group' => Role::ORGANIZATION_OWNER->value,
-                'description' => 'delete in farm'
-            ],
-            // farm team owner
-            [
-                'name' => 'view',
-                'group' => Role::FARM_TEAM_OWNER->value,
-                'description' => 'view farms'
-            ],
-            [
-                'name' => 'edit',
-                'group' => Role::FARM_TEAM_OWNER->value,
-                'description' => 'edit in farm'
-            ],
-            [
-                'name' => 'create',
-                'group' => Role::FARM_TEAM_OWNER->value,
-                'description' => 'create in farm'
-            ],
-            [
-                'name' => 'delete',
-                'group' => Role::FARM_TEAM_OWNER->value,
+                'group' => 'few',
                 'description' => 'delete in farm'
             ],
         ];
@@ -188,10 +99,10 @@ class RoleSeeder extends Seeder
             Permission::updateOrCreate(
                 [
                     'name' => $permission['name'],
-                    'group' => $permission['group']
                 ],
                 [
                     'description' => $permission['description'],
+                    'group' => $permission['group']
                 ]
             );
         });
@@ -208,16 +119,24 @@ class RoleSeeder extends Seeder
                 ]
             );
 
-            //  if ($role['name'] === Role::VIEW_FARMS->value || $role['name'] === Role::EDIT_FARMS->value) {
+            if ($role['name'] === Role::VIEW_FARMS->value) {
+                $mappedPermissions = collect($permissions)->filter(function ($permission) use ($role) {
+
+                    return $permission['group'] === 'all';
+                })->map(function ($permission) {
+                    return $permission['name'];
+                });
+
+                $role->syncPermissions($mappedPermissions);
+            }
             $mappedPermissions = collect($permissions)->filter(function ($permission) use ($role) {
 
-                return $permission['group'] === $role['name'];
+                return $permission['group'] === 'all';
             })->map(function ($permission) {
                 return $permission['name'];
             });
 
             $role->syncPermissions($mappedPermissions);
-            // }
         });
     }
 }
