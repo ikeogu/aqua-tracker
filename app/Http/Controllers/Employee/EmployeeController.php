@@ -23,6 +23,8 @@ class EmployeeController extends Controller
 
     public function index(Request $request, Farm $farm)
     {
+
+        
         $employees = $farm->users()->where('role', '!=', 'FARM_TEAM_OWNER')
             ->when($request->search, function ($query) use ($request) {
                return  $query->where('first_name', 'like', '%' . $request->search . '%')

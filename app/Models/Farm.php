@@ -57,7 +57,10 @@ class Farm extends Model
 
     public function owner(): User
     {
-        return $this->users()->wherePivot('role', Role::FARM_TEAM_OWNER->value)->first();
+        return $this->users()
+        ->wherePivot('role', Role::FARM_TEAM_OWNER->value)
+        
+        ->first();
     }
 
     public function harvestcustomers(): HasMany

@@ -127,7 +127,7 @@ class DashboardController extends Controller
         foreach ($models as $model) {
             $farmsId = $model::whereBetween('created_at', [$start_date, $end_date])->pluck('farm_id')->unique();
             foreach ($farmsId as $farmId) {
-                $userId = Farm::find($farmId)->tenant->user->id;
+                $userId = Farm::find($farmId)->tenant?->user?->id;
                 if (!isset($tenantCounts[$userId])) {
                     $tenantCounts[] = 1;
                     $tenants[] = $userId;

@@ -98,42 +98,124 @@ class RoleSeeder extends Seeder
                 'description' => 'Can remove',
                 'group' => Role::SUPER_ADMIN->value,
             ],
+            [
+                'name' => 'can view',
+                'group' => Role::VIEW_FARMS->value,
+                'description' => 'Can view farms'
+            ],
+            [
+                'name' => 'can edit',
+                'group' => Role::EDIT_FARMS->value,
+                'description' => 'Can edit farms'
+            ],
+            [
+                'name' => 'can create',
+                'group' => Role::EDIT_FARMS->value,
+                'description' => 'Can edit farms'
+            ],
+            [
+                'name' => 'can view',
+                'group' => Role::EDIT_FARMS->value,
+                'description' => 'Can edit farms'
+            ],
+            // farm admin
+            [
+                'name' => 'can view',
+                'group' => Role::FARM_ADMIN->value,
+                'description' => 'Can view farms'
+            ],
+            [
+                'name' => 'can edit',
+                'group' => Role::FARM_ADMIN->value,
+                'description' => 'Can edit in farm'
+            ],
+            [
+                'name' => 'can create',
+                'group' => Role::FARM_ADMIN->value,
+                'description' => 'Can create in farm'
+            ],
+            [
+                'name' => 'can delete',
+                'group' => Role::FARM_ADMIN->value,
+                'description' => 'Can delete in farm'
+            ],
+            // farm owner
+            [
+                'name' => 'can view',
+                'group' => Role::ORGANIZATION_OWNER->value,
+                'description' => 'Can view farms'
+            ],
+            [
+                'name' => 'can edit',
+                'group' => Role::ORGANIZATION_OWNER->value,
+                'description' => 'Can edit in farm'
+            ],
+            [
+                'name' => 'can create',
+                'group' => Role::ORGANIZATION_OWNER->value,
+                'description' => 'Can create in farm'
+            ],
+            [
+                'name' => 'can delete',
+                'group' => Role::ORGANIZATION_OWNER->value,
+                'description' => 'Can delete in farm'
+            ],
+            // farm team owner
+            [
+                'name' => 'can view',
+                'group' => Role::FARM_TEAM_OWNER->value,
+                'description' => 'Can view farms'
+            ],
+            [
+                'name' => 'can edit',
+                'group' => Role::FARM_TEAM_OWNER->value,
+                'description' => 'Can edit in farm'
+            ],
+            [
+                'name' => 'can create',
+                'group' => Role::FARM_TEAM_OWNER->value,
+                'description' => 'Can create in farm'
+            ],
+            [
+                'name' => 'can delete',
+                'group' => Role::FARM_TEAM_OWNER->value,
+                'description' => 'Can delete in farm'
+            ],
         ];
 
 
-      collect($permissions)->map(function (array $permission) {
-            Permission::updateOrCreate(['name' => $permission['name']],
+        collect($permissions)->map(function (array $permission) {
+            Permission::updateOrCreate(
+                ['name' => $permission['name']],
                 [
-                'description' => $permission['description'],
-                'group' => $permission['group']
-            ]);
+                    'description' => $permission['description'],
+                    'group' => $permission['group']
+                ]
+            );
         });
 
-        collect($roles)->each(function (array $role) use ($permissions){
+        collect($roles)->each(function (array $role) use ($permissions) {
             $role =  ModelsRole::updateOrCreate(
                 [
-                'name' => $role['name'],
-                'title' => $role['title']
+                    'name' => $role['name'],
+                    'title' => $role['title']
                 ],
                 [
-                'description' => $role['description'],
-                'guard_name' => 'api'
-            ]);
+                    'description' => $role['description'],
+                    'guard_name' => 'api'
+                ]
+            );
 
             if ($role['name'] === Role::VIEW_FARMS->value || $role['name'] === Role::EDIT_FARMS->value) {
                 $mappedPermissions = collect($permissions)->filter(function ($permission) use ($role) {
 
-                  return $permission['group'] === $role['name'];
+                    return $permission['group'] === $role['name'];
                 })->map(function ($permission) {
                     return $permission['name'];
                 });
 
                 $role->syncPermissions($mappedPermissions);
             }
-
-
         });
-
-
     }
 }
