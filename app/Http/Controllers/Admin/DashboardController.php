@@ -73,9 +73,7 @@ class DashboardController extends Controller
 
             ->paginate($request->per_page ?? 10);
 
-        Log::info("::::::: Admin users :::::::");
-        Log::debug(['users' => $users]);
-
+       
         $lastSeen = match ($request->input('duration')) {
             'today' => ['start_date' => Carbon::now()->startOfDay(), 'end_date' => now()->endOfDay()],
             'yesterday' => ['start_date' => Carbon::now()->subDay()->startOfDay(), 'end_date' => now()->endOfDay()],
