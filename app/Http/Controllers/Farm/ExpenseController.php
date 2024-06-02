@@ -16,8 +16,16 @@ class ExpenseController extends Controller
 {
     //
 
-    public function store(CreateExpenseRequest $request, Farm $farm) : JsonResponse
+    public function store(CreateExpenseRequest $request, Farm $farm): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('create')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
 
         $expense = $farm->expenses()->create(array_merge($request->validated(), ['splitted_for_batch' => $request->splitted_for_batch]));
 
@@ -28,8 +36,16 @@ class ExpenseController extends Controller
         );
     }
 
-    public function update(UpdateExpenseRequest $request, Farm $farm, Expense $expense) : JsonResponse
+    public function update(UpdateExpenseRequest $request, Farm $farm, Expense $expense): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('edit')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $expense = $farm->expenses()->findOrFail($expense->id);
         $expense->update(array_merge($request->validated(), ['splitted_for_batch' => json_encode($request->splitted_for_batch)]));
 
@@ -40,8 +56,16 @@ class ExpenseController extends Controller
         );
     }
 
-    public function destroy(Farm $farm, Expense $expense) : JsonResponse
+    public function destroy(Farm $farm, Expense $expense): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('delete')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $expense = $farm->expenses()->findOrFail($expense->id);
         $expense->delete();
 
@@ -52,8 +76,17 @@ class ExpenseController extends Controller
         );
     }
 
-    public function index(Request $request, Farm $farm) : JsonResponse
+    public function index(Request $request, Farm $farm): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('view')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
+
         $expenses = $farm->expenses()->when($request->search, function ($query) use ($request) {
             return $query->where('description', 'like', '%' . $request->search . '%')
                 ->orWhere('total_amount', 'like', '%' . $request->search . '%');
@@ -64,6 +97,5 @@ class ExpenseController extends Controller
             data: ExpenseResource::collection($expenses)->response()->getData(),
             code: HttpStatusCode::SUCCESSFUL->value
         );
-
     }
 }

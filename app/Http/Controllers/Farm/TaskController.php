@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Farm;
 
+use App\Enums\HttpStatusCode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Resources\TaskResource;
@@ -13,8 +14,16 @@ use Illuminate\Http\Request;
 class TaskController extends Controller
 {
 
-    public function index(Request $request, Farm $farm) : JsonResponse
+    public function index(Request $request, Farm $farm): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('view')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $tasks = TaskResource::collection($farm->tasks()->latest()->paginate($request->per_page ?? 10))->response()->getData();
 
         return $this->success(
@@ -23,9 +32,16 @@ class TaskController extends Controller
             code: 200
         );
     }
-    public function store(CreateTaskRequest $request, Farm $farm) : JsonResponse
+    public function store(CreateTaskRequest $request, Farm $farm): JsonResponse
     {
-
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('create')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $task =  $farm->tasks()->create($request->validated());
 
         return $this->success(
@@ -35,8 +51,16 @@ class TaskController extends Controller
         );
     }
 
-    public function update(Request $request, Farm $farm, Task $task) : JsonResponse
+    public function update(Request $request, Farm $farm, Task $task): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('edit')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $farm->tasks()->findOrFail($task->id);
         $task->update($request->all());
 
@@ -47,8 +71,16 @@ class TaskController extends Controller
         );
     }
 
-    public function destroy(Farm $farm, Task $task) : JsonResponse
+    public function destroy(Farm $farm, Task $task): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('delete')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $farm->tasks()->findOrFail($task->id);
         $task->delete();
 

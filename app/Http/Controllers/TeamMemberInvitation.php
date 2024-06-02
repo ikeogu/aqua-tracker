@@ -19,11 +19,21 @@ class TeamMemberInvitation extends Controller
     public function __invoke(Request $request): JsonResponse
 
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('create')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
+
         $request->validate([
             'emails' => 'required|array',
             'emails.*' => 'required|email',
             'role' => 'required|exists:roles,id',
         ]);
+
 
         /** @var Role $role */
         $role = Role::find($request->role);
@@ -63,6 +73,14 @@ class TeamMemberInvitation extends Controller
 
     public function updateTeamMember(Request $request, string $teamMemberId): JsonResponse
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('edit')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
         $request->validate([
             'first_name' => 'nullable|string',
             'last_name' => 'nullable|string',
@@ -99,6 +117,15 @@ class TeamMemberInvitation extends Controller
 
     public function deleteTeamMember(string $teamMemberId): JsonResponse
     {
+
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('delete')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
 
         /** @var Tenant $tenant */
         $tenant = auth()->user()->tenant;

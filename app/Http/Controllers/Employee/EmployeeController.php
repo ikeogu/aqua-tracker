@@ -23,41 +23,58 @@ class EmployeeController extends Controller
 
     public function index(Request $request, Farm $farm)
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('view')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
 
-        
         $employees = $farm->users()->where('role', '!=', 'FARM_TEAM_OWNER')
             ->when($request->search, function ($query) use ($request) {
-               return  $query->where('first_name', 'like', '%' . $request->search . '%')
+                return  $query->where('first_name', 'like', '%' . $request->search . '%')
                     ->orWhere('last_name', 'like', '%' . $request->search . '%')
                     ->orWhere('email', 'like', '%' . $request->search . '%')
                     ->orWhere('phone_number', 'like', '%' . $request->search . '%');
             })
 
-        ->paginate($request->per_page ?? 20);
+            ->paginate($request->per_page ?? 20);
 
         return $this->success(
-           message: 'Employees retrieved successfully',
-           data:EmployeeResource::collection($employees)->response()->getData(),
-           code: HttpStatusCode::SUCCESSFUL->value
+            message: 'Employees retrieved successfully',
+            data: EmployeeResource::collection($employees)->response()->getData(),
+            code: HttpStatusCode::SUCCESSFUL->value
         );
-
     }
 
     public function store(CreateEmployeeRequest $request, Farm $farm)
     {
 
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('create')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
+
         $pwd = Str::random(8);
-        $user = User::firstOrCreate(['email' => $request->email],
-            array_merge(Arr::except($request->validated(),['role', 'phone_number']), [
-            'password' => Hash::make($pwd)
-        ]));
+        $user = User::firstOrCreate(
+            ['email' => $request->email],
+            array_merge(Arr::except($request->validated(), ['role', 'phone_number']), [
+                'password' => Hash::make($pwd)
+            ])
+        );
 
         $farm->users()->attach($user->id, [
             'role' => Role::getRoleNames($request->role),
             'data' => json_encode(['phone_number' => $request->phone_number])
         ]);
 
-        Mail::to($user->email)->send(new EmployeeInviteMail($user,$pwd, $farm, $request->role));
+        Mail::to($user->email)->send(new EmployeeInviteMail($user, $pwd, $farm, $request->role));
 
         return $this->success(
             message: 'Employee added successfully',
@@ -68,12 +85,20 @@ class EmployeeController extends Controller
 
     public function update(UpdateEmployeeRequest $request, Farm $farm, User $employee)
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('edit')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
         $farm->users()->updateExistingPivot($employee->id, [
             'role' => Role::getRoleNames($request->role),
             'data' => json_encode(['phone_number' => $request->phone_number])
         ]);
 
-        $employee->update(Arr::except($request->validated(),['role', 'phone_number']));
+        $employee->update(Arr::except($request->validated(), ['role', 'phone_number']));
 
         return $this->success(
             message: 'Employee updated successfully',
@@ -84,6 +109,14 @@ class EmployeeController extends Controller
 
     public function destroy(Farm $farm, User $employee)
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('delete')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
         $farm->users()->detach($employee->id);
 
         return $this->success(
@@ -91,6 +124,4 @@ class EmployeeController extends Controller
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }
-
-
 }

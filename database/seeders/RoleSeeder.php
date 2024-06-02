@@ -22,7 +22,7 @@ class RoleSeeder extends Seeder
             [
                 'title' => 'Organization Owner',
                 'name' => Role::ORGANIZATION_OWNER->value,
-                'description' => 'Can manage and info abt organization'
+                'description' => 'manage and info abt organization'
             ],
             [
                 'title' => 'Organization Team Member',
@@ -33,38 +33,38 @@ class RoleSeeder extends Seeder
             [
                 'title' => 'Farm Team Owner',
                 'name' => Role::FARM_TEAM_OWNER->value,
-                'description' => 'Can manage and info abt farm'
+                'description' => 'manage and info abt farm'
             ],
             [
                 'title' => 'Farm Admin',
                 'name' => Role::FARM_ADMIN->value,
-                'description' => 'Can manage and info abt farm'
+                'description' => 'manage and info abt farm'
             ],
             [
                 'title' => 'Farm Employee',
                 'name' => Role::FARM_EMPLOYEE->value,
-                'description' => 'Can manage and info abt farm'
+                'description' => 'manage and info abt farm'
             ],
             [
                 'title' => 'Super Admin',
                 'name' => Role::SUPER_ADMIN->value,
-                'description' => 'Can manage and info abt farm'
+                'description' => 'manage and info abt farm'
             ],
             [
                 'title' => 'Admin',
                 'name' => Role::ADMIN->value,
-                'description' => 'Can mamange entire application'
+                'description' => 'mamange entire application'
             ],
 
             [
                 'title' => 'View Farms',
                 'name' => Role::VIEW_FARMS->value,
-                'description' => 'Can view farms'
+                'description' => 'view farms'
             ],
             [
                 'title' => 'Edit Farms',
                 'name' => Role::EDIT_FARMS->value,
-                'description' => 'Can edit farms'
+                'description' => 'edit farms'
             ],
 
         ];
@@ -72,114 +72,114 @@ class RoleSeeder extends Seeder
         $permissions = [
 
             [
-                'name' => 'can view',
-                'description' => 'Can view',
+                'name' => 'view',
+                'description' => 'view',
                 'group' => Role::ADMIN->value,
             ],
 
             [
-                'name' => 'can edit',
-                'description' => 'Can edit',
+                'name' => 'edit',
+                'description' => 'edit',
                 'group' => Role::ADMIN->value,
             ],
 
             [
-                'name' => 'can view',
-                'description' => 'Can view',
+                'name' => 'view',
+                'description' => 'view',
                 'group' => Role::SUPER_ADMIN->value,
             ],
             [
-                'name' => 'can edit',
-                'description' => 'Can edit',
+                'name' => 'edit',
+                'description' => 'edit',
                 'group' => Role::SUPER_ADMIN->value,
             ],
             [
                 'name' => 'remove',
-                'description' => 'Can remove',
+                'description' => 'remove',
                 'group' => Role::SUPER_ADMIN->value,
             ],
             [
-                'name' => 'can view',
+                'name' => 'view',
                 'group' => Role::VIEW_FARMS->value,
-                'description' => 'Can view farms'
+                'description' => 'view farms'
             ],
             [
-                'name' => 'can edit',
+                'name' => 'edit',
                 'group' => Role::EDIT_FARMS->value,
-                'description' => 'Can edit farms'
+                'description' => 'edit farms'
             ],
             [
-                'name' => 'can create',
+                'name' => 'create',
                 'group' => Role::EDIT_FARMS->value,
-                'description' => 'Can edit farms'
+                'description' => 'edit farms'
             ],
             [
-                'name' => 'can view',
+                'name' => 'view',
                 'group' => Role::EDIT_FARMS->value,
-                'description' => 'Can edit farms'
+                'description' => 'edit farms'
             ],
             // farm admin
             [
-                'name' => 'can view',
+                'name' => 'view',
                 'group' => Role::FARM_ADMIN->value,
-                'description' => 'Can view farms'
+                'description' => 'view farms'
             ],
             [
-                'name' => 'can edit',
+                'name' => 'edit',
                 'group' => Role::FARM_ADMIN->value,
-                'description' => 'Can edit in farm'
+                'description' => 'edit in farm'
             ],
             [
-                'name' => 'can create',
+                'name' => 'create',
                 'group' => Role::FARM_ADMIN->value,
-                'description' => 'Can create in farm'
+                'description' => 'create in farm'
             ],
             [
-                'name' => 'can delete',
+                'name' => 'delete',
                 'group' => Role::FARM_ADMIN->value,
-                'description' => 'Can delete in farm'
+                'description' => 'delete in farm'
             ],
             // farm owner
             [
-                'name' => 'can view',
+                'name' => 'view',
                 'group' => Role::ORGANIZATION_OWNER->value,
-                'description' => 'Can view farms'
+                'description' => 'view farms'
             ],
             [
-                'name' => 'can edit',
+                'name' => 'edit',
                 'group' => Role::ORGANIZATION_OWNER->value,
-                'description' => 'Can edit in farm'
+                'description' => 'edit in farm'
             ],
             [
-                'name' => 'can create',
+                'name' => 'create',
                 'group' => Role::ORGANIZATION_OWNER->value,
-                'description' => 'Can create in farm'
+                'description' => 'create in farm'
             ],
             [
-                'name' => 'can delete',
+                'name' => 'delete',
                 'group' => Role::ORGANIZATION_OWNER->value,
-                'description' => 'Can delete in farm'
+                'description' => 'delete in farm'
             ],
             // farm team owner
             [
-                'name' => 'can view',
+                'name' => 'view',
                 'group' => Role::FARM_TEAM_OWNER->value,
-                'description' => 'Can view farms'
+                'description' => 'view farms'
             ],
             [
-                'name' => 'can edit',
+                'name' => 'edit',
                 'group' => Role::FARM_TEAM_OWNER->value,
-                'description' => 'Can edit in farm'
+                'description' => 'edit in farm'
             ],
             [
-                'name' => 'can create',
+                'name' => 'create',
                 'group' => Role::FARM_TEAM_OWNER->value,
-                'description' => 'Can create in farm'
+                'description' => 'create in farm'
             ],
             [
-                'name' => 'can delete',
+                'name' => 'delete',
                 'group' => Role::FARM_TEAM_OWNER->value,
-                'description' => 'Can delete in farm'
+                'description' => 'delete in farm'
             ],
         ];
 

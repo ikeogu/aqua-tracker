@@ -17,8 +17,16 @@ class FarmController extends Controller
 {
     //
 
-    public function store(CreateFarmRequest $request) : JsonResponse
+    public function store(CreateFarmRequest $request): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('create')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $tenant = $request->user()->tenant;
 
 
@@ -39,6 +47,14 @@ class FarmController extends Controller
 
     public function index(Request $request)
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('view')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $tenants = $request->user()->tenants;
 
         $organizations = $tenants->map(function ($tenant) {
@@ -50,7 +66,7 @@ class FarmController extends Controller
                     'organization_name' => $tenant->organization_name,
                     'no_of_farms_owned' => $tenant->no_of_farms_owned,
 
-                  //  'capital' => $tenant->capital
+                    //  'capital' => $tenant->capital
                 ],
                 'farms' => $tenant->farms->map(function ($farm) {
                     return [
@@ -71,8 +87,16 @@ class FarmController extends Controller
         );
     }
 
-    public function update(UpdateFarmRequest $request, Farm $farm) : JsonResponse
+    public function update(UpdateFarmRequest $request, Farm $farm): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('edit')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $farm->update($request->validated());
 
         return $this->success(
@@ -82,12 +106,13 @@ class FarmController extends Controller
         );
     }
 
-    public function destroy(Farm $farm) : JsonResponse
+    public function destroy(Farm $farm): JsonResponse
     {
+
         /** @var User $user */
         $user = auth()->user();
 
-        if(!$user->isFarmOwner($farm)) {
+        if (!$user->isFarmOwner($farm)) {
             return $this->error(
                 message: 'Unauthorized',
                 code: HttpStatusCode::BAD_REQUEST->value
@@ -101,4 +126,3 @@ class FarmController extends Controller
         );
     }
 }
-

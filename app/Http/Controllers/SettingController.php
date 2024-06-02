@@ -32,20 +32,6 @@ class SettingController extends Controller
             $user->addMediaFromRequest('profile_picture')->toMediaCollection('profile_picture');
         }
 
-
-       // if($user->hasAnyRole([Role::ORGANIZATION_OWNER->value, Role::FARM_ADMIN->value])){
-
-             /** @var \App\Models\Tenant $tenant */
-            $tenant  = $user->tenant;
-
-            $tenant->update([
-                'organization_name' => $data['organization_name'] ?? $tenant->organization_name,
-                'location' => $data['location'] ?? $tenant->location,
-            ]);
-
-      //  }
-
-
         return $this->success(
             message: 'Profile updated successfully',
             data: new UserResource($user),

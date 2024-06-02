@@ -15,6 +15,14 @@ class BeneficiaryController extends Controller
 
     public function store(Request $request, Farm $farm) : JsonResponse
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('create')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
         // Create a new beneficiary
         $request->validate([
             'harvest_customer_id' => 'required|exists:harvest_customers,id',
@@ -40,7 +48,14 @@ class BeneficiaryController extends Controller
 
     public function index(Request $request, Farm $farm) : JsonResponse
     {
-
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('view')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
         $beneficiaries = $farm->beneficiaries()->
         when($request->search, function ($query) use ($request) {
             return $query->where('harvest_customer_id', 'like', '%' . $request->search . '%')
@@ -68,6 +83,14 @@ class BeneficiaryController extends Controller
 
     public function destroy(Farm $farm,string $beneficiary) : JsonResponse
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('delete')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
         $beneficiary = $farm->beneficiaries()->where('harvest_customer_id', $beneficiary)->first();
         if(!$beneficiary){
             return $this->error(

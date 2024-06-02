@@ -17,75 +17,107 @@ class PondController extends Controller
 {
     //
 
-    public function index(Request $request, Farm $farm) : JsonResponse
+    public function index(Request $request, Farm $farm): JsonResponse
     {
-
-        $ponds= $farm->ponds()->latest()
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('view')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
+        $ponds = $farm->ponds()->latest()
             ->latest()->paginate($request->per_page ?? 20);
 
         return $this->success(
-            message:"Ponds fetched Successfully",
+            message: "Ponds fetched Successfully",
             data: PondResource::collection($ponds)->response()->getData(true),
             code: HttpStatusCode::SUCCESSFUL->value
         );
-
     }
 
-    public function store(CreatePondRequest $request, Farm $farm) : JsonResponse
+    public function store(CreatePondRequest $request, Farm $farm): JsonResponse
     {
-
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('create')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $pond = $farm->ponds()->create($request->validated());
 
         return $this->success(
-            message:"Pond Created Successfully",
+            message: "Pond Created Successfully",
             data: new PondResource($pond),
             code: HttpStatusCode::CREATED->value
         );
-
     }
 
-    public function show(Pond $pond, Farm $farm) : JsonResponse
+    public function show(Pond $pond, Farm $farm): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('view')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $pond = $farm->ponds()->find($pond->id);
 
         return $this->success(
-            message:"Pond fetched Successfully",
+            message: "Pond fetched Successfully",
             data: new PondResource($pond),
             code: HttpStatusCode::SUCCESSFUL->value
         );
-
     }
 
-    public function update(UpdatePondRequest $request, Farm $farm, Pond $pond) : JsonResponse
+    public function update(UpdatePondRequest $request, Farm $farm, Pond $pond): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('edit')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
 
         $farm->ponds()->find($pond->id);
 
         $pond->update($request->validated());
 
         return $this->success(
-            message:"Pond Updated Successfully",
+            message: "Pond Updated Successfully",
             data: new PondResource($pond),
             code: HttpStatusCode::SUCCESSFUL->value
         );
-
     }
 
-    public function destroy(Farm $farm, Pond $pond) : JsonResponse
+    public function destroy(Farm $farm, Pond $pond): JsonResponse
     {
-
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('delete')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $farm->ponds()->find($pond->id);
         $pond->delete();
 
         return $this->success(
-            message:"Pond Deleted Successfully",
+            message: "Pond Deleted Successfully",
             code: HttpStatusCode::SUCCESSFUL->value
         );
-
     }
 
 
-    public function farmStatictics(Farm $farm) : JsonResponse
+    public function farmStatictics(Farm $farm): JsonResponse
     {
 
         $ponds = $farm->ponds()->get();
@@ -101,7 +133,7 @@ class PondController extends Controller
 
 
         return $this->success(
-            message:"Farm Statistics fetched Successfully",
+            message: "Farm Statistics fetched Successfully",
             data: [
                 'total_ponds' => $totalPonds,
                 'total_capacity' => $totalPondsCapacity,
@@ -111,8 +143,5 @@ class PondController extends Controller
             ],
             code: HttpStatusCode::SUCCESSFUL->value
         );
-
     }
-
-
 }

@@ -19,6 +19,14 @@ class OrganizationController extends Controller
     public function __invoke(UpdateOrganazationRequest $request, Tenant $tenant) : JsonResponse
 
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('edit')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
         /** @var User $user */
         $user = auth()->user();
 

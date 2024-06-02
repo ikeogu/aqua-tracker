@@ -19,7 +19,14 @@ class BatchController extends Controller
     //
     public function store(CreateBatchRequest $request, Farm $farm) : JsonResponse
     {
-
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('create')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
         /** @var Batch $batch */
         $batch = $farm->batches()->create($request->validated());
 
@@ -59,6 +66,14 @@ class BatchController extends Controller
 
     public function getBatches(Request $request, Farm $farm): JsonResponse
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('view')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
 
         $batches = QueryBuilder::for(Batch::class)
         ->where('farm_id', $farm->id)
@@ -93,12 +108,16 @@ class BatchController extends Controller
     }
 
 
-
-
-
-
     public function update(UpdateBatchRequest $request,Farm $farm,  Batch $batch) : JsonResponse
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('edit')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
         $batch = $farm->batches()->find($batch->id);
 
         $batch->update($request->validated());
@@ -112,6 +131,14 @@ class BatchController extends Controller
 
     public function show(Farm $farm, Batch $batch) : JsonResponse
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('edit')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
         $batch = $farm->batches()->find($batch->id);
         return $this->success(
             message:"Batch fetched Successfully",
@@ -122,6 +149,14 @@ class BatchController extends Controller
 
     public function destroy (Farm $farm, Batch $batch) : JsonResponse
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('delete')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
         $batch = $farm->batches()->find($batch->id);
         $batch->delete();
 

@@ -21,7 +21,14 @@ class PurchaseController extends Controller
 
     public function store(Request $request, Farm $farm, Harvest $harvest) : JsonResponse
     {
-
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('create')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
         $harvest = $farm->harvests()->find($harvest->id);
         $purchases =  Arr::map($request->data, function($purchase) use($harvest, $farm){
           return  Purchase::create(
@@ -39,6 +46,14 @@ class PurchaseController extends Controller
 
     public function update(Request $request, Farm $farm, Harvest $harvest) : JsonResponse
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('edit')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
 
         $harvest = $farm->harvests()->find($harvest->id);
         $purchases =  Arr::map($request->data, function($purchase) use($harvest){
@@ -57,6 +72,14 @@ class PurchaseController extends Controller
 
     public function destroy( Purchase $purchase) : JsonResponse
     {
+         /** @var User $user */
+         $user = auth()->user();
+         if ($user->cannot('delete')) {
+             return $this->error(
+                 message: "unathourized area.",
+                 code: HttpStatusCode::FORBIDDEN->value
+             );
+         }
 
         $purchase->delete();
 

@@ -17,22 +17,38 @@ use Illuminate\Database\Eloquent\Builder;
 class InventoryController extends Controller
 {
     //
-    public function store(CreateInventoryRequest $request, Farm $farm) : JsonResponse
+    public function store(CreateInventoryRequest $request, Farm $farm): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('create')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         // Create a new inventory
         $inventory = $farm->inventories()->create(
-            array_merge($request->validated(), ['status' => Status::INSTOCK->value ])
+            array_merge($request->validated(), ['status' => Status::INSTOCK->value])
         );
 
         return $this->success(
             message: 'Inventory created successfully',
-            data :  new InventoryResource($inventory),
+            data: new InventoryResource($inventory),
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }
 
-    public function index(Request $request, Farm $farm) : JsonResponse
+    public function index(Request $request, Farm $farm): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('view')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $inventories = $farm->inventories()->when($request->search, function (Builder $query) use ($request) {
             return $query->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('description', 'like', '%' . $request->search . '%')
@@ -40,7 +56,6 @@ class InventoryController extends Controller
                 ->orWhere('price', 'like', '%' . $request->search . '%')
                 ->orWhere('vendor', 'like', '%' . $request->search . '%')
                 ->orWhere('status', 'like', '%' . $request->search . '%');
-
         })->latest()->paginate($request->per_page ?? 20);
 
         return $this->success(
@@ -50,8 +65,16 @@ class InventoryController extends Controller
         );
     }
 
-    public function show(Farm $farm, Inventory $inventory) : JsonResponse
+    public function show(Farm $farm, Inventory $inventory): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('view')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $inventory = $farm->inventories()->find($inventory->id);
 
         if (!$inventory) {
@@ -68,8 +91,16 @@ class InventoryController extends Controller
         );
     }
 
-    public function update(UpdateInventoryRequest $request, Farm $farm, Inventory $inventory) : JsonResponse
+    public function update(UpdateInventoryRequest $request, Farm $farm, Inventory $inventory): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('edit')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $inventory = $farm->inventories()->find($inventory->id);
 
         if (!$inventory) {
@@ -88,8 +119,16 @@ class InventoryController extends Controller
         );
     }
 
-    public function destroy(Farm $farm, Inventory $inventory) : JsonResponse
+    public function destroy(Farm $farm, Inventory $inventory): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('delete')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $inventory = $farm->inventories()->find($inventory->id);
 
         if (!$inventory) {
@@ -107,5 +146,4 @@ class InventoryController extends Controller
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }
-
 }

@@ -24,6 +24,14 @@ class HarvestController extends Controller
     //
     public function index(Request $request, Farm $farm): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('view')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $harvests = $farm->harvests()->when($request->search, function (Builder $query) use ($request) {
             return $query->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('consultant', 'like', '%' . $request->search . '%')
@@ -91,6 +99,14 @@ class HarvestController extends Controller
 
     public function show(Farm $farm, Harvest $harvest): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('view')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $harvest = $farm->harvests()->find($harvest->id);
 
         if (!$harvest) {
@@ -109,6 +125,14 @@ class HarvestController extends Controller
 
     public function store(createHarvestRequest $request, Farm $farm): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('create')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $harvest = $farm->harvests()->create($request->validated());
 
         $batch = $farm->batches()->find($request->batch_id);
@@ -126,6 +150,14 @@ class HarvestController extends Controller
 
     public function update(UpdateHarvestRequest $request, Farm $farm, Harvest $harvest): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('edit')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
 
         $harvest->update($request->validated());
 

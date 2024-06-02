@@ -21,8 +21,16 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class HarvestCustomerController extends Controller
 {
 
-    public function index(Request $request, Farm $farm, Harvest $harvest) : mixed
+    public function index(Request $request, Farm $farm, Harvest $harvest): mixed
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('view')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $harvest = $farm->harvests()->find($harvest->id);
         $customers = $harvest->customers()->when($request->search, function ($query) use ($request) {
             return $query->where('name', 'like', '%' . $request->search . '%')
@@ -48,11 +56,18 @@ class HarvestCustomerController extends Controller
             data: CustomerResource::collection($customers)->response()->getData(),
             code: HttpStatusCode::SUCCESSFUL->value
         );
-
     }
 
-    public function show(Farm $farm, Harvest $harvest, HarvestCustomer $customer) : JsonResponse
+    public function show(Farm $farm, Harvest $harvest, HarvestCustomer $customer): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('view')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $harvest = $farm->harvests()->find($harvest->id);
         $customer = $harvest->customers()->find($customer->id);
 
@@ -70,8 +85,16 @@ class HarvestCustomerController extends Controller
         );
     }
 
-    public function store(CreateCustomerRequest $request, Farm $farm, Harvest $harvest) : JsonResponse
+    public function store(CreateCustomerRequest $request, Farm $farm, Harvest $harvest): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('create')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $harvest = $farm->harvests()->find($harvest->id);
 
         $customer = $harvest->customers()->create(
@@ -85,8 +108,16 @@ class HarvestCustomerController extends Controller
         );
     }
 
-    public function update(UpdateCustomerRequest $request, Farm $farm, Harvest $harvest, HarvestCustomer $customer) : JsonResponse
+    public function update(UpdateCustomerRequest $request, Farm $farm, Harvest $harvest, HarvestCustomer $customer): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('edit')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $harvest = $farm->harvests()->find($harvest->id);
         $customer = $harvest->customers()->find($customer->id);
 

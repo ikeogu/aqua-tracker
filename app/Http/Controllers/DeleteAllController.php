@@ -13,13 +13,19 @@ class DeleteAllController extends Controller
 
     public function __construct(
         public DeleteAllService $deleteAllService
-    )
-    {
-
+    ) {
     }
 
-    public function __invoke(Request $request) : JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
+        if ($user->cannot('delete')) {
+            return $this->error(
+                message: "unathourized area.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         $request->validate([
             'model' => 'required|string|in:tasks,ponds,farms,batches,customers,expenses,employees,inventories,harvests',
             'ids' => 'required|array',
@@ -30,7 +36,7 @@ class DeleteAllController extends Controller
         $this->deleteAllService->execute($request->model, $request->ids);
 
         return $this->success(
-            message: $request->model. " deleted successfully",
+            message: $request->model . " deleted successfully",
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }
