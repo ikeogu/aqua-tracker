@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        SubscriptionPlan::updateOrCreate(
+     /*    SubscriptionPlan::updateOrCreate(
             ['title' => 'Basic Plan'],
             [
                 'description' => 'Just basic plan',
@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
                 ]
             ]
         );
-        
+
        $user = User::updateOrCreate([
             'first_name' => 'Super Admin',
             "last_name" => "User",
@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
 
         $role =ModelsRole::where('name',Role::SUPER_ADMIN->value)->first();
         $user->assignRole($role);
-
+ */
        $this->call(
             RoleSeeder::class,
        );
