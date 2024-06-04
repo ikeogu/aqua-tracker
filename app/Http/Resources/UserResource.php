@@ -68,6 +68,7 @@ class UserResource extends JsonResource
 
                     'organization_name' => $tenant->organization_name,
                     'no_of_farms_owned' => $tenant->no_of_farms_owned,
+                    'is_subscription_active' => ($tenant?->subscribedPlans()->where('status', 'active')->exists()) ? true : false
                     //'capital' => $tenant->capital
                 ],
                 'farms' => $tenant->farms->map(function ($farm) {
