@@ -35,7 +35,7 @@ class UserResource extends JsonResource
         ];
     }
 
-    public function farmOwner() : array
+    public function farmOwner(): array
     {
         return [
             'id' => $this->tenant?->id,
@@ -57,28 +57,26 @@ class UserResource extends JsonResource
         ];
     }
 
-    public function others() : mixed
+    public function others(): mixed
     {
-       return $this->whenLoaded('tenants',function () {
-            return $this->tenants->map(function ($tenant) {
-                return [
-                    'id' => $tenant->id,
-                    'type' => 'tenant',
-                    'attributes' => [
 
-                        'organization_name' => $tenant->organization_name,
-                        'no_of_farms_owned' => $tenant->no_of_farms_owned,
-                        //'capital' => $tenant->capital
-                    ],
-                    'farms' => $tenant->farms->map(function ($farm) {
-                        return [
-                            'id' => $farm->id,
-                            'name' => $farm->name,
-                        ];
-                    }),
-                ];
-            });
+        return $this->tenants->map(function ($tenant) {
+            return [
+                'id' => $tenant->id,
+                'type' => 'tenant',
+                'attributes' => [
 
+                    'organization_name' => $tenant->organization_name,
+                    'no_of_farms_owned' => $tenant->no_of_farms_owned,
+                    //'capital' => $tenant->capital
+                ],
+                'farms' => $tenant->farms->map(function ($farm) {
+                    return [
+                        'id' => $farm->id,
+                        'name' => $farm->name,
+                    ];
+                }),
+            ];
         });
     }
 }
