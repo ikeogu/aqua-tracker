@@ -25,6 +25,7 @@ class CheckFarmerRole
             Role::FARM_EMPLOYEE,
             Role::FARM_TEAM_OWNER,
             Role::VIEW_FARMS,
+            Role::EDIT_FARMS,
             Role::ORGANIZATION_OWNER,
             Role::ORGANIZATION_TEAM_MEMBER,
         ];
