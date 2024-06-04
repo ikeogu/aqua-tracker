@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Actions;
+
 use App\Enums\Role;
 use App\Enums\Status;
 use App\Models\User;

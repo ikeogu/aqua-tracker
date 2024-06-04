@@ -60,4 +60,13 @@ class OrganizationController extends Controller
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }
+
+ /*    public function destroy(Tenant $tenant) : JsonResponse
+    {
+        try {
+
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    } */
 }

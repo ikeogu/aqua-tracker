@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\BootstrapTeamMember as ActionsBootstrapTeamMember;
 use App\Actions\TeamMemberInvitation as ActionsTeamMemberInvitation;
 use App\Enums\HttpStatusCode;
 use App\Enums\Role as EnumsRole;
@@ -148,7 +149,7 @@ class TeamMemberInvitation extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        BootstrapTeamMember::execute($user, $request);
+        ActionsBootstrapTeamMember::execute($user, $request);
 
         return $this->success(
             message: "Team member onbaorded successfully",
