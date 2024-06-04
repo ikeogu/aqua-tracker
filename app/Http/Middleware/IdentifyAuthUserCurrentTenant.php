@@ -20,11 +20,13 @@ class IdentifyAuthUserCurrentTenant
          /** @var User $user */
          $user = auth()->user();
 
-         if (!$user->tenant) { //@phpstan-ignore-line
+         $tenant = $user->tenant ?? $user->tenants()->latest()->first();
+
+         if (!$tenant) { //@phpstan-ignore-line
              throw new Exception('Unable to identify tenant with payload', 500);
          }
-        
-         tenancy()->initialize($user->tenant);
+
+         tenancy()->initialize($tenant);
 
          return $next($request);
     }
