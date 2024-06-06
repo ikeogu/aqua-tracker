@@ -24,7 +24,7 @@ class PurchaseController extends Controller
     {
          /** @var User $user */
          $user = auth()->user();
-         if ($user->cannot('create')) {
+         if ($user->hasRole(Role::VIEW_FARMS->value)) {
              return $this->error(
                  message: "unathourized area.",
                  code: HttpStatusCode::FORBIDDEN->value
@@ -49,7 +49,7 @@ class PurchaseController extends Controller
     {
          /** @var User $user */
          $user = auth()->user();
-         if ($user->cannot('edit')) {
+         if ($user->hasRole(Role::VIEW_FARMS->value)) {
              return $this->error(
                  message: "unathourized area.",
                  code: HttpStatusCode::FORBIDDEN->value
