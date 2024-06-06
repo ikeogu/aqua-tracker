@@ -9,6 +9,7 @@ use App\Models\SubscriptionPlan;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Notifications\PaymentInfoNotification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -53,9 +54,9 @@ class PaymentService
 
         $existingPlan = SubscribedPlan::where('tenant_id', $user->tenant->id)->latest()->first();
 
-        $newStartsAt = ($existingPlan?->end_date) ? $existingPlan?->end_date : now();
+        $newStartsAt = ($existingPlan?->end_date) ? Carbon::parse($existingPlan?->end_date) : now();
 
-        Log::debug(['$request->no_of_months' => $request->no_of_months]);
+     
         if ($request->no_of_months == 1) {
             $newExpiresAt = $newStartsAt->addDays(30);
         } else {
