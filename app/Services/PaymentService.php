@@ -10,6 +10,7 @@ use App\Models\Tenant;
 use App\Models\User;
 use App\Notifications\PaymentInfoNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PaymentService
 {
@@ -48,8 +49,10 @@ class PaymentService
 
         $existingPlan = SubscribedPlan::where('tenant_id', $user->tenant->id)->latest()->first();
 
+        Log::debug(['existingPlan' => $existingPlan]);
         $newStartsAt = ($existingPlan?->expires_at) ? $existingPlan?->expires_at : now();
 
+        Log::debug(['newStartsAt' => $newStartsAt]);
 
         if ($request->no_of_months == 1) {
             $newExpiresAt = $newStartsAt->addDays(30);
