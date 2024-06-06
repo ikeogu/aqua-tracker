@@ -80,7 +80,7 @@ Route::get('/subscribe-users', function () {
             app(PaymentService::class)->addFreePlanToTenant($tenant);
 
         }
-        return;
+      
     }
 
     return 'users subscribed';
