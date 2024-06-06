@@ -51,7 +51,11 @@ class PaymentService
         $newStartsAt = ($existingPlan?->expires_at) ? $existingPlan?->expires_at : now();
 
 
-        $newExpiresAt = $newStartsAt->addMonths($request->no_of_months);
+        if ($request->no_of_months == 1) {
+            $newExpiresAt = $newStartsAt->addDays(30);
+        } else {
+            $newExpiresAt = $newStartsAt->addMonths($request->no_of_months);
+        }
 
         $subscribedPlan = SubscribedPlan::create([
             'subscription_plan_id' => $subscriptionPlan?->id,

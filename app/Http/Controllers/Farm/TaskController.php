@@ -17,7 +17,7 @@ class TaskController extends Controller
 
     public function index(Request $request, Farm $farm): JsonResponse
     {
-       
+
         $tasks = TaskResource::collection($farm->tasks()->latest()->paginate($request->per_page ?? 10))->response()->getData();
 
         return $this->success(
@@ -32,7 +32,7 @@ class TaskController extends Controller
         $user = auth()->user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
-                message: "unathourized area.",
+                message: "Your current role does not permit this action, kindly contact the Admin.",
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }
@@ -51,7 +51,7 @@ class TaskController extends Controller
         $user = auth()->user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
-                message: "unathourized area.",
+                message: "Your current role does not permit this action, kindly contact the Admin.",
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }
@@ -71,7 +71,7 @@ class TaskController extends Controller
         $user = auth()->user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
-                message: "unathourized area.",
+                message: "Your current role does not permit this action, kindly contact the Admin.",
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }

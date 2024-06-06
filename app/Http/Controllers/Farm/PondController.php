@@ -20,7 +20,7 @@ class PondController extends Controller
 
     public function index(Request $request, Farm $farm): JsonResponse
     {
-        
+
         $ponds = $farm->ponds()->latest()
             ->latest()->paginate($request->per_page ?? 20);
 
@@ -37,7 +37,7 @@ class PondController extends Controller
         $user = auth()->user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
-                message: "unathourized area.",
+                message: "Your current role does not permit this action, kindly contact the Admin.",
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }
@@ -68,7 +68,7 @@ class PondController extends Controller
         $user = auth()->user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
-                message: "unathourized area.",
+                message: "Your current role does not permit this action, kindly contact the Admin.",
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }
@@ -90,7 +90,7 @@ class PondController extends Controller
         $user = auth()->user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
-                message: "unathourized area.",
+                message: "Your current role does not permit this action, kindly contact the Admin.",
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }

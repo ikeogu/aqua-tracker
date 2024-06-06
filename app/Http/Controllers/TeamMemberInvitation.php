@@ -25,7 +25,7 @@ class TeamMemberInvitation extends Controller
          $user = auth()->user();
          if ($user->hasAnyRole([EnumsRole::VIEW_FARMS->value, EnumsRole::EDIT_FARMS->value])) {
              return $this->error(
-                 message: "unathourized area.",
+                 message: "Your current role does not permit this action, kindly contact the Admin.",
                  code: HttpStatusCode::FORBIDDEN->value
              );
          }
@@ -79,7 +79,7 @@ class TeamMemberInvitation extends Controller
          $user = auth()->user();
          if ($user->hasAnyRole([EnumsRole::VIEW_FARMS->value, EnumsRole::EDIT_FARMS->value])) {
              return $this->error(
-                 message: "unathourized area.",
+                 message: "Your current role does not permit this action, kindly contact the Admin.",
                  code: HttpStatusCode::FORBIDDEN->value
              );
          }
@@ -124,7 +124,7 @@ class TeamMemberInvitation extends Controller
          $user = auth()->user();
          if ($user->hasAnyRole([EnumsRole::VIEW_FARMS->value, EnumsRole::EDIT_FARMS->value])) {
              return $this->error(
-                 message: "unathourized area.",
+                 message: "Your current role does not permit this action, kindly contact the Admin.",
                  code: HttpStatusCode::FORBIDDEN->value
              );
          }

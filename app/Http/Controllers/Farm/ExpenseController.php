@@ -23,7 +23,7 @@ class ExpenseController extends Controller
         $user = auth()->user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
-                message: "unathourized area.",
+                message: "Your current role does not permit this action, kindly contact the Admin.",
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }
@@ -43,7 +43,7 @@ class ExpenseController extends Controller
         $user = auth()->user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
-                message: "unathourized area.",
+                message: "Your current role does not permit this action, kindly contact the Admin.",
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }
@@ -63,7 +63,7 @@ class ExpenseController extends Controller
         $user = auth()->user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
-                message: "unathourized area.",
+                message: "Your current role does not permit this action, kindly contact the Admin.",
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }
@@ -79,7 +79,7 @@ class ExpenseController extends Controller
 
     public function index(Request $request, Farm $farm): JsonResponse
     {
-       
+
         $expenses = $farm->expenses()->when($request->search, function ($query) use ($request) {
             return $query->where('description', 'like', '%' . $request->search . '%')
                 ->orWhere('total_amount', 'like', '%' . $request->search . '%');

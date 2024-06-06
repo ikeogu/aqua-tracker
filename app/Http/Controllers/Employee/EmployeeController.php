@@ -48,7 +48,7 @@ class EmployeeController extends Controller
          $user = auth()->user();
          if ($user->hasRole([Role::VIEW_FARMS->value])) {
              return $this->error(
-                 message: "unathourized area.",
+                 message: "Your current role does not permit this action, kindly contact the Admin.",
                  code: HttpStatusCode::FORBIDDEN->value
              );
          }
@@ -81,7 +81,7 @@ class EmployeeController extends Controller
          $user = auth()->user();
          if ($user->hasRole([Role::VIEW_FARMS->value])) {
              return $this->error(
-                 message: "unathourized area.",
+                 message: "Your current role does not permit this action, kindly contact the Admin.",
                  code: HttpStatusCode::FORBIDDEN->value
              );
          }
@@ -105,7 +105,7 @@ class EmployeeController extends Controller
          $user = auth()->user();
          if ($user->hasRole([Role::VIEW_FARMS->value])) {
              return $this->error(
-                 message: "unathourized area.",
+                 message: "Your current role does not permit this action, kindly contact the Admin.",
                  code: HttpStatusCode::FORBIDDEN->value
              );
          }
