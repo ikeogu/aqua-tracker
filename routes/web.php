@@ -1,12 +1,14 @@
 <?php
 
 use App\Enums\Role;
+use App\Models\PaymentInfo;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
 use App\Services\PaymentService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Models\Role as ModelsRole;
+use App\Models\SubscribedPlan;
 
 Route::get('/', function () {
     return view('welcome');
@@ -73,9 +75,12 @@ Route::get('/subscribe-users', function () {
         /** @var Tenant $tenant */
         $tenant = $user->tenant;
         if($tenant){
-
+            SubscribedPlan::where('tenant_id', $tenant->id)->delete();
+            PaymentInfo::where('tenant_id', $tenant->id)->delete();
             app(PaymentService::class)->addFreePlanToTenant($tenant);
+
         }
+        return;
     }
 
     return 'users subscribed';
