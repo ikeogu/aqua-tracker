@@ -60,7 +60,7 @@ class PaymentService
         if ($request->no_of_months == 1) {
             $newExpiresAt = $newStartsAt->addDays(30);
         } else {
-            $newExpiresAt = $newStartsAt->addMonths($request->no_of_months);
+            $newExpiresAt = $newStartsAt->addMonths((int)$request->no_of_months);
         }
         Log::debug(['newExpiresAt' => $newExpiresAt]);
 
