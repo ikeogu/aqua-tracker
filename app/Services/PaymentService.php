@@ -28,9 +28,9 @@ class PaymentService
 
         $newStartsAt =  now();
         if ($subscriptionPlan->duration == 1) {
-            $newExpiresAt = $newStartsAt->addDays(30);
+            $newExpiresAt = (clone $newStartsAt)->addDays(30);
         } else {
-            $newExpiresAt = $newStartsAt->addMonths($subscriptionPlan->duration);
+            $newExpiresAt = (clone $newStartsAt)->addMonths($subscriptionPlan->duration);
         }
        $subscribedPlan = SubscribedPlan::create([
             'subscription_plan_id' => $subscriptionPlan->id,
@@ -56,13 +56,12 @@ class PaymentService
 
         $newStartsAt = ($existingPlan?->end_date) ? Carbon::parse($existingPlan?->end_date) : now();
 
-     
         if ($request->no_of_months == 1) {
-            $newExpiresAt = $newStartsAt->addDays(30);
+            $newExpiresAt = (clone $newStartsAt)->addDays(30);
         } else {
-            $newExpiresAt = $newStartsAt->addMonths($request->no_of_months);
+            $newExpiresAt = (clone $newStartsAt)->addMonths($request->no_of_months);
         }
-        Log::debug(['newExpiresAt' => $newExpiresAt]);
+
 
         $subscribedPlan = SubscribedPlan::create([
             'subscription_plan_id' => $subscriptionPlan?->id,
@@ -77,6 +76,8 @@ class PaymentService
             'type' =>'paid'
 
         ]);
+
+
 
         $data = [
             'email' => $user->email,
