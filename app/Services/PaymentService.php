@@ -26,7 +26,11 @@ class PaymentService
         $subscriptionPlan = SubscriptionPlan::where('type', 'free')->latest()->first();
 
         $newStartsAt =  now();
-        $newExpiresAt = $newStartsAt->addMonths($subscriptionPlan?->duration);
+        if ($subscriptionPlan->duration == 1) {
+            $newExpiresAt = $newStartsAt->addDays(30);
+        } else {
+            $newExpiresAt = $newStartsAt->addMonths($subscriptionPlan->duration);
+        }
        $subscribedPlan = SubscribedPlan::create([
             'subscription_plan_id' => $subscriptionPlan->id,
             'status' => 'active',
@@ -49,8 +53,7 @@ class PaymentService
 
         $existingPlan = SubscribedPlan::where('tenant_id', $user->tenant->id)->latest()->first();
 
-        Log::debug(['existingPlan' => $existingPlan]);
-        $newStartsAt = ($existingPlan?->expires_at) ? $existingPlan?->expires_at->endOfDay() : now()->startOfDay();
+        $newStartsAt = ($existingPlan?->end_date) ? $existingPlan?->end_date : now();
 
         Log::debug(['newStartsAt' => $newStartsAt]);
 
