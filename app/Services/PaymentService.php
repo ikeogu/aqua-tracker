@@ -55,12 +55,11 @@ class PaymentService
 
         $newStartsAt = ($existingPlan?->end_date) ? $existingPlan?->end_date : now();
 
-        Log::debug(['newStartsAt' => $newStartsAt]);
-
+        Log::debug(['$request->no_of_months' => $request->no_of_months]);
         if ($request->no_of_months == 1) {
             $newExpiresAt = $newStartsAt->addDays(30);
         } else {
-            $newExpiresAt = $newStartsAt->addMonths((int)$request->no_of_months);
+            $newExpiresAt = $newStartsAt->addMonths($request->no_of_months);
         }
         Log::debug(['newExpiresAt' => $newExpiresAt]);
 
