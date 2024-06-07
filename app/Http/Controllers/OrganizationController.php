@@ -5,12 +5,20 @@ namespace App\Http\Controllers;
 use App\Enums\HttpStatusCode;
 use App\Enums\Role;
 use App\Http\Requests\UpdateOrganazationRequest;
+use App\Models\Batch;
+use App\Models\Expense;
 use App\Models\Farm;
+use App\Models\Harvest;
+use App\Models\Pond;
 use App\Models\SubscribedPlan;
 use App\Models\Tenant;
+use App\Models\TenantUser;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrganizationController extends Controller
 {
@@ -61,12 +69,49 @@ class OrganizationController extends Controller
         );
     }
 
- /*    public function destroy(Tenant $tenant) : JsonResponse
+   public function destroy(array $userIds) : JsonResponse
     {
         try {
 
+
+            DB::transaction(function () use ($userIds) {
+                User::whereIn('id', $userIds)->delete();
+                // Step 2: Delete from tenant_user
+                TenantUser::whereIn('user_id', $userIds)->delete();
+
+                // Step 3: Identify tenant IDs from user IDs
+                $tenantIds = Tenant::whereIn('user_id', $userIds)->pluck('id');
+
+                // Step 4: Identify farm IDs from tenant IDs
+                $farmIds = Farm::whereIn('tenant_id', $tenantIds)->pluck('id');
+
+                // Step 5: Delete from farms
+                Farm::whereIn('tenant_id', $tenantIds)->delete();
+
+                // Step 6: Delete from related tables where farm_id matches
+                Batch::whereIn('farm_id', $farmIds)->delete();
+                Expense::whereIn('farm_id', $farmIds)->delete();
+                Pond::whereIn('farm_id', $farmIds)->delete();
+                Harvest::whereIn('farm_id', $farmIds)->delete();
+                Tenant::whereIn('user_id', $userIds)->delete();
+
+            });
+
+            Log::info('Records successfully deleted based on the provided user IDs.');
+
+            return $this->success(
+                message: 'Organization/s deleted',
+                code: HttpStatusCode::SUCCESSFUL->value
+            );
+
         } catch (\Throwable $th) {
             //throw $th;
+            Log::debug(['error' => $th]);
+            return $this->success(
+                message: 'Organization deletion failed',
+                code: HttpStatusCode::SERVER_ERROR->value
+            );
+
         }
-    } */
+    }
 }
