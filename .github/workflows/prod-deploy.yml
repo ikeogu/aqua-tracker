@@ -1,0 +1,32 @@
+name: Build and deploy PHP app to EC2
+
+on:
+  push:
+    branches: [ 'Development' ]
+  workflow_dispatch:
+
+env:
+  WEBAPP_NAME: payroll-system    # set this to your application's name
+  ARTIFACT_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
+  PHP_VERSION: '8.x'                  # set this to the PHP version to use
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: deployment
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATEKEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd /var/www/html/payroll-automation.revvex.io
+          ./server_deploy.sh
