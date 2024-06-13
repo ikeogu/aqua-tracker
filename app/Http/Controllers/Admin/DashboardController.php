@@ -94,6 +94,11 @@ class DashboardController extends Controller
                 ->whereBetween('created_at', [$lastSeen['start_date'], $lastSeen['end_date']])->count(),
             'active_users' => $this->frequentUsers($lastSeen['start_date'], $lastSeen['end_date'])['active_users'],
             'inactive_users' => $this->frequentUsers($lastSeen['start_date'], $lastSeen['end_date'])['inactive_users'],
+            'total_farm_owners' => User::query()
+            ->whereRelation('roles', 'name', Role::ORGANIZATION_OWNER->value)->count(),
+            'total_users' => User::query()
+            ->whereRelation('roles', 'name', '!=',Role::SUPER_ADMIN->value)->count()
+
 
         ];
 

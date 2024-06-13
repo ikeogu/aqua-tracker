@@ -81,7 +81,7 @@ class PaymentService
 
         $data = [
             'email' => $user->email,
-            'amount' => $subscribedPlan->amount * 100,
+            'amount' => $subscribedPlan->amount,
             'reference' => $subscribedPlan->reference,
             //'callback_url' => route('verifyPayment')
         ];
