@@ -12,6 +12,8 @@ use App\Models\Farm;
 use App\Models\Pond;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class PondController extends Controller
@@ -73,9 +75,18 @@ class PondController extends Controller
             );
         }
 
-        $farm->ponds()->find($pond->id);
 
-        $pond->update($request->validated());
+        $pond->update(
+            array_merge(
+                Arr::except($request->validated(), 'mortality_rate'),
+                ['mortality_rate' =>  DB::raw('mortality_rate + ' . $request->mortality_rate)]
+            )
+        );
+
+        if ($request->mortality_rate > 0) {
+            $pond->unit -= $request->mortality_rate;
+            $pond->save();
+        }
 
         return $this->success(
             message: "Pond Updated Successfully",
