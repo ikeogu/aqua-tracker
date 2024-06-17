@@ -79,7 +79,7 @@ class PondController extends Controller
         $pond->update(
             array_merge(
                 Arr::except($request->validated(), 'mortality_rate'),
-                ['mortality_rate' =>  DB::raw('mortality_rate + ' . $request->mortality_rate)]
+                ['mortality_rate' =>  $pond->mortality_rate + $request->mortality_rate]
             )
         );
 
