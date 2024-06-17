@@ -75,17 +75,17 @@ class PondController extends Controller
             );
         }
 
+        $mortality_rate =  $pond->mortality_rate + $request->mortality_rate;
 
         $pond->update(
             array_merge(
                 Arr::except($request->validated(), 'mortality_rate'),
-                ['mortality_rate' =>  $pond->mortality_rate + $request->mortality_rate]
+                ['mortality_rate' => $mortality_rate]
             )
         );
 
         if ($request->mortality_rate > 0) {
-            $pond->unit -= $request->mortality_rate;
-            $pond->save();
+            $pond->update(['unit' => $pond->unit - $request->mortality_rate]);
         }
 
         return $this->success(
