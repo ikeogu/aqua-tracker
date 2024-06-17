@@ -84,9 +84,7 @@ class PondController extends Controller
             )
         );
 
-        if ($request->mortality_rate > 0) {
-            $pond->update(['unit' => $pond->unit - $request->mortality_rate]);
-        }
+
 
         return $this->success(
             message: "Pond Updated Successfully",
