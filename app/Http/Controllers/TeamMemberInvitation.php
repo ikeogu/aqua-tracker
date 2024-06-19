@@ -149,6 +149,7 @@ class TeamMemberInvitation extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
+        
         ActionsBootstrapTeamMember::execute($user, $request);
 
         return $this->success(

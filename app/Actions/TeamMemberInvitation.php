@@ -20,6 +20,8 @@ class TeamMemberInvitation
         /** @var Tenant $tenant */
         $tenant = auth()->user()->tenant;
 
+
+
         Arr::map($data, function ($email) use ($tenant, $role) {
 
             $pwd = Str::random(8);
@@ -41,18 +43,23 @@ class TeamMemberInvitation
                 ]);
             }
 
-            $tenant->users()->attach($user, [
-                'role' => $role->name,
-                'status' => Status::PENDING->value,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+            if(!$tenant->users()->where('user_id', $user->id)->exists()){
 
-            $user->assignRole($role);
-            $user->markEmailAsVerified();
+                $tenant->users()->attach($user, [
+                    'role' => $role->name,
+                    'status' => Status::PENDING->value,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+
+                $user->assignRole($role);
+                $user->markEmailAsVerified();
+
+                $user->notify(new TeamMemberInvitationNotification($tenant, $role->title, $pwd));
 
 
-            $user->notify(new TeamMemberInvitationNotification($tenant, $role->title, $pwd));
+            }
         });
+
     }
 }
