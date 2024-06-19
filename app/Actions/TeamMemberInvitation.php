@@ -24,16 +24,22 @@ class TeamMemberInvitation
 
             $pwd = Str::random(8);
 
-            /** @var User $user */
-            $user = User::firstOrCreate(['email' => $email], [
-                'status' => Status::PENDING->value,
-                'password' => Hash::make($pwd),
-                'fully_onboarded' => false,
-                'team_member_onboarded' => false,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+            $user = User::withTrashed()->where('email', $email)->first();
+            if ($user) {
+                $user->restore();
+            }
 
+            if (!$user) {
+                /** @var User $user */
+                $user = User::query()->create(['email' => $email], [
+                    'status' => Status::PENDING->value,
+                    'password' => Hash::make($pwd),
+                    'fully_onboarded' => false,
+                    'team_member_onboarded' => false,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
 
             $tenant->users()->attach($user, [
                 'role' => $role->name,
@@ -48,7 +54,5 @@ class TeamMemberInvitation
 
             $user->notify(new TeamMemberInvitationNotification($tenant, $role->title, $pwd));
         });
-
-
     }
 }
