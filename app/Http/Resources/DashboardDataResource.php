@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\LoginLog;
 use App\Models\SubscribedPlan;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -23,7 +24,7 @@ class DashboardDataResource extends JsonResource
             'email' => $this->email,
             "subscription_plan" => $this->tenant?->subscribedPlans()?->where('status', 'active')?->first()?->subscriptionPlan?->title,
             'created_at' => $this->created_at,
-            'last_seen' => $this->loginLogs()->latest()->first()?->login_at,
+            'last_seen' => LoginLog::where('user_id', $this->id)->latest()->first()?->login_at,
             'status' => $this->tenant?->status,
             'tenant_id' => $this->tenant?->id
         ];
