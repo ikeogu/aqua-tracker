@@ -29,6 +29,7 @@ class SigninController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
+        LoginLog::where('user_id',$user->id)->whereNull('logout_at')->update(['logout_at' => now()]);
 
         LoginLog::create([
             'user_id' => $user->id,
