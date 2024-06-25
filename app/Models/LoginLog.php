@@ -13,8 +13,8 @@ class LoginLog extends Model
 
     protected $fillable = [
         'user_id',
-        'login_at'  => 'datetime',
-        'logout_at' => 'datetime',
+        'login_at',
+        'logout_at'
     ];
 
 
