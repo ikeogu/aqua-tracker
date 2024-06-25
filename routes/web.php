@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\Role;
+use App\Models\LoginLog;
 use App\Models\PaymentInfo;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
@@ -32,6 +33,21 @@ Route::get('/create-admin', function () {
     $role =ModelsRole::where('name',Role::SUPER_ADMIN->value)->first();
     $user->assignRole($role);
 
+});
+
+Route::get('update-logins', function() {
+    $logs = LoginLog::whereNull('logout_at')
+        ->get();
+
+    foreach ($logs as $log) {
+        # code...
+        $log->update([
+            'logout_at' => $log->updated_at,
+            'login_at' => $log->created_at
+        ]);
+    }
+
+    return "success";
 });
 
 
@@ -80,7 +96,7 @@ Route::get('/subscribe-users', function () {
             app(PaymentService::class)->addFreePlanToTenant($tenant);
 
         }
-      
+
     }
 
     return 'users subscribed';
