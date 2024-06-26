@@ -30,7 +30,7 @@ class UpdateTrackerStatusJob implements ShouldQueue
     public function handle(): void
     {
         $tasks = Task::where('status',Status::PENDING->value)->get();
-        Log::info(":::::::: RUn Task Jobs");
+       
         $tasks->each(function ($task) {
 
             if ($task->due_date < now()) {
