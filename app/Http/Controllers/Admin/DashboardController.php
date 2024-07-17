@@ -105,7 +105,7 @@ class DashboardController extends Controller
 
         $data = [
             'card_data' => $cardDetails,
-            'users' => DashboardDataResource::collection($users)->response()->getData()
+            'users' => DashboardDataResource::collection($users)->response()->getData(true)
         ];
 
         return $this->success(

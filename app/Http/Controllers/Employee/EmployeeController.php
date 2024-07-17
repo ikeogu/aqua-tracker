@@ -36,7 +36,7 @@ class EmployeeController extends Controller
 
         return $this->success(
             message: 'Employees retrieved successfully',
-            data: EmployeeResource::collection($employees)->response()->getData(),
+            data: EmployeeResource::collection($employees)->response()->getData(true),
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }

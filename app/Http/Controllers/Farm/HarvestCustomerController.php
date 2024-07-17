@@ -47,7 +47,7 @@ class HarvestCustomerController extends Controller
 
         return $this->success(
             message: 'Customers retrieved successfully',
-            data: CustomerResource::collection($customers)->response()->getData(),
+            data: CustomerResource::collection($customers)->response()->getData(true),
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }

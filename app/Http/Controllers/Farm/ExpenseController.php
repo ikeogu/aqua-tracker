@@ -87,7 +87,7 @@ class ExpenseController extends Controller
 
         return $this->success(
             message: 'Expenses retrieved successfully',
-            data: ExpenseResource::collection($expenses)->response()->getData(),
+            data: ExpenseResource::collection($expenses)->response()->getData(true),
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }

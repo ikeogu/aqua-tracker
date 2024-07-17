@@ -18,7 +18,7 @@ class TaskController extends Controller
     public function index(Request $request, Farm $farm): JsonResponse
     {
 
-        $tasks = TaskResource::collection($farm->tasks()->latest()->paginate($request->per_page ?? 10))->response()->getData();
+        $tasks = TaskResource::collection($farm->tasks()->latest()->paginate($request->per_page ?? 10))->response()->getData(true);
 
         return $this->success(
             message: 'Tasks retrieved successfully',
