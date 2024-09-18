@@ -35,24 +35,29 @@ class UpdateSubscriptionJob implements ShouldQueue
         $oneDayAgo = Carbon::now()->subDay();
 
         SubscribedPlan::where('status', 'active')
-            ->each(function ($query) use ($sevenDaysAgo, $threeDaysAgo, $oneDayAgo) {
-                if(Carbon::parse($query->end_date)->equalTo($sevenDaysAgo)){
-                    $query->tenant->user->notify(new SubscriptionReminderNotification($sevenDaysAgo));
-                }
-                if(Carbon::parse($query->end_date)->equalTo($threeDaysAgo)){
-                    $query->tenant->user->notify(new SubscriptionReminderNotification($threeDaysAgo));
-                }
-                if(Carbon::parse($query->end_date)->equalTo($oneDayAgo)){
-                    $query->tenant->user->notify(new SubscriptionReminderNotification($oneDayAgo));
-                }
+        ->each(function ($plan) use ($sevenDaysAgo, $threeDaysAgo, $oneDayAgo) {
+            $endDate = Carbon::parse($plan->end_date);
 
-                if(Carbon::parse($query->end_date)->lessThan($oneDayAgo)){
-                    $query->status = 'expired';
-                    $query->save();
-                    $query->tenant->user->notify(new SubscriptionExpiredNotification());
+            if ($endDate->isSameDay($sevenDaysAgo)) {
+                $plan->tenant->user->notify(new SubscriptionReminderNotification($sevenDaysAgo));
+            }
 
-                }
-            });
+            if ($endDate->isSameDay($threeDaysAgo)) {
+                $plan->tenant->user->notify(new SubscriptionReminderNotification($threeDaysAgo));
+            }
+
+            if ($endDate->isSameDay($oneDayAgo)) {
+                $plan->tenant->user->notify(new SubscriptionReminderNotification($oneDayAgo));
+            }
+
+            // If the subscription has expired (end date is before today)
+            if ($endDate->isBefore(Carbon::now())) {
+                $plan->status = 'expired';
+                $plan->save();
+                $plan->tenant->user->notify(new SubscriptionExpiredNotification());
+            }
+        });
+
 
 
 

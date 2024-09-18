@@ -4,15 +4,18 @@ namespace App\Http\Controllers\Farm;
 
 use App\Enums\HttpStatusCode;
 use App\Enums\Role;
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateBatchRequest;
 use App\Http\Requests\UpdateBatchRequest;
 use App\Http\Resources\BatchResource;
 use App\Models\Batch;
 use App\Models\Farm;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate as FacadesGate;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class BatchController extends Controller
@@ -52,7 +55,9 @@ class BatchController extends Controller
                     ->orWhere('vendor', 'like', '%' . $request->search . '%')
                     ->orWhere('status', 'like', '%' . $request->search . '%')
                     ->orWhere('date_purchased', 'like', '%' . $request->search . '%');
-            })->latest()->get();
+            })->
+            where('status', Status::INSTOCK->value)
+            ->latest()->get();
 
         return $this->success(
             message: "batches retrived",
@@ -96,12 +101,17 @@ class BatchController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->hasRole(Role::VIEW_FARMS->value)) {
+
+       $authorization = FacadesGate::inspect('update', $batch);
+
+        if ($authorization->denied()) {
             return $this->error(
-                message: "Your current role does not permit this action, kindly contact the Admin.",
+                message: $authorization->message(),
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }
+
+
         $batch = $farm->batches()->find($batch->id);
 
         $batch->update($request->validated());

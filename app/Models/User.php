@@ -40,7 +40,7 @@ class User extends Authenticatable implements HasMedia
         'fully_onboarded',
         'team_member_onboarded',
         'tenant_id',
-        'phone_number',
+        'telephone',
     ];
 
     /**

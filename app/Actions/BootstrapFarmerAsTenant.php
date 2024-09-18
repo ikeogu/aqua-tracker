@@ -38,6 +38,7 @@ class BootstrapFarmerAsTenant
             'fully_onboarded' => true,
             'tenant_id' => $tenant->id,
             'team_member_onboarded' => true,
+            'telephone' => $data['telephone']
 
             ])->save();
 

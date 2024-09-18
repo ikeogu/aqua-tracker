@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class PondController extends Controller
@@ -68,9 +69,11 @@ class PondController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->hasRole(Role::VIEW_FARMS->value)) {
+        $authorization = Gate::inspect('update', $farm);
+
+        if ($authorization->denied()) {
             return $this->error(
-                message: "Your current role does not permit this action, kindly contact the Admin.",
+                message: $authorization->message(),
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }

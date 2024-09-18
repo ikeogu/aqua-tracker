@@ -12,6 +12,7 @@ use App\Jobs\DeleteFarmJob;
 use App\Models\Farm;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class FarmController extends Controller
 {
@@ -84,9 +85,11 @@ class FarmController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->hasRole(Role::VIEW_FARMS->value)) {
+        $authorization = Gate::inspect('update', $farm);
+
+        if ($authorization->denied()) {
             return $this->error(
-                message: "Your current role does not permit this action, kindly contact the Admin.",
+                message: $authorization->message(),
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }

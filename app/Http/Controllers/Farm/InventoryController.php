@@ -14,6 +14,7 @@ use App\Models\Inventory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 
 class InventoryController extends Controller
 {
@@ -82,9 +83,11 @@ class InventoryController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->hasRole(Role::VIEW_FARMS->value)) {
+        $authorization = Gate::inspect('update', $farm);
+
+        if ($authorization->denied()) {
             return $this->error(
-                message: "Your current role does not permit this action, kindly contact the Admin.",
+                message: $authorization->message(),
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }

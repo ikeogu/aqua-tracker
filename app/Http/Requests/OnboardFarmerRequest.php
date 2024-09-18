@@ -25,6 +25,7 @@ class OnboardFarmerRequest extends FormRequest
             //
             'organization_name' => 'required|string',
             'no_of_farms_owned' => 'nullable|integer',
+            'telephone' => 'required|string',
 
             'team_members' => 'nullable|array',
             'team_members.*' => 'email',

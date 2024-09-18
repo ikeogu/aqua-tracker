@@ -12,6 +12,7 @@ use App\Models\Expense;
 use App\Models\Farm;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ExpenseController extends Controller
 {
@@ -41,9 +42,11 @@ class ExpenseController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        if ($user->hasRole(Role::VIEW_FARMS->value)) {
+        $authorization = Gate::inspect('update', $expense);
+
+        if ($authorization->denied()) {
             return $this->error(
-                message: "Your current role does not permit this action, kindly contact the Admin.",
+                message: $authorization->message(),
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }
