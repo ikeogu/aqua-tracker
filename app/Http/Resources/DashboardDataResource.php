@@ -22,6 +22,7 @@ class DashboardDataResource extends JsonResource
             'id' => $this->id,
             'name' => $this->first_name . ' '. $this->last_name,
             'email' => $this->email,
+            'telephone' => $this->telephone,
             "subscription_plan" => $this->tenant?->subscribedPlans()?->where('status', 'active')?->first()?->subscriptionPlan?->title,
             'created_at' => $this->created_at,
             'last_seen' => LoginLog::where('user_id', $this->id)->latest()->first()?->login_at,
@@ -30,4 +31,3 @@ class DashboardDataResource extends JsonResource
         ];
     }
 }
-

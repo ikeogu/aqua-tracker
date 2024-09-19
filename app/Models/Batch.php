@@ -25,20 +25,36 @@ class Batch extends Model
     ];
 
 
-    protected $casts = [
-
-    ];
+    protected $casts = [];
 
 
     public function getRelationshipToPrimaryModel(): string
     {
         return 'farm';
     }
-    public function farm() : BelongsTo
+    public function farm(): BelongsTo
     {
         return $this->belongsTo(Farm::class);
     }
 
+    public function inventories()
+    {
+        return $this->hasMany(Inventory::class);
+    }
+
+    public function expenses()
+    {
+        return   Expense::where('farm_id', $this->farm->id)
+            ->whereJsonContains('splitted_for_batch', ['batch_id' => $this->id])
+            ->get()
+            ->pluck('splitted_for_batch')
+            ->flatten()
+            ->toArray();
+    }
 
 
+    public function harvests()
+    {
+        return $this->hasMany(Harvest::class);
+    }
 }
