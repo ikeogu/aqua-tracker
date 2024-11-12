@@ -30,13 +30,14 @@ class TeamMemberInvitation
             }
 
             if (!$user) {
-                
+
                 $pwd = Str::random(8);
 
                 /** @var User $user */
                 $user = User::create([
                     'status' => Status::PENDING->value,
                     'password' => Hash::make($pwd),
+                    'email' => $email,
                     'fully_onboarded' => false,
                     'team_member_onboarded' => false,
                     'created_at' => now(),
