@@ -18,7 +18,7 @@ class TeamMemberInvitationNotification extends Notification
     public function __construct(
         public Tenant $tenant,
         public string $role,
-        public string $password
+        public ?string $password = null
 
     )
     {

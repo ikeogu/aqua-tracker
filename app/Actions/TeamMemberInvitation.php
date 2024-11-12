@@ -22,7 +22,7 @@ class TeamMemberInvitation
 
         Arr::map($data, function ($email) use ($tenant, $role) {
 
-            $pwd = Str::random(8);
+
 
             $user = User::withTrashed()->where('email', $email)->first();
             if ($user) {
@@ -30,6 +30,9 @@ class TeamMemberInvitation
             }
 
             if (!$user) {
+                
+                $pwd = Str::random(8);
+
                 /** @var User $user */
                 $user = User::create([
                     'status' => Status::PENDING->value,
