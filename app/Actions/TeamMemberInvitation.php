@@ -20,8 +20,6 @@ class TeamMemberInvitation
         /** @var Tenant $tenant */
         $tenant = auth()->user()->tenant;
 
-
-
         Arr::map($data, function ($email) use ($tenant, $role) {
 
             $pwd = Str::random(8);
@@ -33,7 +31,7 @@ class TeamMemberInvitation
 
             if (!$user) {
                 /** @var User $user */
-                $user = User::query()->create(['email' => $email], [
+                $user = User::create([
                     'status' => Status::PENDING->value,
                     'password' => Hash::make($pwd),
                     'fully_onboarded' => false,

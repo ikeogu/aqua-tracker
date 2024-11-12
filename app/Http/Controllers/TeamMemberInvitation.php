@@ -32,7 +32,7 @@ class TeamMemberInvitation extends Controller
 
         $request->validate([
             'emails' => 'required|array',
-            'emails.*' => 'required|email',
+            'emails.*' => 'required|email|unique:users,email',
             'role' => 'required|exists:roles,id',
         ]);
 
@@ -149,7 +149,7 @@ class TeamMemberInvitation extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        
+
         ActionsBootstrapTeamMember::execute($user, $request);
 
         return $this->success(
