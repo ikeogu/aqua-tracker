@@ -52,7 +52,7 @@ class BatchResource extends JsonResource
                     return [
                         'id' => $inventory->id,
                         'amount' => $inventory->amount,
-                        'date' => $inventory->date,
+                        'date' => $inventory->created_at,
                         'brand' => $inventory->name,
                         'quantity' => $inventory->quantity,
                         'size' => $inventory->size,
