@@ -14,6 +14,7 @@ use App\Notifications\PaymentInfoNotification;
 use App\Services\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 use phpDocumentor\Reflection\PseudoTypes\False_;
 use Ramsey\Uuid\Builder\FallbackBuilder;
@@ -80,6 +81,7 @@ class SubscribedPlanController extends Controller
         $response = $this->paystackClient->verifyTransaction($request->reference);
 
         if ($response->status === false) {
+            Log::error('Payment was not completed');
             return $this->error(
                 'Payment was not completed'
             );
@@ -94,7 +96,6 @@ class SubscribedPlanController extends Controller
         ]);
 
 
-
         $payment->update([
             'status' => Carbon::parse($payment->start_date)->isSameDay(Carbon::now()) ? 'active' : 'inactive',
             'payment_method' => $response->channel,
@@ -102,7 +103,7 @@ class SubscribedPlanController extends Controller
         ]);
 
         $payment->tenant->user->notify(new PaymentInfoNotification($payment));
-
+        Log::info('Payment successful');
         return $this->success(
             message: "Payment successful",
             data: null,
