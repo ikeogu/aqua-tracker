@@ -124,7 +124,8 @@ class DashboardController extends Controller
             'yesterday' => ['start_date' => Carbon::now()->subDay()->startOfDay(), 'end_date' => now()->endOfDay()],
             'one_week' => ['start_date' => Carbon::now()->subWeek()->addDay()->startOfDay(), 'end_date' => now()->endOfDay()],
             'thirty_days' => ['start_date' => now()->subDays(30)->addDay()->startOfDay(), 'end_date' => now()->endOfDay()],
-            default => ['start_date' => Carbon::parse(explode(':', $request->query('duration'))[0]), 'end_date' => Carbon::parse(explode(':', $request->query('duration'))[1])]
+            default => ['start_date' => Carbon::now()->startOfDay(), 'end_date' => now()->endOfDay()]
+            // ['start_date' => Carbon::parse(explode(':', $request->query('duration'))[0]), 'end_date' => Carbon::parse(explode(':', $request->query('duration'))[1])]
         };
     }
 
