@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
-
+Route::webhooks('webhook/paystack', 'paystack');
 
 Route::get('/create-admin', function () {
     $user = User::updateOrCreate([

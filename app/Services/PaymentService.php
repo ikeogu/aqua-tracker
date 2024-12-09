@@ -122,4 +122,24 @@ class PaymentService
 
     }
 
+
+    public function verifyPayment(array $data) : void
+    {
+        $payment = SubscribedPlan::where('reference', $data['reference'])->first();
+
+        PaymentInfo::create([
+            'tenant_id' => $payment->tenant_id,
+            'authorization' => isset($data['authorization']) ? json_encode($data['authorization']) : null,
+            'auto_renewal' => false
+        ]);
+
+
+        $payment->update([
+            'status' => Carbon::parse($payment->start_date)->isSameDay(Carbon::now()) ? 'active' : 'inactive',
+            'payment_method' => $data['channel'] ?? 'transfer',
+
+        ]);
+
+        $payment->tenant->user->notify(new PaymentInfoNotification($payment));
+        Log::info('Payment successful');
 }
