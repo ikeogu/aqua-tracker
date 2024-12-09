@@ -142,4 +142,6 @@ class PaymentService
 
         $payment->tenant->user->notify(new PaymentInfoNotification($payment));
         Log::info('Payment successful');
+
+    }
 }
