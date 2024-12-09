@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Spatie\WebhookClient\Models\WebhookCall;
 use Spatie\WebhookClient\Jobs\ProcessWebhookJob;
 
-class PaystackHandler implements ProcessWebhookJob
+class PaystackHandler extends ProcessWebhookJob
 {
     public function handle(WebhookCall $webhookCall, PaymentService $paymentService)
     {
