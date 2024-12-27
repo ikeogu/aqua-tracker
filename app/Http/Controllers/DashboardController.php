@@ -31,6 +31,8 @@ class DashboardController extends Controller
             'mortality_rate' => (int) $farm->ponds()->whereIn('batch_id', $batchesId)->sum('mortality_rate'),
         ];
 
+        // 
+
 
         $farmDetails = $this->pieChartData($farmDetails);
 

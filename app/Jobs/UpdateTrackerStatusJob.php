@@ -35,11 +35,12 @@ class UpdateTrackerStatusJob implements ShouldQueue
 
         $tasks->each(function ($task) {
             $dueDate = Carbon::parse($task->due_date);
+            $startDate = Carbon::parse($task->start_date);
             $now = now();
 
             // Check if the task is overdue
             if ($dueDate < $now) {
-                Log::info(":::::::: task overdue");
+                Log::debug(":::::::: task overdue");
                 $task->update(['status' => Status::OVERDUE->value]);
                 $task->farm->owner->notify(new TaskNotification($task, Status::OVERDUE->value));
 
@@ -48,15 +49,15 @@ class UpdateTrackerStatusJob implements ShouldQueue
                     Log::info(":::::::: task not due");
                     $task->update(['status' => Status::PENDING->value]);
                 }
-            } elseif ($dueDate->isSameDay($now)) {
+            } elseif ($startDate->isSameDay($now)) {
                 Log::info(":::::::: task due now");
                 $task->update(['status' => Status::ACTIVE->value]);
                 $task->farm->owner->notify(new TaskNotification($task, Status::ACTIVE->value));
-            } elseif ($dueDate > $now) {
+            } /* elseif ($dueDate > $now) {
                 Log::info(":::::::: task due in the future");
                 $task->update(['status' => Status::DUE->value]);
                 $task->farm->owner->notify(new TaskNotification($task, Status::DUE->value));
-            }
+            } */
 
             // Notification reminders
             $reminderTimes = ['1 day', '3 days', '7 days', '14 days', '30 days', '1 hr', '30 mins', '15 mins', '5 mins', '1 min'];
