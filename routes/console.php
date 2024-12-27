@@ -13,4 +13,4 @@ Artisan::command('inspire', function () {
 Schedule::command('app:update-task-status-command')->everySecond();
 Schedule::command('app:update-subscription-status-command')->daily();
 
-//Schedule::command('app:test-supervisor-command')->everySecond();
+//Schedule::command('app:test-supervisor-command')->everySecond(); 
