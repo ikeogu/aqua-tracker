@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TaskNotification extends Notification implements ShouldQueue
+class TaskNotification extends Notification 
 {
     use Queueable;
 
