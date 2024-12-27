@@ -45,8 +45,8 @@ class BatchResource extends JsonResource
                 'total_capital' => $totalCapital,
                 'total_expenses' => $totalExpenses,
                 'total_profit' => $totalProfit,
-                'total_kg' => $this->harvests()->purchases()->sum('size'),
-                'total_pc' => $this->harvests()->purchases()->sum('pieces'),
+                'total_kg' => Purchase::whereIn('harvest_id', $totalHarvest)->sum('size'),
+                'total_pc' => Purchase::whereIn('harvest_id', $totalHarvest)->sum('pieces'),
                 'total_feed' => $this->inventories()->sum('quantity'),
                 'inventories' => $this->inventories->map(function ($inventory) {
                     return [
