@@ -45,8 +45,8 @@ class BatchResource extends JsonResource
                 'total_capital' => $totalCapital,
                 'total_expenses' => $totalExpenses,
                 'total_profit' => $totalProfit,
-                'total_kg' => $this->inventories()->sum('size'),
-                'total_pc' => 0,
+                'total_kg' => $this->harvests->purchases->sum('size'),
+                'total_pc' => $this->harvests->purchases->sum('pieces'),
                 'total_feed' => $this->inventories()->sum('quantity'),
                 'inventories' => $this->inventories->map(function ($inventory) {
                     return [
