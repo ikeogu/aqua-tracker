@@ -51,7 +51,7 @@ class BeneficiaryController extends Controller
     {
          /** @var User $user */
          $user = auth()->user();
-         if ($user->cannot('view')) {
+         if (!$user->hasAnyRole([Role::VIEW_FARMS->value, Role::ORGANIZATION_OWNER->value])) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",
                  code: HttpStatusCode::FORBIDDEN->value
