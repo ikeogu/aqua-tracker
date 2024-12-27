@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TaskNotification extends Notification
+class TaskNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -39,10 +39,12 @@ class TaskNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+
+        $body  = !empty($this->reminder) ? "Task {$this->task->title} is {$this->status}. You have set a reminder for {$this->reminder}" : "Task {$this->task->title} is {$this->status}";
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                    ->subject("Task {$this->task->title} is {$this->status}")
+                    ->line($body)
+                    ->line('Task Reminder');
     }
 
     /**
