@@ -19,6 +19,8 @@ class Purchase extends Model
         'size',
         'farm_id',
         'harvest_id',
+        "to_balance",
+        "amount_paid",
         'harvest_customer_id',
     ];
 

@@ -31,6 +31,8 @@ class UpdatePondRequest extends FormRequest
             "feed_size" => ["nullable", "numeric"],
             "mortality_rate " => ["nullable", "numeric"],
             "batch_id" => ["", "exists:batches,id"],
+            "amount_paid" => ['nullable', 'numeric'],
+            "to_balance" => ['nullable', 'numeric']
 
         ];
     }
