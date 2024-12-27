@@ -117,7 +117,7 @@ class BatchController extends Controller
         $batch->update($request->validated());
 
         if($batch->status === Status::SOLDOUT->value){
-            $batch->inventories->update(['status' => Status::SOLDOUT->value]);
+            $batch->inventories()->update(['status' => Status::SOLDOUT->value]);
         }
 
         return $this->success(
