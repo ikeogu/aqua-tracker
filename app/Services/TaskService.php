@@ -38,7 +38,7 @@ class TaskService
                 $task->farm->owner->notify(new TaskNotification($task, Status::ACTIVE->value));
             }
             // Notification reminders
-            $reminderTimes = ['1 day', '3 days', '7 days', '14 days', '30 days', '1 hr', '30 mins', '15 mins', '5 mins', '1 min'];
+            $reminderTimes = ['1 day', '3 days', '7 days', '14 days', '30 days', '1 hour', '30 minutes', '15 minutes', '5 minutes', '1 minute'];
             Log::info(":::::::: task reminder");
             foreach ($reminderTimes as $reminderTime) {
                 $reminderDate = $dueDate->copy()->sub($reminderTime);
