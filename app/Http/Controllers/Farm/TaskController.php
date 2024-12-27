@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Farm;
 
 use App\Enums\HttpStatusCode;
 use App\Enums\Role;
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Resources\TaskResource;
@@ -36,7 +37,10 @@ class TaskController extends Controller
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }
-        $task =  $farm->tasks()->create($request->validated());
+
+        $data = $request->validated();
+        $data['status'] = Status::PENDING->value;
+        $task =  $farm->tasks()->create($data);
 
         return $this->success(
             message: 'Task created successfully',
