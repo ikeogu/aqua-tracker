@@ -26,12 +26,12 @@ class DashboardController extends Controller
         $farmDetails = [
             'total_units' => (int) $farm->ponds()->whereIn('batch_id', $batchesId)->sum('unit'),
             'batch' => $farm->batches()->where('status', Status::INSTOCK->value)->count(),
-            'feed_available' => $farm->inventories()->whereIn('status', [Status::INSTOCK->value, Status::SOLDOUT->value])->sum('quantity') + $farm->inventories()->where('status', Status::SOLDOUT->value)->sum('left_over'),
+            'feed_available' => $farm->inventories()->where('status', Status::INSTOCK->value)->sum('quantity') + $farm->inventories()->where('status', Status::SOLDOUT->value)->sum('left_over'),
             'ponds' => $farm->ponds()->whereIn('batch_id', $batchesId)->count(),
             'mortality_rate' => (int) $farm->ponds()->whereIn('batch_id', $batchesId)->sum('mortality_rate'),
         ];
 
-        // 
+        //
 
 
         $farmDetails = $this->pieChartData($farmDetails);
