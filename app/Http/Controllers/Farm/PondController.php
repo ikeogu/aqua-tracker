@@ -69,13 +69,8 @@ class PondController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        $authorization = Gate::inspect('update', $farm);
-
-        if ($authorization->denied()) {
-            return $this->error(
-                message: $authorization->message(),
-                code: HttpStatusCode::FORBIDDEN->value
-            );
+        if (!$user->hasAnyRole([Role::FARM_ADMIN->value, Role::ORGANIZATION_OWNER->value, Role::SUPER_ADMIN->value])) {
+            return $this->error(403, 'You are not authorized to perform this action');
         }
 
         $mortality_rate =  $pond->mortality_rate + $request->mortality_rate;
