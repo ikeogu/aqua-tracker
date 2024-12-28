@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('purchases', function (Blueprint $table) {
-            $table->bigInteger('to_balance')->default(0);
-            $table->bigInteger('amount_paid')->default(0);
+            $table->bigInteger('to_balance')->default(0)->nullable();
+            $table->bigInteger('amount_paid')->default(0)->nullable();
         });
     }
 
