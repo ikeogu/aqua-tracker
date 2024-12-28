@@ -35,7 +35,7 @@ class HarvestCustomerController extends Controller
 
         if ($request->has('export') && $request->export !== null) {
             try {
-                return Excel::download(new PurchaseExport($customers), 'customers-export-' . date('Ymdhis') . '.csv');
+                return Excel::download(new PurchaseExport($customers->get()), 'customers-export-' . date('Ymdhis') . '.csv');
                 //@codeCoverageIgnoreStart
             } catch (\Throwable $exception) {
                 Log::error($exception->getMessage());
