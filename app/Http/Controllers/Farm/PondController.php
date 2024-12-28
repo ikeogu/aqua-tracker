@@ -13,9 +13,6 @@ use App\Models\Pond;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class PondController extends Controller
 {

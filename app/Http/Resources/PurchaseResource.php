@@ -23,6 +23,8 @@ class PurchaseResource extends JsonResource
                 'amount' => $this->amount,
                 'status' => $this->status,
                 'size' => $this->size,
+                'amount_paid' => $this->amount_paid,
+                'to_balance' => $this->to_balance,
             ],
 
         ];

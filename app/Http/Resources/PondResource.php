@@ -26,9 +26,6 @@ class PondResource extends JsonResource
                 'unit' => $this->unit,
                 'feed_size' =>$this->feed_size,
                 'mortality_rate' => $this->mortality_rate,
-                "amount_paid" => $this->amount_paid,
-                "to_balance" => $this->to_balance,
-
             ],
             'percentage' => [
                 'unit' => round ((($this->unit / $this->holding_capacity) * 100),2),
