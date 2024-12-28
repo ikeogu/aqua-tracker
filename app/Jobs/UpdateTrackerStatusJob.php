@@ -29,6 +29,6 @@ class UpdateTrackerStatusJob implements ShouldQueue
     {
         $taskService->executeTask();
 
-        Log::debug(['logged for task']);
+       // Log::debug(['logged for task']);
     }
 }

@@ -74,9 +74,9 @@ class PurchaseController extends Controller
     public function updatePurchase(Request $request, Purchase $purchase){
 
         $request->validate([
-            'amount_paid' => 'required', 'numeric',
-            'to_balance' => 'required', 'numeric',
-            'status' => 'nullable'
+            'amount_paid' => ['required', 'numeric'],
+            'to_balance' => ['required', 'numeric'],
+            'status' => ['nullable']
         ]);
 
         $purchase->update([
