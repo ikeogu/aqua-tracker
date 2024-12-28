@@ -26,7 +26,9 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
             'Size (Kg)',
             'Pieces (pcs)',
             'Amount (₦)',
-            'status'
+            'Status',
+            'Amount Paid',
+            "To Balance"
         ];
     }
 
