@@ -75,7 +75,6 @@ Route::middleware([
     Route::post('activate-renewal', [SubscribedPlanController::class, 'activateAutoRenewal'])->name('activateAutoRenewal');
     Route::get('get-premium-plan', [SubscriptionPlanController::class, 'getPremiumPlan']);
 
-
-
-
+    Route::patch('purchase/{purchase}', [PurchaseController::class, 'updatePurchase'])->name('updatePurchase');
+    
 });

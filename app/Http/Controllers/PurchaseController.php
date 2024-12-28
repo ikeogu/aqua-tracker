@@ -71,6 +71,26 @@ class PurchaseController extends Controller
 
     }
 
+    public function updatePurchase(Request $request, Purchase $purchase){
+
+        $request->validate([
+            'amount_paid' => 'required', 'numeric',
+            'to_balance' => 'required', 'numeric',
+            'status' => 'nullable'
+        ]);
+
+        $purchase->update([
+            'amount_paid' => $request->amount_paid,
+            'to_balance' => $request->to_balance,
+            'status' => $request->status
+        ]);
+
+        return $this->success(
+            message: 'Purchase updated successfully',
+            code: HttpStatusCode::SUCCESSFUL->value
+        );
+    }
+
     public function destroy( Purchase $purchase) : JsonResponse
     {
          /** @var User $user */
