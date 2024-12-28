@@ -25,7 +25,7 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
             'Price',
             'Size (Kg)',
             'Pieces (pcs)',
-            'Amount (N)',
+            'Amount (₦)',
             'status'
         ];
     }
@@ -53,7 +53,10 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
                         $purchase->size,
                         $purchase->pieces,
                         number_format($purchase->amount),
-                        $purchase->status
+                        $purchase->status,
+                        $purchase->amount_paid,
+                        $purchase->to_balance,
+
 
                     ],
 
@@ -68,7 +71,7 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
                 '',
                 $customer->purchases->sum('size') . ' (kg)',
                 $customer->purchases->sum('pieces') . ' (pcs)',
-                "₦". number_format( intval($customer->purchases->sum('amount'))),
+                 number_format( intval($customer->purchases->sum('amount'))),
 
             ];
 
