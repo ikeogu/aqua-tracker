@@ -26,14 +26,15 @@ class HarvestCustomerController extends Controller
     {
 
         $harvest = $farm->harvests()->find($harvest->id);
-        $customers = $harvest->customers()->when($request->search, function ($query) use ($request) {
-            return $query->where('name', 'like', '%' . $request->search . '%')
-                ->orWhere('email', 'like', '%' . $request->search . '%')
-                ->orWhere('phone_number', 'like', '%' . $request->search . '%');
-        });
+        $customers = $harvest->customers()->whereHas('purchases')
+            ->when($request->search, function ($query) use ($request) {
+                return $query->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%')
+                    ->orWhere('phone_number', 'like', '%' . $request->search . '%');
+            });
 
 
-        if ($request->has('export') && $request->export !== null) {
+        if ($request->has('export') && $request->export != null) {
             try {
                 return Excel::download(new PurchaseExport($customers->get()), 'customers-export-' . date('Ymdhis') . '.csv');
                 //@codeCoverageIgnoreStart

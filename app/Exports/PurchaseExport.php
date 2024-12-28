@@ -6,6 +6,7 @@ use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 
 class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
@@ -67,7 +68,7 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
                 '',
                 $customer->purchases->sum('size') . ' (kg)',
                 $customer->purchases->sum('pieces') . ' (pcs)',
-                "₦". number_format($customer->purchases->sum('amount')),
+                "₦". number_format( intval($customer->purchases->sum('amount'))),
 
             ];
 
