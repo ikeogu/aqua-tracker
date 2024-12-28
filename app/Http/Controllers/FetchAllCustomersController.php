@@ -21,6 +21,7 @@ class FetchAllCustomersController extends Controller
     {
 
         $customers = $farm->harvestcustomers()->
+            whereHas('purchases')->
              when($request->search, function ($query) use ($request) {
                 return $query->where('name', 'like', '%' . $request->search . '%')
                     ->orWhere('email', 'like', '%' . $request->search . '%')

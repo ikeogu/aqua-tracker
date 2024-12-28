@@ -35,7 +35,9 @@ class PurchaseExport implements FromCollection, WithHeadings, ShouldAutoSize
             $customerData = [
                 $key + 1,
                 $customer->name,
-                ($customer->purchases->count() == 0) ? '' : ((($customer->purchases->where('status', 'paid')->count() == $customer->purchases->count())) ? 'completed' : 'incomplete'),
+                ($customer->purchases->count() == 0) ? ''
+                : ((($customer->purchases->where('status', 'paid')->count() == $customer->purchases->count()))
+                ? 'completed' : 'incomplete'),
 
             ];
 
