@@ -23,9 +23,17 @@ class TaskService
 
             // Check if the task is overdue
             if ($dueDate->isPast()) {
-                Log::debug(":::::::: task overdue");
-                $task->update(['status' => Status::OVERDUE->value]);
-                $task->farm->owner->notify(new TaskNotification($task, Status::OVERDUE->value));
+                $overdueThreshold = $dueDate->copy()->addDay(); // Add 1 day grace period
+
+                if (now()->greaterThan($overdueThreshold)) {
+                    Log::debug(":::::::: task overdue");
+                    $task->update(['status' => Status::OVERDUE->value]);
+                    $task->farm->owner->notify(new TaskNotification($task, Status::OVERDUE->value));
+                } else {
+                    Log::debug(":::::::: task due");
+                    $task->update(['status' => Status::DUE->value]);
+                    $task->farm->owner->notify(new TaskNotification($task, Status::DUE->value));
+                }
 
                 // Handle repeating tasks
                 if ($task->repeat) {

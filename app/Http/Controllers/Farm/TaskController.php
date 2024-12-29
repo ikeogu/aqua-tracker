@@ -19,10 +19,19 @@ class TaskController extends Controller
     public function index(Request $request, Farm $farm): JsonResponse
     {
 
-        $tasks = match($request->type){
-            'active' => $farm->tasks()->where('status', Status::ACTIVE->value)->latest()->paginate($request->per_page ?? 10),
-            'due' => $farm->tasks()->where('status', Status::DUE->value)->latest()->paginate($request->per_page ?? 10),
-            'completed'  => $farm->tasks()->where('status', Status::COMPLETED->value)->latest()->paginate($request->per_page ?? 10),
+        $tasks = match ($request->type) {
+            'active' => $farm->tasks()
+                ->where('status', Status::ACTIVE->value)
+                ->latest()->paginate($request->per_page ?? 10),
+            'due' => $farm->tasks()->where('status', Status::DUE->value)
+                ->orWhere('status', Status::OVERDUE->value)
+                ->latest()->paginate($request->per_page ?? 10),
+            'completed'  => $farm->tasks()
+                ->where('status', Status::COMPLETED->value)
+                ->latest()->paginate($request->per_page ?? 10),
+            'pending'  => $farm->tasks()
+                ->where('status', Status::PENDING->value)
+                ->latest()->paginate($request->per_page ?? 10),
             default  => $farm->tasks()->latest()->paginate($request->per_page ?? 10),
         };
 
