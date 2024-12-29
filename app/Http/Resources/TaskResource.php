@@ -27,7 +27,7 @@ class TaskResource extends JsonResource
                 'end_date' => $this->due_date,
                 'start_date' => $this->start_date,
                 'repeat' => $this->repeat,
-                'time_left' => $startDate->diffAsCarbonInterval($endDate)->forHumans(),
+                'time_left' => Carbon::today()->diffAsCarbonInterval($endDate)->forHumans(),
                 'created_at' => $this->created_at,
 
 
