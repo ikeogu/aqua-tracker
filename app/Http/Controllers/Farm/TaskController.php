@@ -75,7 +75,7 @@ class TaskController extends Controller
         $data['status'] = Status::PENDING->value;
         $task =  $farm->tasks()->create($data);
 
-        $task->farm->owner->notify(new TaskNotification($task, 'pending', $currentTime));
+        $task->farm->tenant->user->notify(new TaskNotification($task, 'pending', $currentTime));
         return $this->success(
             message: 'Task created successfully',
             data: new TaskResource($task),
