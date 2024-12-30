@@ -57,7 +57,7 @@ class TaskController extends Controller
         }
 
         $data = $request->validated();
-        $$startDate = Carbon::parse($data['start_date']);
+        $startDate = Carbon::parse($data['start_date']);
 
         // Get the current time
         $currentTime = Carbon::now()->addHour();
