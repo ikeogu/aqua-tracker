@@ -26,7 +26,7 @@ class HarvestCustomerController extends Controller
     {
 
         $harvest = $farm->harvests()->find($harvest->id);
-        $customers = $harvest->customers()->whereHas('purchases')
+        $customers = $harvest->customers()
             ->when($request->search, function ($query) use ($request) {
                 return $query->where('name', 'like', '%' . $request->search . '%')
                     ->orWhere('email', 'like', '%' . $request->search . '%')
