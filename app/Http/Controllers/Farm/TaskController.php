@@ -10,6 +10,8 @@ use App\Http\Requests\CreateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Farm;
 use App\Models\Task;
+use App\Notifications\TaskNotification;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -55,9 +57,25 @@ class TaskController extends Controller
         }
 
         $data = $request->validated();
+        $$startDate = Carbon::parse($data['start_date']);
+
+        // Get the current time
+        $currentTime = Carbon::now()->addHour();
+
+        // Set the time of $startDate to the current time
+        $startDate->setTime(
+            $currentTime->hour,
+            $currentTime->minute,
+            $currentTime->second
+        );
+
+        // Format the date back to string with the current time
+        $data['start_date'] = $startDate->format('Y-m-d H:i:s');
+
         $data['status'] = Status::PENDING->value;
         $task =  $farm->tasks()->create($data);
 
+        $task->farm->owner->notify(new TaskNotification($task, 'pending', $currentTime));
         return $this->success(
             message: 'Task created successfully',
             data: new TaskResource($task),
