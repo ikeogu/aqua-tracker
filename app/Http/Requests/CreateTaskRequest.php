@@ -24,9 +24,9 @@ class CreateTaskRequest extends FormRequest
         return [
             //
             'title' => 'required|string',
-            'description' => 'required|string',
-            'start_date' => 'required|date',
-            'due_date' => 'required|date|after:start_date',
+            'description' => 'nullable|string',
+            'start_date' => 'required',
+            'due_date' => 'required',
             'repeat' => 'required|boolean',
 
         ];
