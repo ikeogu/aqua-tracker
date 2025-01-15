@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\SubscribedPlan;
+use App\Models\Tenant;
 use App\Notifications\SubscriptionExpiredNotification;
 use App\Notifications\SubscriptionReminderNotification;
 use Carbon\Carbon;
@@ -59,14 +60,18 @@ class UpdateSubscriptionJob implements ShouldQueue
         });
 
 
-        SubscribedPlan::where('status', 'expired')
+        Tenant::whereHas('subscribedPlans')
         ->latest()
         ->get()
-        ->unique('tenant_id')
-        ->each(function ($plan) {
+        ->each(function ($tenant) {
+
+            if($tenant->subscribedPlans->where('status', 'active')->exists()){
+                return ;
+            }
             // Find the first inactive plan for the current tenant
             $newSubscription = SubscribedPlan::where('status', 'inactive')
-                ->where('tenant_id', $plan->tenant_id)
+                ->where('tenant_id', $tenant->id)
+                ->latest()
                 ->first();
 
             // If an inactive plan is found, update its status to active
