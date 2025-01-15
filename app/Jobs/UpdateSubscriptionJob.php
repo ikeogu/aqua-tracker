@@ -70,7 +70,7 @@ class UpdateSubscriptionJob implements ShouldQueue
                 ->first();
 
             // If an inactive plan is found, update its status to active
-            if ($newSubscription) {
+            if ($newSubscription && Carbon::parse($newSubscription->end_date)->isFuture()) {
                 $newSubscription->update(['status' => 'active']);
             }
         });
