@@ -75,7 +75,6 @@ class UpdateSubscriptionJob implements ShouldQueue
             $newSubscription = SubscribedPlan::where('status', 'inactive')
             ->where('tenant_id', $tenant->id)
                 ->first();
-            Log::debug(['latest subs' => $newSubscription]);
 
             // If an inactive plan is found and it has not expired, update its status to active
             if ($newSubscription && Carbon::parse($newSubscription->end_date)->isFuture()) {
