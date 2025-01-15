@@ -30,9 +30,9 @@ class UpdateSubscriptionJob implements ShouldQueue
     public function handle(): void
     {
         //
-        $sevenDaysAgo = Carbon::now()->subDays(7);
-        $threeDaysAgo = Carbon::now()->subDays(3);
-        $oneDayAgo = Carbon::now()->subDay();
+        $sevenDaysAgo = Carbon::today()->subDays(7);
+        $threeDaysAgo = Carbon::today()->subDays(3);
+        $oneDayAgo = Carbon::today()->subDay();
 
         SubscribedPlan::where('status', 'active')
         ->each(function ($plan) use ($sevenDaysAgo, $threeDaysAgo, $oneDayAgo) {
@@ -55,6 +55,23 @@ class UpdateSubscriptionJob implements ShouldQueue
                 $plan->status = 'expired';
                 $plan->save();
                 $plan->tenant->user->notify(new SubscriptionExpiredNotification());
+            }
+        });
+
+
+        SubscribedPlan::where('status', 'expired')
+        ->latest()
+        ->get()
+        ->unique('tenant_id')
+        ->each(function ($plan) {
+            // Find the first inactive plan for the current tenant
+            $newSubscription = SubscribedPlan::where('status', 'inactive')
+                ->where('tenant_id', $plan->tenant_id)
+                ->first();
+
+            // If an inactive plan is found, update its status to active
+            if ($newSubscription) {
+                $newSubscription->update(['status' => 'active']);
             }
         });
 
