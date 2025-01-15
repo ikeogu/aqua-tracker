@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UpdateSubscriptionJob implements ShouldQueue
 {
@@ -65,21 +66,23 @@ class UpdateSubscriptionJob implements ShouldQueue
         ->get()
         ->each(function ($tenant) {
 
-            if($tenant->subscribedPlans->where('status', 'active')->exists()){
-                return ;
+            // Check if the tenant already has an active subscription
+            if ($tenant->subscribedPlans->where('status', 'active')->isNotEmpty()) {
+                return; // Skip to the next tenant
             }
-            // Find the first inactive plan for the current tenant
-            $newSubscription = SubscribedPlan::where('status', 'inactive')
-                ->where('tenant_id', $tenant->id)
-                ->latest()
-                ->first();
 
-            // If an inactive plan is found, update its status to active
+            // Find the latest inactive plan for the current tenant that is still valid
+            $newSubscription = SubscribedPlan::where('status', 'inactive')
+            ->where('tenant_id', $tenant->id)
+                ->latest()
+                ->last();
+            Log::debug(['latest subs' => $newSubscription]);
+
+            // If an inactive plan is found and it has not expired, update its status to active
             if ($newSubscription && Carbon::parse($newSubscription->end_date)->isFuture()) {
                 $newSubscription->update(['status' => 'active']);
             }
         });
-
 
 
 
