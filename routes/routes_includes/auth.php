@@ -8,10 +8,11 @@ use App\Http\Controllers\Auth\SigninController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\TeamMemberInvitation;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-Route::middleware('guest')
+Route::prefix('auth')->middleware('guest')
     ->group(function () {
         Route::post('/signup', SignupController::class)->name('register');
         Route::post('/signin', SigninController::class)->name('login');
@@ -20,7 +21,7 @@ Route::middleware('guest')
         Route::post('/email-verification/resend', [VerifyEmailController::class, 'resend'])->name('verification.resend');
     });
 
-Route::middleware('auth:sanctum')
+Route::prefix('auth')->middleware('auth:sanctum')
     ->group(function () {
         // EMAIL VERIFICATION
 
@@ -36,7 +37,7 @@ Route::middleware('auth:sanctum')
         Route::post('/onboarding/team-member', [TeamMemberInvitation::class, 'onboardTeamMember'])->name('team-member.onboarding');
 
         Route::get('/user', function () {
-            return new \App\Http\Resources\UserResource(auth()->user());
+            return new \App\Http\Resources\UserResource(Auth::user());
         });
     });
 

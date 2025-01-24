@@ -6,10 +6,15 @@ use App\Enums\HttpStatusCode;
 use App\Http\Resources\CustomNotificationResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CustomNotificationController extends Controller
 {
-    //
+    /**
+     * Notifications
+     *
+     *
+     */
 
     public function __invoke(Request $request) : JsonResponse
     {
@@ -18,7 +23,7 @@ class CustomNotificationController extends Controller
         ]);
 
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
         $notications = match ($request->type) {
             'read' => $user->readNotifications()->paginate($request->per_page ?? 10 ),
@@ -36,11 +41,14 @@ class CustomNotificationController extends Controller
         );
     }
 
+    /**
+     * Mark all Notification as read
+     */
     public function markAllAsRead() : JsonResponse
     {
 
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
         $user->unreadNotifications->markAsRead();
 

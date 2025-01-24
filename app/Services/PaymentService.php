@@ -56,6 +56,8 @@ class PaymentService
 
         $newStartsAt = ($existingPlan?->end_date) ? Carbon::parse($existingPlan?->end_date) : now();
 
+        $newStartsAt = $newStartsAt->isPast() ? now() : $newStartsAt;
+
         if ($request->no_of_months == 1) {
             $newExpiresAt = (clone $newStartsAt)->addDays(30);
         } else {
@@ -76,7 +78,6 @@ class PaymentService
             'type' =>'paid'
 
         ]);
-
 
 
         $data = [

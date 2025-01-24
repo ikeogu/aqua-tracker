@@ -25,6 +25,12 @@ Route::get('roles', [RolePermissionController::class, 'index']);
 
 Route::get('notifications', CustomNotificationController::class)->middleware('auth:sanctum');
 Route::post('notifications/mark-all-as-read', [CustomNotificationController::class, 'markAllAsRead'])->middleware('auth:sanctum');
-
 Route::get('fetch-subscription-plan', [SubscriptionPlanController::class, 'index'])->name('subscription.plan.create');
 Route::get('verify-payment', [SubscribedPlanController::class, 'verifyPayment'])->name('verifyPayment');
+
+
+require __DIR__ . '/routes_includes/admin.php';
+
+require __DIR__ . '/routes_includes/auth.php';
+
+require __DIR__ . '/routes_includes/farmer.php';

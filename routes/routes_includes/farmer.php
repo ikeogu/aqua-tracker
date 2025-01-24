@@ -21,7 +21,7 @@ use App\Http\Controllers\TeamMemberInvitation;
 use App\Models\SubscriptionPlan;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware([
+Route::prefix('farmer')->middleware([
     'auth:sanctum',
     'farmer-admin', // This middleware group is defined in bootstrap/app.php
 ])->group(function () {
@@ -76,5 +76,5 @@ Route::middleware([
     Route::get('get-premium-plan', [SubscriptionPlanController::class, 'getPremiumPlan']);
 
     Route::patch('purchase/{purchase}', [PurchaseController::class, 'updatePurchase'])->name('updatePurchase');
-    
+
 });

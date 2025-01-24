@@ -14,11 +14,11 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
-       // api: __DIR__.'/../routes/api.php',
+        api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function(){
-            Route::prefix('auth')
+      /*       Route::prefix('auth')
             ->group(base_path('routes/routes_includes/auth.php'));
 
             Route::middleware('api')
@@ -31,7 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('api')
                 ->prefix('farmer')
                 ->group(base_path('routes/routes_includes/farmer.php'));
-
+ */
 
         }
 

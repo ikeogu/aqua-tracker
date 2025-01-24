@@ -9,7 +9,7 @@ use App\Http\Controllers\Subscription\SubscriptionPlanController;
 use App\Http\Middleware\CheckAdminRole;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('guest')
+Route::prefix('admin')->middleware('guest')
     ->group(function () {
 
         Route::post('signin', AdminLoginController::class)->name('login');
@@ -18,7 +18,7 @@ Route::middleware('guest')
 
     });
 
-Route::middleware(['auth:sanctum', CheckAdminRole::class])
+Route::prefix('admin')->middleware(['auth:sanctum', CheckAdminRole::class])
 ->group(function () {
     Route::post('invite-admin', RegisterController::class)->name('invite-admin');
 

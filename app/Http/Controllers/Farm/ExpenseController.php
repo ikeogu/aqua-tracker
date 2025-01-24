@@ -12,16 +12,24 @@ use App\Models\Expense;
 use App\Models\Farm;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class ExpenseController extends Controller
 {
-    //
+    /**
+     * Create an Expense
+     *
+     * @param CreateExpenseRequest $request
+     * @param Farm $farm
+     *
+     * @response array{message: string,data: ExpenseResource}
+     */
 
     public function store(CreateExpenseRequest $request, Farm $farm): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -38,10 +46,20 @@ class ExpenseController extends Controller
         );
     }
 
+    /**
+     * Update an Expense
+     *
+     * @param UpdateExpenseRequest $request
+     * @param Farm $farm
+     * @param Expense $expense
+     *
+     * @response array{message: string,data: ExpenseResource}
+     */
+
     public function update(UpdateExpenseRequest $request, Farm $farm, Expense $expense): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         $authorization = Gate::inspect('update', $expense);
 
         if ($authorization->denied()) {
@@ -60,17 +78,26 @@ class ExpenseController extends Controller
         );
     }
 
+    /**
+     * Delete an Expense
+     *
+     *
+     * @param Farm $farm
+     * @param Expense $expense
+     */
+
     public function destroy(Farm $farm, Expense $expense): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
+
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "Your current role does not permit this action, kindly contact the Admin.",
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }
-        $expense = $farm->expenses()->findOrFail($expense->id);
+        $expense = $farm->expenses()->find($expense->id);
         $expense->delete();
 
         return $this->success(
