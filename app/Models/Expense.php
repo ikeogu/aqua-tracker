@@ -19,7 +19,7 @@ class Expense extends Model
     ];
 
     protected $casts = [
-        'splitted_for_batch' => 'json',
+        'splitted_for_batch' => 'array',
     ];
 
 
