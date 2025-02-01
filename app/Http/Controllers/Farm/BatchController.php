@@ -156,9 +156,14 @@ class BatchController extends Controller
                 return $split['batch_id'] !== $batch->id;
             });
 
+            if(empty($splittedForBatch)) {
+                 $expense->delete();
+            }else{
+                $expense->splitted_for_batch = array_values($splittedForBatch);
+                $expense->save();
+            }
             // Encode the array back to JSON
-            $expense->splitted_for_batch = array_values($splittedForBatch);
-            $expense->save();
+
 
         }
         $batch->delete();

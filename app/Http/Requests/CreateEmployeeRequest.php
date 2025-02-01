@@ -26,7 +26,7 @@ class CreateEmployeeRequest extends FormRequest
             //
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'nullable|email',
             'role' => 'required|in:'.implode(',', [Role::getRoleTextName(Role::FARM_EMPLOYEE), Role::getRoleTextName(Role::FARM_ADMIN)]),
             'phone_number' => 'required|string',
         ];

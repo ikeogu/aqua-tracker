@@ -54,6 +54,8 @@ class UpdateSubscriptionJob implements ShouldQueue
 
             // If the subscription has expired (end date is before today)
             if ($endDate->isBefore(Carbon::now())) {
+
+                
                 $plan->status = 'expired';
                 $plan->save();
                 $plan->tenant->user->notify(new SubscriptionExpiredNotification());
