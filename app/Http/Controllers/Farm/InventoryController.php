@@ -83,11 +83,11 @@ class InventoryController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        $authorization = Gate::inspect('update', $farm);
+        // $authorization = Gate::inspect('update', $farm);
 
-        if ($authorization->denied()) {
+        if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
-                message: $authorization->message(),
+                message: "Your current role does not permit this action, kindly contact the Admin.",
                 code: HttpStatusCode::FORBIDDEN->value
             );
         }
