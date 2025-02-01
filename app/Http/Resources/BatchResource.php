@@ -20,9 +20,18 @@ class BatchResource extends JsonResource
             'expenses' => $this->expenses()
         ]);
         $totalInventories = $this->inventories()->sum('amount');
-        $totalExpenses = array_sum(array_filter($this->expenses(), function ($item) {
-            return is_numeric($item);
-        }));
+        $totalExpenses = 0;
+
+        // Loop through the expenses and sum the amount for the specific batch_id
+        foreach ($this->expenses() as $expense) {
+            $splittedForBatch = json_decode($expense->splitted_for_batch, true);
+
+            foreach ($splittedForBatch as $split) {
+                if ($split['batch_id'] === $this->id) {
+                    $totalExpenses += $split['amount'];
+                }
+            }
+        }
         $totalCapital = $this->amount_spent + $totalExpenses + $totalInventories;
 
         $totalHarvest = $this->harvests()->pluck('id')->toArray();

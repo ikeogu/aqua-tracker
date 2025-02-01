@@ -46,10 +46,7 @@ class Batch extends Model
     {
         return   Expense::where('farm_id', $this->farm->id)
             ->whereJsonContains('splitted_for_batch', ['batch_id' => $this->id])
-            ->get()
-            ->pluck('splitted_for_batch')
-            ->flatten()
-            ->toArray();
+            ->get();
     }
 
 
