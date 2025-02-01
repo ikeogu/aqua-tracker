@@ -24,7 +24,8 @@ class BatchResource extends JsonResource
 
         // Loop through the expenses and sum the amount for the specific batch_id
         foreach ($this->expenses() as $expense) {
-            $splittedForBatch = json_decode($expense->splitted_for_batch, true);
+            $splittedForBatch = is_string($expense->splitted_for_batch) ?
+                json_decode($expense->splitted_for_batch, true) : $expense->splitted_for_batch;
 
             foreach ($splittedForBatch as $split) {
                 if ($split['batch_id'] === $this->id) {
