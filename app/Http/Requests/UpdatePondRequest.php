@@ -27,6 +27,7 @@ class UpdatePondRequest extends FormRequest
             "type" => ["nullable", "string"],
             "holding_capacity" => ["nullable", "numeric"],
             "unit" => ["nullable", "numeric"],
+            "unit_size" => ["nullable", "string", 'in:kg,g'],
             "size" => ["nullable", "numeric"],
             "feed_size" => ["nullable", "numeric"],
             "mortality_rate " => ["nullable", "numeric"],
