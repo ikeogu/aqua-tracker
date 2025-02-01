@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 
 class BatchResource extends JsonResource
 {
@@ -15,7 +16,9 @@ class BatchResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
+        Log::debug([
+            'expenses' => $this->expenses()
+        ]);
         $totalInventories = $this->inventories()->sum('amount');
         $totalExpenses = array_sum(array_filter($this->expenses(), function ($item) {
             return is_numeric($item);
