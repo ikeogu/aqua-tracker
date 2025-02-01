@@ -2,10 +2,12 @@
 
 namespace App\Jobs;
 
+use App\Models\PaymentInfo;
 use App\Models\SubscribedPlan;
 use App\Models\Tenant;
 use App\Notifications\SubscriptionExpiredNotification;
 use App\Notifications\SubscriptionReminderNotification;
+use App\Services\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -29,7 +31,7 @@ class UpdateSubscriptionJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle(PaymentService $paymentService): void
     {
         //
         $sevenDaysAgo = Carbon::today()->subDays(7);
@@ -37,7 +39,7 @@ class UpdateSubscriptionJob implements ShouldQueue
         $oneDayAgo = Carbon::today()->subDay();
 
         SubscribedPlan::where('status', 'active')
-        ->each(function ($plan) use ($sevenDaysAgo, $threeDaysAgo, $oneDayAgo) {
+        ->each(function ($plan) use ($sevenDaysAgo, $threeDaysAgo, $oneDayAgo, $paymentService){
             $endDate = Carbon::parse($plan->end_date);
 
             if ($endDate->isSameDay($sevenDaysAgo)) {
@@ -54,11 +56,16 @@ class UpdateSubscriptionJob implements ShouldQueue
 
             // If the subscription has expired (end date is before today)
             if ($endDate->isBefore(Carbon::now())) {
+                $paymentInfo = PaymentInfo::where('tenant_id', $plan->tenant_id)->where('auto_renewal', true)->first();
+                if($paymentInfo){
+                    $paymentService->autoRenew($paymentInfo->tenant);
+                }else{
+                    $plan->status = 'expired';
+                    $plan->save();
+                    $plan->tenant->user->notify(new SubscriptionExpiredNotification());
+                }
 
-                
-                $plan->status = 'expired';
-                $plan->save();
-                $plan->tenant->user->notify(new SubscriptionExpiredNotification());
+
             }
         });
 
