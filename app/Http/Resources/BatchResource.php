@@ -16,9 +16,7 @@ class BatchResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        Log::debug([
-            'expenses' => $this->expenses()
-        ]);
+       
         $totalInventories = $this->inventories()->sum('amount');
         $totalExpenses = 0;
 

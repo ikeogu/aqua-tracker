@@ -149,6 +149,21 @@ class BatchController extends Controller
             );
         }
         $batch = $farm->batches()->find($batch->id);
+
+        foreach ($batch->expenses() as $expense) {
+            $splittedForBatch = is_string($expense->splitted_for_batch) ?
+                json_decode($expense->splitted_for_batch, true) : $expense->splitted_for_batch;
+
+            // Filter out entries that match the specific batch_id
+            $splittedForBatch = array_filter($splittedForBatch, function ($split) use ($batch){
+                return $split['batch_id'] !== $batch->id;
+            });
+
+            // Encode the array back to JSON
+            $expense->splitted_for_batch = array_values($splittedForBatch);
+            $expense->save();
+
+        }
         $batch->delete();
 
         return $this->success(
