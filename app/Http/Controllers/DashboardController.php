@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\Status;
 use App\Http\Resources\TaskResource;
 use App\Models\Farm;
+use App\Models\Purchase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,9 @@ class DashboardController extends Controller
     {
         $overview = [
             'capital' => $farm->inventories()->sum('amount') + $farm->batches()->sum('amount_spent'),
-            'net_profit' => $farm->purchases()->sum('amount') - $farm->inventories()->sum('amount') - $farm->batches()->sum('amount_spent'),
+            'net_profit' => Purchase::where('farm_id', $farm->id)->sum('amount') -
+                $farm->inventories()->sum('amount') -
+                $farm->batches()->sum('amount_spent'),
             'total_expense' => $farm->expenses()->sum('total_amount'),
 
         ];
