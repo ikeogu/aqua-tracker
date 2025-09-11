@@ -14,6 +14,7 @@ use App\Notifications\PaymentInfoNotification;
 use App\Services\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 use phpDocumentor\Reflection\PseudoTypes\False_;
@@ -48,15 +49,15 @@ class SubscribedPlanController extends Controller
 
     public function upgradePlan(Request $request): JsonResponse
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         $request->validate([
             'no_of_months' => ['required', 'in:1,3,6,12']
         ]);
 
-        /*     if(SubscribedPlan::where('tenant_id', $user->tenant->id)->where('type','!=', 'free')->where('status', 'active')->exists()){
-            return $this->error("You have a subscription still running");
-        } */
+         if(SubscribedPlan::where('tenant_id', $user->tenant->id)->where('status', 'active')->exists()){
+            return $this->error("You have a subscription still running, you can subscribe when exhausted.");
+        }
 
         //SubscribedPlan::where('tenant_id', $user->tenant->id)->where('status', 'active')->first()->update(['status', 'expired']);
 
@@ -114,7 +115,7 @@ class SubscribedPlanController extends Controller
 
     public function billingRecords(Request $request): JsonResponse
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         $tenant = $user->tenant;
 

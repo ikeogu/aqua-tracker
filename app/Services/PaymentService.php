@@ -101,7 +101,7 @@ class PaymentService
 
         $response = $this->paystackClient->chargeCard($token, $subscribedPlan->amount, $tenant->user->email);
 
-        if(!$response['status']){
+        if(!$response->status){
             return false;
         }
 
@@ -120,7 +120,7 @@ class PaymentService
         ]);
 
         $tenant->user->notify(new PaymentInfoNotification($subscribedPlan));
-
+        return true;
     }
 
 
@@ -134,9 +134,9 @@ class PaymentService
             'auto_renewal' => false
         ]);
 
-
+        /* Carbon::parse($payment->start_date)->isSameDay(Carbon::now()) ? */
         $payment->update([
-            'status' => Carbon::parse($payment->start_date)->isSameDay(Carbon::now()) ? 'active' : 'inactive',
+            'status' =>  'active',
             'payment_method' => $data['channel'] ?? 'transfer',
 
         ]);

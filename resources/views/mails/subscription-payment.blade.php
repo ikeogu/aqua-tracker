@@ -20,7 +20,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
                     <tr>
                         <td style="color: #003366; font-size: 24px;">
-                            Hello dear,
+                            Hello there,
                         </td>
                     </tr>
                     <tr>
@@ -38,7 +38,7 @@
                             Thank you for using {{ config('app.name') }}.
                         </td>
                     </tr>
-                   
+
                 </table>
             </td>
         </tr>
