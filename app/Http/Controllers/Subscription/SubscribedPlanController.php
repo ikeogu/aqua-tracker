@@ -92,13 +92,13 @@ class SubscribedPlanController extends Controller
 
         PaymentInfo::create([
             'tenant_id' => $payment->tenant_id,
-            'authorization' => json_encode($response->authorization),
+            'authorization' => $response->authorization,
             'auto_renewal' => false
         ]);
 
 
         $payment->update([
-            'status' => Carbon::parse($payment->start_date)->isSameDay(Carbon::now()) ? 'active' : 'inactive',
+            'status' =>  'active',
             'payment_method' => $response->channel,
 
         ]);

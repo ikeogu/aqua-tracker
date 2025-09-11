@@ -16,6 +16,10 @@ class PaymentInfo extends Model
         'tenant_id'
     ];
 
+     protected $cast = [
+        'authorization'  => 'array'
+    ];
+
     public function tenant() : BelongsTo
     {
         return $this->belongsTo(Tenant::class);
