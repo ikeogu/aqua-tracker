@@ -12,13 +12,14 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\Tenant;
+use Illuminate\Support\Facades\Auth;
 
 class TeamMemberInvitation
 {
     public static function execute(array $data, ModelsRole $role): void
     {
         /** @var Tenant $tenant */
-        $tenant = Aut::user()->tenant;
+        $tenant = Auth::user()->tenant;
 
         Arr::map($data, function ($email) use ($tenant, $role) {
 
