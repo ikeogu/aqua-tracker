@@ -24,10 +24,14 @@ class HarvestResource extends JsonResource
 
         $totalHarvest = $this->purchases()->sum('amount');
         $inventories = Inventory::where('batch_id', $this->batch_id)->sum('amount');
-        $expenses = Expense::whereJsonContains('splitted_for_batch', ['batch_id' => $this->batch_id])
-            ->pluck('splitted_for_batch')
-            ->flatten(1)
-            ->whereNotNull('amount')
+
+        $expenses = Expense::get()
+            ->flatMap(
+                fn($expense) => is_string($expense->splitted_for_batch)
+                    ? json_decode($expense->splitted_for_batch, true)
+                    : $expense->splitted_for_batch
+            )
+            ->filter(fn($split) => $split['batch_id'] === $this->id)
             ->sum('amount');
 
         $batch = Batch::find($this->batch->id)->amount_spent;
