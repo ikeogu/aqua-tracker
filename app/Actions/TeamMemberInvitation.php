@@ -23,8 +23,6 @@ class TeamMemberInvitation
 
         Arr::map($data, function ($email) use ($tenant, $role) {
 
-
-
             $user = User::withTrashed()->where('email', $email)->first();
             if ($user) {
                 $user->restore();

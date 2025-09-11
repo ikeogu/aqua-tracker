@@ -4,13 +4,14 @@ namespace App\Traits;
 
 use App\Exceptions\InvalidOrExpiredOtp;
 use App\Enums\Otp;
+use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 trait HasOtp
 {
     public function generateOtpFor(Otp $for): void
     {
-       $otp = random_int(1000, 9999); // safer than rand()
+        $otp = random_int(1000, 9999); // safer than rand()
 
         $this->otp()->updateOrCreate(
             [
@@ -36,11 +37,10 @@ trait HasOtp
             throw new InvalidOrExpiredOtp('Invalid OTP provided', 422);
         }
 
-        if ($userOtp->expires_at->isPast()) {
+        if (Carbon::parse($userOtp->expires_at)->isPast()) {
             $userOtp->delete();
             throw new InvalidOrExpiredOtp('OTP has expired', 422);
         }
-
         // OTP is valid → delete after successful verification
         $userOtp->delete();
 
