@@ -42,7 +42,7 @@ class Batch extends Model
         return $this->hasMany(Inventory::class);
     }
 
-    public function expenses() : mixed
+    public function expenses(): mixed
     {
         return Expense::where('farm_id', $this->farm->id)
             ->whereJsonContains('splitted_for_batch', ['batch_id' => $this->id])

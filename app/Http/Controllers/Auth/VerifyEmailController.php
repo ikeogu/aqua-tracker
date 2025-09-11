@@ -34,11 +34,12 @@ class VerifyEmailController extends Controller
 
     public function verify(VerifyOtpRequest $request): JsonResponse
     {
+        $data = (object) $request->validated();
         /** @var \App\Models\User $user */
-        //$user = User::where('email', $request->email)->first();
-        $user = Auth::user();
+        $user = User::where('email', $data->email)->first();
+       // $user = Auth::user();
 
-        $user->verifyOtpFor(Otp::EMAIL_VERIFICATION, $request->validated()['code']);
+        $user->verifyOtpFor(Otp::EMAIL_VERIFICATION, $data->code);
 
         event(new EmailVerified($user));
 
