@@ -92,7 +92,7 @@ class PaymentService
     public function autoRenew(Tenant $tenant): bool
     {
         $paymentInfo = PaymentInfo::where('tenant_id', $tenant->id)->latest()->first();
-        $token = json_decode($paymentInfo['authorization'])['authorization_code'];
+        $token = json_decode($paymentInfo['authorization'])->authorization_code;
         $subscribedPlan = SubscribedPlan::where('tenant_id', $tenant->id)->where('status', 'active')->first();
 
         $response = $this->paystackClient->chargeCard($token, $subscribedPlan->amount, $tenant->user->email);
