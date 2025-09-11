@@ -9,6 +9,7 @@ use App\Models\SubscriptionPlan;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Notifications\PaymentInfoNotification;
+use App\Notifications\SubscriptionExpiredNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -53,7 +54,7 @@ class PaymentService
 
         $newStartsAt = /* ($existingPlan->end_date) ? Carbon::parse($existingPlan->end_date) : */ now();
 
-       // $newStartsAt = $newStartsAt->isPast() ? now() : $newStartsAt;
+        // $newStartsAt = $newStartsAt->isPast() ? now() : $newStartsAt;
 
         if ($request->no_of_months == 1) {
             $newExpiresAt = (clone $newStartsAt)->addDays(30);
@@ -92,7 +93,7 @@ class PaymentService
     {
         $paymentInfo = PaymentInfo::where('tenant_id', $tenant->id)->latest()->first();
         $token = json_decode($paymentInfo['authorization'])['authorization_code'];
-        $subscribedPlan = SubscribedPlan::where('tenant_id', $tenant->id)->latest()->first();
+        $subscribedPlan = SubscribedPlan::where('tenant_id', $tenant->id)->where('status', 'active')->first();
 
         $response = $this->paystackClient->chargeCard($token, $subscribedPlan->amount, $tenant->user->email);
 
@@ -100,9 +101,9 @@ class PaymentService
             Log::debug([
                 '***** Auto Renew Failes' => $response->message
             ]);
-            $subscribedPlan->update(['status' => 'failed']);
+            $subscribedPlan->update(['status' => 'expired']);
+            $tenant->user->notify(new SubscriptionExpiredNotification());
             return false;
-
         }
 
         $subscribedPlan = SubscribedPlan::create([

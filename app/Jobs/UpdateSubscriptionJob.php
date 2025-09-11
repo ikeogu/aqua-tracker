@@ -57,7 +57,7 @@ class UpdateSubscriptionJob implements ShouldQueue
 
                 Log::debug([
                     'end_date' => $endDate->toDateString(),
-                    'today'    => $today->toDateTimeString(),
+                    'today'    => $today->toDateString(),
                 ]);
 
                 // ⛔ Handle expired subscriptions
