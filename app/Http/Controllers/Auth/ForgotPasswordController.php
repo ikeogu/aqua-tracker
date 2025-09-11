@@ -40,7 +40,6 @@ class ForgotPasswordController extends Controller
     public function verifyPasswordResetOtp(Request $request)
     {
         $request->validate([
-
             'code' => 'required|string',
         ]);
 

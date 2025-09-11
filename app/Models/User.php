@@ -27,11 +27,6 @@ class User extends Authenticatable implements HasMedia
 {
     use HasFactory, Notifiable, InteractsWithMedia, HasOtp, HasUuids, HasRoles, HasApiTokens, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'first_name',
         'last_name',
@@ -43,16 +38,12 @@ class User extends Authenticatable implements HasMedia
         'telephone',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    protected $guard_name = 'web';
     /**
      * Get the attributes that should be cast.
      *
@@ -68,7 +59,7 @@ class User extends Authenticatable implements HasMedia
         ];
     }
 
-    protected $with = [ 'tenants'];
+    protected $with = ['tenants'];
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('profile_picture')->singleFile();
@@ -78,7 +69,7 @@ class User extends Authenticatable implements HasMedia
     public function role(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->getRoleNames()[0] ?? null
+            get: fn() => $this->getRoleNames()[0] ?? null
         );
     }
 
@@ -86,7 +77,7 @@ class User extends Authenticatable implements HasMedia
     public function isVerified(): Attribute
     {
         return Attribute::make(
-            get: fn () => !is_null($this->email_verified_at),
+            get: fn() => !is_null($this->email_verified_at),
         );
     }
 
@@ -108,14 +99,14 @@ class User extends Authenticatable implements HasMedia
 
     public function sendEmailVerificationOtp(): void
     {
-        $this->generateOtpFor(Otp::EMAIL_VERIFICATION); // @phpstan-ignore-line
-        $this->notify(new EmailVerificationNotification()); // @phpstan-ignore-line
+        $this->generateOtpFor(Otp::EMAIL_VERIFICATION);
+        $this->notify(new EmailVerificationNotification());
     }
 
     public function sendPasswordResetOtp(): void
     {
-        $this->generateOtpFor(Otp::PASSWORD_RESET); // @phpstan-ignore-line
-       $this->notify(new ForgotPasswordNotification()); // @phpstan-ignore-line
+        $this->generateOtpFor(Otp::PASSWORD_RESET);
+        $this->notify(new ForgotPasswordNotification());
     }
 
     public function tenant(): BelongsTo
@@ -130,10 +121,8 @@ class User extends Authenticatable implements HasMedia
 
     protected function fullName(): Attribute
     {
-        $fullName = ($this->first_name ?? '') . ' ' . ($this->last_name  ?? '');
-
         return Attribute::make(
-            get: fn () => empty($fullName) || $fullName == " " ? null : $fullName,
+            get: fn() => trim(($this->first_name ?? '') . ' ' . ($this->last_name ?? '')) ?: null,
         );
     }
 
@@ -145,7 +134,7 @@ class User extends Authenticatable implements HasMedia
     public function profilePicture(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->getFirstMediaUrl('profile_picture'),
+            get: fn() => $this->getFirstMediaUrl('profile_picture'),
         );
     }
 
@@ -164,6 +153,4 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(LoginLog::class, 'user_id');
     }
-
-
 }

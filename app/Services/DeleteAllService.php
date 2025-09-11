@@ -51,6 +51,7 @@ class DeleteAllService
             User::class => $this->deleteEmployees($ids),
             Inventory::class => Inventory::whereIn('id', $ids)->delete(),
             Harvest::class => $this->deleteHarvests($ids),
+            default => null
         };
     }
 

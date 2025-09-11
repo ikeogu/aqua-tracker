@@ -18,7 +18,7 @@ class TeamMemberInvitation
     public static function execute(array $data, ModelsRole $role): void
     {
         /** @var Tenant $tenant */
-        $tenant = auth()->user()->tenant;
+        $tenant = Aut::user()->tenant;
 
         Arr::map($data, function ($email) use ($tenant, $role) {
 

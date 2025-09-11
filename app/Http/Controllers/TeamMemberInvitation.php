@@ -13,6 +13,7 @@ use BootstrapTeamMember;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class TeamMemberInvitation extends Controller
 {
@@ -22,7 +23,7 @@ class TeamMemberInvitation extends Controller
 
     {
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if ($user->hasAnyRole([EnumsRole::VIEW_FARMS->value, EnumsRole::EDIT_FARMS->value])) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -50,7 +51,7 @@ class TeamMemberInvitation extends Controller
     public function listTeamMembers(Request $request): JsonResponse
     {
         /** @var Tenant $tenant */
-        $tenant = auth()->user()->tenant;
+        $tenant = Auth::user()->tenant;
 
         $teamMembers = $tenant->teamMembers()->paginate($request->per_page ?? 20)
             ->map(function ($teamMember) {
@@ -76,7 +77,7 @@ class TeamMemberInvitation extends Controller
     public function updateTeamMember(Request $request, string $teamMemberId): JsonResponse
     {
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if ($user->hasAnyRole([EnumsRole::VIEW_FARMS->value, EnumsRole::EDIT_FARMS->value])) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -93,7 +94,7 @@ class TeamMemberInvitation extends Controller
         ]);
 
         /** @var Tenant $tenant */
-        $tenant = auth()->user()->tenant;
+        $tenant = Auth::user()->tenant;
 
         $teamMember = $tenant->teamMembers()->where('user_id', $teamMemberId)->first();
         /** @var Role $role */
@@ -121,7 +122,7 @@ class TeamMemberInvitation extends Controller
     {
 
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if ($user->hasAnyRole([EnumsRole::VIEW_FARMS->value, EnumsRole::EDIT_FARMS->value])) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -130,7 +131,7 @@ class TeamMemberInvitation extends Controller
          }
 
         /** @var Tenant $tenant */
-        $tenant = auth()->user()->tenant;
+        $tenant = Auth::user()->tenant;
 
         $teamMember = $tenant->teamMembers()->where('users.id', $teamMemberId)->first();
         $tenant->teamMembers()->detach($teamMemberId);
@@ -148,7 +149,7 @@ class TeamMemberInvitation extends Controller
     public function onboardTeamMember(Request $request): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
         ActionsBootstrapTeamMember::execute($user, $request);
 

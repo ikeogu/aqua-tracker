@@ -7,6 +7,7 @@ use App\Enums\Role;
 use App\Services\DeleteAllService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DeleteAllController extends Controller
 {
@@ -20,7 +21,7 @@ class DeleteAllController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "Your current role does not permit this action, kindly contact the Admin.",

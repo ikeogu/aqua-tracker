@@ -39,6 +39,8 @@ Route::prefix('auth')->middleware('auth:sanctum')
         Route::get('/user', function () {
             return new \App\Http\Resources\UserResource(Auth::user());
         });
+
+        Route::post('email-verification/verify', [VerifyEmailController::class, 'verify'])->name('verification.verify');
     });
 
-Route::post('auth/email-verification/verify', [VerifyEmailController::class, 'verify'])->name('verification.verify');
+//Route::post('auth/email-verification/verify', [VerifyEmailController::class, 'verify'])->name('verification.verify');

@@ -20,6 +20,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 
 class HarvestController extends Controller
 {
@@ -115,7 +116,7 @@ class HarvestController extends Controller
     public function store(createHarvestRequest $request, Farm $farm): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
         $harvest = $farm->harvests()->create($request->validated());
 
@@ -135,7 +136,7 @@ class HarvestController extends Controller
     public function update(UpdateHarvestRequest $request, Farm $farm, Harvest $harvest): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         $authorization = Gate::inspect('update', $farm);
 
         if ($authorization->denied()) {

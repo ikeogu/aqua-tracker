@@ -15,6 +15,7 @@ class TaskService
     public function executeTask()
     {
         $tasks = Task::where('status', Status::PENDING->value)->get();
+        if($tasks->count() < 1) return;
 
         foreach ($tasks as $task) {
             $dueDate = Carbon::parse($task->due_date);
@@ -28,11 +29,11 @@ class TaskService
                 if (now()->greaterThan($overdueThreshold)) {
                     Log::debug(":::::::: task overdue");
                     $task->update(['status' => Status::OVERDUE->value]);
-                    $task->farm->tenant->user->notify(new TaskNotification($task, Status::OVERDUE->value));
+                    $task->farm?->tenant->user->notify(new TaskNotification($task, Status::OVERDUE->value));
                 } else {
                     Log::debug(":::::::: task due");
                     $task->update(['status' => Status::DUE->value]);
-                    $task->farm->tenant->user->notify(new TaskNotification($task, Status::DUE->value));
+                    $task->farm?->tenant->user->notify(new TaskNotification($task, Status::DUE->value));
                 }
 
                 // Handle repeating tasks
@@ -43,7 +44,7 @@ class TaskService
             } elseif ($startDate->isToday()) {
                 Log::info(":::::::: task due now");
                 $task->update(['status' => Status::ACTIVE->value]);
-                $task->farm->tenant->user->notify(new TaskNotification($task, Status::ACTIVE->value));
+                $task->farm?->tenant->user->notify(new TaskNotification($task, Status::ACTIVE->value));
             }
             // Notification reminders
             $durations = ['1 day', '3 days', '7 days', '14 days', '30 days', '1 hour', '30 minutes', '15 minutes', '5 minutes', '1 minute'];

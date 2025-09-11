@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class HarvestCustomerController extends Controller
@@ -76,7 +77,7 @@ class HarvestCustomerController extends Controller
     public function store(CreateCustomerRequest $request, Farm $farm, Harvest $harvest): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -99,7 +100,7 @@ class HarvestCustomerController extends Controller
     public function update(UpdateCustomerRequest $request, Farm $farm, Harvest $harvest, HarvestCustomer $customer): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "Your current role does not permit this action, kindly contact the Admin.",

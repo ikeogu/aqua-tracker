@@ -29,7 +29,7 @@ class BootstrapFarmerAsTenant
                 'organization_name' => $data['organization_name']
             ],
             [
-                'no_of_farms_owned' => $data['no_of_farms_owned'] ?? null,
+                'no_of_farms_owned' => $data['no_of_farms_owned'] ?? 1,
                 'data' => json_encode($data['team_members'] ?? []),
             ]
         );
@@ -39,8 +39,7 @@ class BootstrapFarmerAsTenant
             'tenant_id' => $tenant->id,
             'team_member_onboarded' => true,
             'telephone' => $data['telephone']
-
-            ])->save();
+        ])->save();
 
         $tenant->users()->attach($user->id, [
             'status' => Status::ACTIVE->value,

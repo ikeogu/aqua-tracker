@@ -9,6 +9,7 @@ use App\Http\Resources\CustomerResource;
 use App\Models\Farm;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BeneficiaryController extends Controller
 {
@@ -17,7 +18,7 @@ class BeneficiaryController extends Controller
     public function store(Request $request, Farm $farm) : JsonResponse
     {
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if ($user->hasRole(Role::VIEW_FARMS->value)) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -50,7 +51,7 @@ class BeneficiaryController extends Controller
     public function index(Request $request, Farm $farm) : JsonResponse
     {
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if (!$user->hasAnyRole([Role::VIEW_FARMS->value, Role::ORGANIZATION_OWNER->value])) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -85,7 +86,7 @@ class BeneficiaryController extends Controller
     public function destroy(Farm $farm,string $beneficiary) : JsonResponse
     {
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if ($user->cannot('delete')) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",

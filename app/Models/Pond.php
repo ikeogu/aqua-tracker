@@ -25,11 +25,7 @@ class Pond extends Model
         "batch_id",
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
+   
     protected $casts = [
         'holding_capacity' => 'integer',
         'unit' => 'integer',

@@ -37,7 +37,7 @@ class ForgotPasswordNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Forgot Password Notification OTP')
-            ->from(env('MAIL_FROM_ADDRESS'))
+            ->from(config('mail.from.address'))
             ->markdown(
                 'mails.forgot-password-otp',
                 [

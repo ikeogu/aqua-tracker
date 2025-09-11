@@ -13,12 +13,12 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__.'/../routes/web.php',
-        api: __DIR__.'/../routes/api.php',
-        commands: __DIR__.'/../routes/console.php',
+        web: __DIR__ . '/../routes/web.php',
+        api: __DIR__ . '/../routes/api.php',
+        commands: __DIR__ . '/../routes/console.php',
         health: '/up',
-        then: function(){
-      /*       Route::prefix('auth')
+        then: function () {
+            /*       Route::prefix('auth')
             ->group(base_path('routes/routes_includes/auth.php'));
 
             Route::middleware('api')
@@ -32,7 +32,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->prefix('farmer')
                 ->group(base_path('routes/routes_includes/farmer.php'));
  */
-
         }
 
     )
@@ -46,11 +45,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->validateCsrfTokens(except: [
+            'http://127.0.0.1:8000/*',
+            'http://127.0.0.1/*',
             'webhook/*',
         ]);
-
     })
-    ->withExceptions(function (Exceptions $exceptions) {
-
-
-    })->create();
+    ->withExceptions(function (Exceptions $exceptions) {})->create();

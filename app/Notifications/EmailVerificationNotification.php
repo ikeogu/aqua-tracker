@@ -37,7 +37,7 @@ class EmailVerificationNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Verify Your Email Address')
-            ->from(env('MAIL_FROM_ADDRESS'))
+           ->from(config('mail.from.address'))
             ->markdown(
                 'mails.email-verification',
                 [

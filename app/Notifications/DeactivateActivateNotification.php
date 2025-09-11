@@ -41,7 +41,7 @@ class DeactivateActivateNotification extends Notification
         $view = ($this->status) ? "mails.deactivate-account" : "mails.activate-account";
         return (new MailMessage)
             ->subject($this->subject)
-            ->from(env('MAIL_FROM_ADDRESS'))
+            ->from(config('mail.from.address'))
             ->markdown($view);
     }
 

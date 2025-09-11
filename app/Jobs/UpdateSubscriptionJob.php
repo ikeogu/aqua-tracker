@@ -65,7 +65,6 @@ class UpdateSubscriptionJob implements ShouldQueue
                     $plan->tenant->user->notify(new SubscriptionExpiredNotification());
                 }
 
-
             }
         });
 

@@ -15,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 
 class InventoryController extends Controller
 {
@@ -22,7 +23,7 @@ class InventoryController extends Controller
     public function store(CreateInventoryRequest $request, Farm $farm): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -82,7 +83,7 @@ class InventoryController extends Controller
     public function update(UpdateInventoryRequest $request, Farm $farm, Inventory $inventory): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         // $authorization = Gate::inspect('update', $farm);
 
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
@@ -112,7 +113,7 @@ class InventoryController extends Controller
     public function destroy(Farm $farm, Inventory $inventory): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "Your current role does not permit this action, kindly contact the Admin.",

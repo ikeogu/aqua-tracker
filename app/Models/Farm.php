@@ -55,11 +55,10 @@ class Farm extends Model
         return $this->hasMany(Pond::class , 'farm_id');
     }
 
-    public function owner(): User
+    public function owner(): mixed
     {
         return $this->users()
         ->wherePivot('role', Role::FARM_TEAM_OWNER->value)
-        
         ->first();
     }
 

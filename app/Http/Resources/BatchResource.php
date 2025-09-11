@@ -6,7 +6,7 @@ use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Log;
-
+/** @mixin \App\Models\Batch */
 class BatchResource extends JsonResource
 {
     /**
@@ -16,7 +16,7 @@ class BatchResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-       
+
         $totalInventories = $this->inventories()->sum('amount');
         $totalExpenses = 0;
 

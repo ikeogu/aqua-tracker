@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class OrganizationController extends Controller
 {
@@ -28,7 +29,7 @@ class OrganizationController extends Controller
 
     {
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if ($user->hasRole(Role::VIEW_FARMS->value)) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -36,9 +37,9 @@ class OrganizationController extends Controller
              );
          }
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
-        if(!$user->hasRole(Role::ORGANIZATION_OWNER->value) && $user->tenant !== $tenant->id){
+        if(!$user->hasRole(Role::ORGANIZATION_OWNER->value) || $user->tenant !== $tenant->id){
             $this->error(
                 message:"unathorized action.",
                 code:403
@@ -52,7 +53,6 @@ class OrganizationController extends Controller
             data: $tenant,
             code: HttpStatusCode::SUCCESSFUL->value
         );
-
 
     }
 

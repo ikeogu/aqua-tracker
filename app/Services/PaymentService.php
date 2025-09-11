@@ -17,22 +17,19 @@ class PaymentService
 {
     public function __construct(
         public PaystackClient $paystackClient
-    )
-    {
+    ) {}
 
-    }
-    public function addFreePlanToTenant(Tenant $tenant) : void
+
+    public function addFreePlanToTenant(Tenant $tenant): void
     {
 
         $subscriptionPlan = SubscriptionPlan::where('type', 'free')->latest()->first();
 
         $newStartsAt =  now();
-        if ($subscriptionPlan->duration == 1) {
-            $newExpiresAt = (clone $newStartsAt)->addDays(30);
-        } else {
-            $newExpiresAt = (clone $newStartsAt)->addMonths($subscriptionPlan->duration);
-        }
-       $subscribedPlan = SubscribedPlan::create([
+
+        $newExpiresAt = (clone $newStartsAt)->addDays(7);
+
+        $subscribedPlan = SubscribedPlan::create([
             'subscription_plan_id' => $subscriptionPlan->id,
             'status' => 'active',
             'no_of_months' => $subscriptionPlan->duration,
@@ -41,22 +38,22 @@ class PaymentService
             'start_date' => $newStartsAt,
             'end_date' => $newExpiresAt,
             'payment_method' => 'N/A',
-            'type' =>'free',
+            'type' => 'free',
             "tenant_id" => $tenant->id
         ]);
 
         $tenant->user->notify(new PaymentInfoNotification($subscribedPlan));
     }
 
-    public function upgradeUserPlan(Request $request, User $user) : array
+    public function upgradeUserPlan(Request $request, User $user): array
     {
         $subscriptionPlan = SubscriptionPlan::where('type', 'paid')->latest()->first();
 
         $existingPlan = SubscribedPlan::where('tenant_id', $user->tenant->id)->latest()->first();
 
-        $newStartsAt = ($existingPlan?->end_date) ? Carbon::parse($existingPlan?->end_date) : now();
+        $newStartsAt = /* ($existingPlan->end_date) ? Carbon::parse($existingPlan->end_date) : */ now();
 
-        $newStartsAt = $newStartsAt->isPast() ? now() : $newStartsAt;
+       // $newStartsAt = $newStartsAt->isPast() ? now() : $newStartsAt;
 
         if ($request->no_of_months == 1) {
             $newExpiresAt = (clone $newStartsAt)->addDays(30);
@@ -75,7 +72,7 @@ class PaymentService
             'start_date' => $newStartsAt,
             'end_date' => $newExpiresAt,
             'payment_method' => 'N/A',
-            'type' =>'paid'
+            'type' => 'paid'
 
         ]);
 
@@ -87,13 +84,11 @@ class PaymentService
             //'callback_url' => route('verifyPayment')
         ];
 
-       // return $this->paystackClient->initiateTransaction($data);
+        // return $this->paystackClient->initiateTransaction($data);
         return $data;
-
-
     }
 
-    public function autoRenew(Tenant $tenant) : bool
+    public function autoRenew(Tenant $tenant): bool
     {
         $paymentInfo = PaymentInfo::where('tenant_id', $tenant->id)->latest()->first();
         $token = json_decode($paymentInfo['authorization'])['authorization_code'];
@@ -101,11 +96,11 @@ class PaymentService
 
         $response = $this->paystackClient->chargeCard($token, $subscribedPlan->amount, $tenant->user->email);
 
-        if(!$response->status){
+        if (!$response->status) {
             return false;
         }
 
-       $subscribedPlan = SubscribedPlan::create([
+        $subscribedPlan = SubscribedPlan::create([
 
             'subscription_plan_id' => $subscribedPlan->subscription_plan_id,
             'tenant_id' => $tenant->id,
@@ -116,7 +111,7 @@ class PaymentService
             'start_date' => now(),
             'end_date' => now()->addMonths($subscribedPlan->no_of_months),
             'payment_method' => $response['channel'],
-            'type' =>'paid'
+            'type' => 'paid'
         ]);
 
         $tenant->user->notify(new PaymentInfoNotification($subscribedPlan));
@@ -124,7 +119,7 @@ class PaymentService
     }
 
 
-    public function verifyPayment(array $data) : void
+    public function verifyPayment(array $data): void
     {
         $payment = SubscribedPlan::where('reference', $data['reference'])->first();
 
@@ -143,6 +138,5 @@ class PaymentService
 
         $payment->tenant->user->notify(new PaymentInfoNotification($payment));
         Log::info('Payment successful');
-
     }
 }

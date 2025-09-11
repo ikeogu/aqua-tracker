@@ -21,6 +21,7 @@ use phpDocumentor\Reflection\PseudoTypes\False_;
 use Ramsey\Uuid\Builder\FallbackBuilder;
 use Spatie\QueryBuilder\QueryBuilder;
 
+
 use function App\Helpers\currentPlan;
 
 class SubscribedPlanController extends Controller

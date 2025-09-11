@@ -17,6 +17,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate as FacadesGate;
 use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Support\Facades\Auth;
 
 class BatchController extends Controller
 {
@@ -24,7 +25,7 @@ class BatchController extends Controller
     public function store(CreateBatchRequest $request, Farm $farm): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -100,7 +101,7 @@ class BatchController extends Controller
     public function update(UpdateBatchRequest $request, Farm $farm,  Batch $batch): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
@@ -138,7 +139,7 @@ class BatchController extends Controller
     public function destroy(Farm $farm, Batch $batch): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "Your current role does not permit this action, kindly contact the Admin.",

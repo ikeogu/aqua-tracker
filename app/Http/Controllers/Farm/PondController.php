@@ -13,6 +13,7 @@ use App\Models\Pond;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 class PondController extends Controller
 {
@@ -34,7 +35,7 @@ class PondController extends Controller
     public function store(CreatePondRequest $request, Farm $farm): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -65,7 +66,7 @@ class PondController extends Controller
     public function update(UpdatePondRequest $request, Farm $farm, Pond $pond): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if (!$user->hasAnyRole([Role::FARM_ADMIN->value, Role::ORGANIZATION_OWNER->value, Role::SUPER_ADMIN->value])) {
             return $this->error(403, 'You are not authorized to perform this action');
         }
@@ -91,7 +92,7 @@ class PondController extends Controller
     public function destroy(Farm $farm, Pond $pond): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "Your current role does not permit this action, kindly contact the Admin.",

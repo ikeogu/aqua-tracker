@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Enums\Role;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class CheckFarmerRole
 {

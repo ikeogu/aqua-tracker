@@ -35,7 +35,7 @@ class FetchAllCustomersController extends Controller
                     //@codeCoverageIgnoreStart
                 } catch (\Throwable $exception) {
                     Log::debug($exception->getMessage());
-                    return $this->error(Response::HTTP_SERVICE_UNAVAILABLE);
+                    return $this->error("something went wrong", Response::HTTP_SERVICE_UNAVAILABLE);
                 }
                 //@codeCoverageIgnoreEnd
             }

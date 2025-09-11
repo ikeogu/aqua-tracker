@@ -12,7 +12,9 @@ use App\Jobs\DeleteFarmJob;
 use App\Models\Farm;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+
 
 class FarmController extends Controller
 {
@@ -21,7 +23,7 @@ class FarmController extends Controller
     public function store(CreateFarmRequest $request): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if ($user->hasRole(Role::VIEW_FARMS->value)) {
             return $this->error(
                 message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -84,7 +86,7 @@ class FarmController extends Controller
     public function update(UpdateFarmRequest $request, Farm $farm): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         $authorization = Gate::inspect('update', $farm);
 
         if ($authorization->denied()) {
@@ -106,7 +108,7 @@ class FarmController extends Controller
     {
 
         /** @var User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (!$user->isFarmOwner($farm)) {
             return $this->error(

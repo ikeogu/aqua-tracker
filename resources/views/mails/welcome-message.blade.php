@@ -43,8 +43,8 @@
                     </tr>
                     <tr>
                         <td style="padding: 20px 0 30px 0; color: #333333; font-size: 16px; line-height: 20px;">
-                            <strong>Your 30-Day Free Subscription</strong><br>
-                            As a new member of the AquaTrack family, you are entitled to a complimentary 30-day subscription. This gives you full access to all our premium features, allowing you to experience the full potential of our CRM without any cost.
+                            <strong>Your 7-Day Free Subscription</strong><br>
+                            As a new member of the AquaTrack family, you are entitled to a complimentary 7-day subscription. This gives you full access to all our premium features, allowing you to experience the full potential of our CRM without any cost.
                         </td>
                     </tr>
                     <tr>

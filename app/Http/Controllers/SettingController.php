@@ -9,6 +9,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Farm;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
@@ -17,7 +18,7 @@ class SettingController extends Controller
     public function __invoke(ProfileSettingRequest $request) : JsonResponse
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         $data = $request->validated();
 
         $user->update([

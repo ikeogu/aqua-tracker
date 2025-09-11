@@ -41,7 +41,7 @@ class SubscriptionReminderNotification extends Notification
         return (new MailMessage)
                 ->subject('Subscription Expiration Reminder')
                     ->line($this->mess)
-                    ->action('Login to Subscribe', env('FRONTEND_URL') .'/login')
+                    ->action('Login to Subscribe', config('app.front_end_url') .'/login')
                     ->line('Thank you for using our application!');
     }
 

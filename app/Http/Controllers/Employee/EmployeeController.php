@@ -16,6 +16,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeeController extends Controller
 {
@@ -45,7 +46,7 @@ class EmployeeController extends Controller
     {
 
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if ($user->hasRole([Role::VIEW_FARMS->value])) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -78,7 +79,7 @@ class EmployeeController extends Controller
     public function update(UpdateEmployeeRequest $request, Farm $farm, User $employee)
     {
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if ($user->hasRole([Role::VIEW_FARMS->value])) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -102,7 +103,7 @@ class EmployeeController extends Controller
     public function destroy(Farm $farm, User $employee)
     {
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if ($user->hasRole([Role::VIEW_FARMS->value])) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",

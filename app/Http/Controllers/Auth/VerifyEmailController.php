@@ -10,6 +10,7 @@ use App\Http\Requests\VerifyOtpRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VerifyEmailController extends Controller
 {
@@ -25,10 +26,8 @@ class VerifyEmailController extends Controller
             $user->sendEmailVerificationOtp();
         }
 
-
         return $this->success(
             message: 'Email verification code has been sent to your email address',
-
             code: HttpStatusCode::SUCCESSFUL->value
         );
     }
@@ -36,7 +35,8 @@ class VerifyEmailController extends Controller
     public function verify(VerifyOtpRequest $request): JsonResponse
     {
         /** @var \App\Models\User $user */
-        $user = User::where('email', $request->email)->first();
+        //$user = User::where('email', $request->email)->first();
+        $user = Auth::user();
 
         $user->verifyOtpFor(Otp::EMAIL_VERIFICATION, $request->validated()['code']);
 

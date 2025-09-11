@@ -15,6 +15,7 @@ use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 class PurchaseController extends Controller
 {
@@ -23,7 +24,7 @@ class PurchaseController extends Controller
     public function store(Request $request, Farm $farm, Harvest $harvest) : JsonResponse
     {
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if ($user->hasRole(Role::VIEW_FARMS->value)) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -48,7 +49,7 @@ class PurchaseController extends Controller
     public function update(Request $request, Farm $farm, Harvest $harvest) : JsonResponse
     {
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if ($user->hasRole(Role::VIEW_FARMS->value)) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",
@@ -94,7 +95,7 @@ class PurchaseController extends Controller
     public function destroy( Purchase $purchase) : JsonResponse
     {
          /** @var User $user */
-         $user = auth()->user();
+         $user = Auth::user();
          if ($user->hasRole(Role::VIEW_FARMS->value)) {
              return $this->error(
                  message: "Your current role does not permit this action, kindly contact the Admin.",

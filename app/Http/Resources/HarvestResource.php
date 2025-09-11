@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
+/** @mixin \App\Models\Harvest */
 class HarvestResource extends JsonResource
 {
     /**
