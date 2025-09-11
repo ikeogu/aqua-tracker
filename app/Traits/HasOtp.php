@@ -10,29 +10,41 @@ trait HasOtp
 {
     public function generateOtpFor(Otp $for): void
     {
-        $otp = rand(1000, 9999);
-        $this->otp()->updateOrCreate([
-            'user_id' => $this->id,
-            'for' => $for,
-        ], [
-            'otp' =>$otp ,
-            'expires_at' => now()->addMinutes(6),
-        ]);
+       $otp = random_int(1000, 9999); // safer than rand()
+
+        $this->otp()->updateOrCreate(
+            [
+                'user_id' => $this->id,
+                'for'     => $for->value, // store enum value, not object
+            ],
+            [
+                'otp'        => $otp,
+                'expires_at' => now()->addMinutes(6),
+            ]
+        );
     }
 
     public function verifyOtpFor(Otp $for, int $otp): bool
     {
-
         $userOtp = $this->getOtpFor($for);
 
-        if ($userOtp && $userOtp->otp == $otp) {
-            if ($userOtp->expires_at > now()) {
-                $userOtp->delete();
-            }
-            return true;
-        } else {
+        if (! $userOtp) {
+            throw new InvalidOrExpiredOtp('OTP not found', 404);
+        }
+
+        if ($userOtp->otp !== $otp) {
             throw new InvalidOrExpiredOtp('Invalid OTP provided', 422);
         }
+
+        if ($userOtp->expires_at->isPast()) {
+            $userOtp->delete();
+            throw new InvalidOrExpiredOtp('OTP has expired', 422);
+        }
+
+        // OTP is valid → delete after successful verification
+        $userOtp->delete();
+
+        return true;
     }
 
 
