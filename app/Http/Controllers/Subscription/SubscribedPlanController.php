@@ -93,7 +93,7 @@ class SubscribedPlanController extends Controller
 
         PaymentInfo::create([
             'tenant_id' => $payment->tenant_id,
-            'authorization' => $response->authorization,
+            'authorization' => json_encode($response->authorization),
             'auto_renewal' => false
         ]);
 
