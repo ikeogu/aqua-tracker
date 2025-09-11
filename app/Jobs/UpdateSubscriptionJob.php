@@ -63,14 +63,14 @@ class UpdateSubscriptionJob implements ShouldQueue
                         ->first();
 
                     if ($paymentInfo) {
-
+                        info("i got here 1");
                         $paymentService->autoRenew($paymentInfo->tenant);
-
+                        info("i got here 2");
                     } else {
-
+                        info("i got here 3");
                         $plan->update(['status' => 'expired']);
                         $plan->tenant->user->notify(new SubscriptionExpiredNotification());
-
+                        info("i got here 4");
                     }
                 }
             });
