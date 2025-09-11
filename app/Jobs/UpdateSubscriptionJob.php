@@ -55,11 +55,6 @@ class UpdateSubscriptionJob implements ShouldQueue
                     }
                 }
 
-                Log::debug([
-                    'end_date' => $endDate->toDateString(),
-                    'today'    => $today->toDateString(),
-                ]);
-
                 // ⛔ Handle expired subscriptions
                 if ($endDate->isBefore($today)) {
                     $paymentInfo = PaymentInfo::query()
