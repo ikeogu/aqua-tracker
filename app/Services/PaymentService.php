@@ -97,7 +97,12 @@ class PaymentService
         $response = $this->paystackClient->chargeCard($token, $subscribedPlan->amount, $tenant->user->email);
 
         if (!$response->status) {
+            Log::debug([
+                '***** Auto Renew Failes' => $response->message
+            ]);
+            $subscribedPlan->update(['status' => 'failed']);
             return false;
+
         }
 
         $subscribedPlan = SubscribedPlan::create([

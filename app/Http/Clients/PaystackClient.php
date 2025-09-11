@@ -51,7 +51,7 @@ class PaystackClient extends PendingRequest
         try {
 
             $response = $this->post("transaction/charge_authorization", $data);
-            Log::debug($response->json());
+            
             return VerifyPaymentDto::create($response->json());
 
         } catch (GuzzleException $e) {
