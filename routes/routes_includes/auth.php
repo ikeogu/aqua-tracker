@@ -18,7 +18,7 @@ Route::prefix('auth')->middleware('guest')
         Route::post('/signin', SigninController::class)->name('login');
         Route::post('/forgot-password', ForgotPasswordController::class)->name('password.forgot');
         Route::post('verify-password-reset-otp', [ForgotPasswordController::class, 'verifyPasswordResetOtp']);
-        Route::post('auth/email-verification/resend', [VerifyEmailController::class, 'resend'])->name('verification.resend');
+        Route::post('email-verification/resend', [VerifyEmailController::class, 'resend'])->name('verification.resend');
     });
 
 Route::prefix('auth')->middleware('auth:sanctum')

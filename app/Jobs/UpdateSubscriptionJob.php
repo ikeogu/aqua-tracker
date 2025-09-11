@@ -34,64 +34,68 @@ class UpdateSubscriptionJob implements ShouldQueue
     public function handle(PaymentService $paymentService): void
     {
         //
-        $sevenDaysAgo = Carbon::today()->subDays(7);
-        $threeDaysAgo = Carbon::today()->subDays(3);
-        $oneDayAgo = Carbon::today()->subDay();
+        $reminderDays = [
+            7 => Carbon::today()->subDays(7),
+            3 => Carbon::today()->subDays(3),
+            1 => Carbon::today()->subDay(),
+        ];
 
         SubscribedPlan::where('status', 'active')
-        ->each(function ($plan) use ($sevenDaysAgo, $threeDaysAgo, $oneDayAgo, $paymentService){
-            $endDate = Carbon::parse($plan->end_date);
+            ->with(['tenant.user']) // eager load to avoid N+1
+            ->each(function (SubscribedPlan $plan) use ($reminderDays, $paymentService) {
+                $endDate = Carbon::parse($plan->end_date);
+                $today   = Carbon::now();
 
-            if ($endDate->isSameDay($sevenDaysAgo)) {
-                $plan->tenant->user->notify(new SubscriptionReminderNotification($sevenDaysAgo));
-            }
-
-            if ($endDate->isSameDay($threeDaysAgo)) {
-                $plan->tenant->user->notify(new SubscriptionReminderNotification($threeDaysAgo));
-            }
-
-            if ($endDate->isSameDay($oneDayAgo)) {
-                $plan->tenant->user->notify(new SubscriptionReminderNotification($oneDayAgo));
-            }
-
-            Log::debug(['endate' => $endDate, 'today' => Carbon::now()]);
-            // If the subscription has expired (end date is before today)
-            if ($endDate->isBefore(Carbon::now())) {
-                $paymentInfo = PaymentInfo::where('tenant_id', $plan->tenant_id)->where('auto_renewal', true)->first();
-                if($paymentInfo){
-                    $paymentService->autoRenew($paymentInfo->tenant);
-                }else{
-                    $plan->status = 'expired';
-                    $plan->save();
-                    $plan->tenant->user->notify(new SubscriptionExpiredNotification());
+                // 🔔 Send reminders
+                foreach ($reminderDays as $days => $date) {
+                    if ($endDate->isSameDay($date)) {
+                        $plan->tenant->user->notify(
+                            new SubscriptionReminderNotification($date)
+                        );
+                    }
                 }
 
-            }
-        });
+                Log::debug([
+                    'end_date' => $endDate->toDateString(),
+                    'today'    => $today->toDateTimeString(),
+                ]);
+
+                // ⛔ Handle expired subscriptions
+                if ($endDate->isBefore($today)) {
+                    $paymentInfo = PaymentInfo::query()
+                        ->where('tenant_id', $plan->tenant_id)
+                        ->where('auto_renewal', true)
+                        ->first();
+
+                    if ($paymentInfo) {
+                        $paymentService->autoRenew($paymentInfo->tenant);
+                    } else {
+                        $plan->update(['status' => 'expired']);
+                        $plan->tenant->user->notify(new SubscriptionExpiredNotification());
+                    }
+                }
+            });
 
 
         Tenant::whereHas('subscribedPlans')
-        ->latest()
-        ->get()
-        ->each(function ($tenant) {
+            ->latest()
+            ->get()
+            ->each(function ($tenant) {
 
-            // Check if the tenant already has an active subscription
-            if ($tenant->subscribedPlans->where('status', 'active')->isNotEmpty()) {
-                return; // Skip to the next tenant
-            }
+                // Check if the tenant already has an active subscription
+                if ($tenant->subscribedPlans->where('status', 'active')->isNotEmpty()) {
+                    return; // Skip to the next tenant
+                }
 
-            // Find the latest inactive plan for the current tenant that is still valid
-            $newSubscription = SubscribedPlan::where('status', 'inactive')
-            ->where('tenant_id', $tenant->id)
-                ->first();
+                // Find the latest inactive plan for the current tenant that is still valid
+                $newSubscription = SubscribedPlan::where('status', 'inactive')
+                    ->where('tenant_id', $tenant->id)
+                    ->first();
 
-            // If an inactive plan is found and it has not expired, update its status to active
-            if ($newSubscription && Carbon::parse($newSubscription->end_date)->isFuture()) {
-                $newSubscription->update(['status' => 'active']);
-            }
-        });
-
-
-
+                // If an inactive plan is found and it has not expired, update its status to active
+                if ($newSubscription && Carbon::parse($newSubscription->end_date)->isFuture()) {
+                    $newSubscription->update(['status' => 'active']);
+                }
+            });
     }
 }
