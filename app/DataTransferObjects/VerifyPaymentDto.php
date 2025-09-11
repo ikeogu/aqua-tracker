@@ -2,6 +2,7 @@
 
 namespace App\DataTransferObjects;
 
+use Illuminate\Support\Facades\Log;
 use Spatie\LaravelData\Data;
 
 class VerifyPaymentDto extends Data
@@ -16,6 +17,7 @@ class VerifyPaymentDto extends Data
 
 
     public static function create(array $data) : self {
+        Log::debug($data);
         return VerifyPaymentDto::from([
             'status' => $data['status'] ,
             'reference' => $data['data']['reference'],
