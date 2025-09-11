@@ -25,14 +25,16 @@ class HarvestResource extends JsonResource
         $totalHarvest = $this->purchases()->sum('amount');
         $inventories = Inventory::where('batch_id', $this->batch_id)->sum('amount');
 
-        $expenses = Expense::get()
-            ->flatMap(
-                fn($expense) => is_string($expense->splitted_for_batch)
-                    ? json_decode($expense->splitted_for_batch, true)
-                    : $expense->splitted_for_batch
-            )
-            ->filter(fn($split) => $split['batch_id'] === $this->id)
-            ->sum('amount');
+        $expenses =  DB::table('expenses')
+            ->selectRaw('SUM(j.amount) as total')
+            ->fromRaw("expenses, JSON_TABLE(expenses.splitted_for_batch, '$[*]'
+                    COLUMNS (
+                        batch_id VARCHAR(255) PATH '$.batch_id',
+                        amount DECIMAL(10,2) PATH '$.amount'
+                    )
+                ) as j")
+            ->where('j.batch_id', $this->batch_id)
+            ->value('total');
 
         $batch = Batch::find($this->batch->id)->amount_spent;
 
