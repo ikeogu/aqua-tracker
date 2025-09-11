@@ -37,7 +37,7 @@ class VerifyEmailController extends Controller
         /** @var \App\Models\User|null $user */
         $user = User::where('email', $request->validated('email'))->first();
 
-        if (! $user) {
+        if (!$user) {
             return $this->error(
                 message: 'User not found.',
                 code: HttpStatusCode::NOT_FOUND->value

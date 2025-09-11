@@ -25,21 +25,19 @@ class HarvestResource extends JsonResource
         $totalHarvest = $this->purchases()->sum('amount');
         $inventories = Inventory::where('batch_id', $this->batch_id)->sum('amount');
         $expenses = Expense::whereJsonContains('splitted_for_batch', ['batch_id' => $this->batch_id])
-        ->get()
-        ->pluck('splitted_for_batch')
-        ->flatten();
-        $expenses = array_sum(array_filter($expenses->toArray(), function ($item) {
-            return is_int($item);
-        }));
+            ->pluck('splitted_for_batch')
+            ->flatten(1)
+            ->whereNotNull('amount')
+            ->sum('amount');
 
         $batch = Batch::find($this->batch->id)->amount_spent;
 
 
         $data = [
-            'total_harvest' =>$totalHarvest,
+            'total_harvest' => $totalHarvest,
             'total_capital' => $inventories + $batch + $expenses,
-             'total_profit' => $totalHarvest - ($inventories + $batch + $expenses),
-             'expenses' => $expenses,
+            'total_profit' => $totalHarvest - ($inventories + $batch + $expenses),
+            'expenses' => $expenses,
 
         ];
 
@@ -71,7 +69,7 @@ class HarvestResource extends JsonResource
                 'total_pieces' => $this->purchases->sum('pieces'),
                 'total_amount' => $this->purchases->sum('amount'),
                 'total_size' => $this->purchases->sum('size'),
-                'total_sales' => number_format($this->purchases->sum('amount'),2),
+                'total_sales' => number_format($this->purchases->sum('amount'), 2),
             ],
         ];
 
