@@ -54,6 +54,7 @@ class UpdateSubscriptionJob implements ShouldQueue
                 $plan->tenant->user->notify(new SubscriptionReminderNotification($oneDayAgo));
             }
 
+            Log::debug(['endate' => $endDate, 'today' => Carbon::now()]);
             // If the subscription has expired (end date is before today)
             if ($endDate->isBefore(Carbon::now())) {
                 $paymentInfo = PaymentInfo::where('tenant_id', $plan->tenant_id)->where('auto_renewal', true)->first();
