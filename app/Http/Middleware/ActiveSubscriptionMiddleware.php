@@ -18,10 +18,10 @@ class ActiveSubscriptionMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-         /** @var User $user */
-         $user = $request->user();
+        /** @var User $user */
+        $user = $request->user();
 
-         if (!SubscribedPlan::where('tenant_id', $user->tenant->id)->where('status', 'active')->exists()) {
+        if (!SubscribedPlan::where('tenant_id', $user->tenant->id)->where('status', 'active')->exists()) {
             abort(403, 'Your subscription is not active. Kindly upgrade to continue.');
         }
 

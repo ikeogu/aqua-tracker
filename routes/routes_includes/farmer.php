@@ -20,28 +20,27 @@ use App\Http\Controllers\Subscription\SubscriptionPlanController;
 use App\Http\Controllers\TeamMemberInvitation;
 use App\Models\SubscriptionPlan;
 use Illuminate\Support\Facades\Route;
-
-Route::prefix('farmer')->middleware([
-    'auth:sanctum',
-    'farmer-admin', // This middleware group is defined in bootstrap/app.php
-])->group(function () {
+Route::prefix('farmer')
+    ->middleware(['auth:sanctum', 'farmer-admin'])
+    ->group(function () {
 
     Route::get('{farm}/check-subscription-status', [OrganizationController::class, 'checkSubscription']);
 
-    Route::middleware(['active-sub'])->group(function () {
-        Route::prefix('farms')->controller(FarmController::class)
-            ->group(function () {
-                Route::post('/', 'store');
-                Route::patch('/{farm}', 'update');
-                Route::delete('/{farm}', 'destroy');
-            });
-        Route::apiResource('{farm}/batch', BatchController::class)->except(['index, show']);
-        Route::apiResource('{farm}/pond', PondController::class)->except(['index, show']);
-        Route::apiResource('{farm}/employee', EmployeeController::class)->except(['index, show']);
-        Route::apiResource('{farm}/harvest/{harvest}/customer', HarvestCustomerController::class)->except(['index, show']);
-        Route::apiResource('{farm}/inventory', InventoryController::class)->except(['index, show']);
-        Route::apiResource('{farm}/harvest', HarvestController::class)->except(['index, show']);
-        Route::apiResource('{farm}/expense', ExpenseController::class)->except(['index, show']);
+    // Routes requiring active subscription
+    Route::middleware('active-sub')->group(function () {
+        Route::prefix('farms')->group(function () {
+            Route::post('/', [FarmController::class, 'store']);
+            Route::patch('/{farm}', [FarmController::class, 'update']);
+            Route::delete('/{farm}', [FarmController::class, 'destroy']);
+        });
+
+        Route::apiResource('{farm}/batch', BatchController::class)->except(['index', 'show']);
+        Route::apiResource('{farm}/pond', PondController::class)->except(['index', 'show']);
+        Route::apiResource('{farm}/employee', EmployeeController::class)->except(['index', 'show']);
+        Route::apiResource('{farm}/harvest/{harvest}/customer', HarvestCustomerController::class)->except(['index', 'show']);
+        Route::apiResource('{farm}/inventory', InventoryController::class)->except(['index', 'show']);
+        Route::apiResource('{farm}/harvest', HarvestController::class)->except(['index', 'show']);
+        Route::apiResource('{farm}/expense', ExpenseController::class)->except(['index', 'show']);
 
         Route::post('{farm}/harvest/{harvest}/purchase', [PurchaseController::class, 'store']);
         Route::patch('{farm}/harvest/{harvest}/purchase', [PurchaseController::class, 'update']);
@@ -54,7 +53,7 @@ Route::prefix('farmer')->middleware([
         Route::patch('update-team-member/{teamMember}', [TeamMemberInvitation::class, 'updateTeamMember']);
         Route::delete('delete-team-member/{teamMember}', [TeamMemberInvitation::class, 'deleteTeamMember']);
 
-        Route::post('team-member-invitation', TeamMemberInvitation::class);
+        Route::post('team-member-invitation', [TeamMemberInvitation::class, '__invoke']);
         Route::post('delete-all', \App\Http\Controllers\DeleteAllController::class);
 
         Route::post('{farm}/beneficiary', [BeneficiaryController::class, 'store']);
@@ -62,41 +61,33 @@ Route::prefix('farmer')->middleware([
         Route::patch('purchase/{purchase}', [PurchaseController::class, 'updatePurchase'])->name('updatePurchase');
     });
 
-    Route::group(['prefix' => 'farms'], function () {
-        Route::get('/', [FarmController::class, 'index']);
-    });
+    // Read-only routes (index/show)
+    Route::get('farms', [FarmController::class, 'index']);
 
-    Route::controller(BatchController::class)
-        ->group(function () {
-            Route::get('{farm}/fetch-all-batches', 'getBatches');
-            Route::get('{farm}/batch/{batch}', 'show');
-            Route::get('{farm}/batch', 'index');
-        });
+    Route::get('{farm}/fetch-all-batches', [BatchController::class, 'getBatches']);
+    Route::get('{farm}/batch/{batch}', [BatchController::class, 'show']);
+    Route::get('{farm}/batch', [BatchController::class, 'index']);
 
-    Route::controller(PondController::class)
-        ->group(function () {
-            Route::get('ponds/{farm}/farm-statistic', 'farmStatictics');
-            Route::get('{farm}/pond/{pond}', 'show');
-            Route::get('{farm}/pond', 'index');
-        });
+    Route::get('ponds/{farm}/farm-statistic', [PondController::class, 'farmStatictics']);
+    Route::get('{farm}/pond/{pond}', [PondController::class, 'show']);
+    Route::get('{farm}/pond', [PondController::class, 'index']);
 
-    Route::apiResource('{farm}/employee', EmployeeController::class)->except(['store', 'update', 'destroy']);
-    Route::apiResource('{farm}/harvest/{harvest}/customer', HarvestCustomerController::class)->except(['store', 'update']);
-    Route::apiResource('{farm}/inventory', InventoryController::class)->except(['store', 'update', 'destroy']);
-    Route::apiResource('{farm}/harvest', HarvestController::class)->except(['store', 'update', 'destroy']);
-    Route::apiResource('{farm}/expense', ExpenseController::class)->except(['store', 'update', 'destroy']);
+    Route::apiResource('{farm}/employee', EmployeeController::class)->only(['index', 'show']);
+    Route::apiResource('{farm}/harvest/{harvest}/customer', HarvestCustomerController::class)->only(['index', 'show']);
+    Route::apiResource('{farm}/inventory', InventoryController::class)->only(['index', 'show']);
+    Route::apiResource('{farm}/harvest', HarvestController::class)->only(['index', 'show']);
+    Route::apiResource('{farm}/expense', ExpenseController::class)->only(['index', 'show']);
+
     Route::get('{farm}/customers', FetchAllCustomersController::class);
     Route::get('{farm}/tasks', [TaskController::class, 'index']);
 
-
     Route::get('{farm}/dashboard', DashboardController::class)->name('dashboard');
     Route::get('list-team-members', [TeamMemberInvitation::class, 'listTeamMembers']);
-
     Route::get('{farm}/beneficiaries', [BeneficiaryController::class, 'index']);
 
+    // Billing & subscription
     Route::get('billing-history', [SubscribedPlanController::class, 'billingRecords'])->name('billingRecords');
     Route::post('upgrade-plan', [SubscribedPlanController::class, 'upgradePlan'])->name('upgrade');
-
     Route::post('activate-renewal', [SubscribedPlanController::class, 'activateAutoRenewal'])->name('activateAutoRenewal');
     Route::get('get-premium-plan', [SubscriptionPlanController::class, 'getPremiumPlan']);
 });
