@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\InvalidOrExpiredOtp;
+use App\Http\Middleware\ActiveSubscriptionMiddleware;
 use App\Http\Middleware\CheckFarmerRole;
 use App\Http\Middleware\IdentifyAuthUserCurrentTenant;
 use App\Http\Middleware\InitializeUserPermissionsForCurrentTenant;
@@ -42,6 +43,10 @@ return Application::configure(basePath: dirname(__DIR__))
             UserFullyOnboarded::class,
             InitializeUserPermissionsForCurrentTenant::class,
             IdentifyAuthUserCurrentTenant::class,
+        ]);
+
+        $middleware->alias([
+            'active-sub' => ActiveSubscriptionMiddleware::class
         ]);
 
         $middleware->validateCsrfTokens(except: [
