@@ -87,7 +87,7 @@ class UpdateSubscriptionJob implements ShouldQueue
                 }
 
                 // Find the latest inactive plan for the current tenant that is still valid
-                $newSubscription = SubscribedPlan::where('status', 'pending')
+                $newSubscription = SubscribedPlan::where('status', 'inactive')
                     ->where('tenant_id', $tenant->id)
                     ->first();
 

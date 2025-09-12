@@ -122,6 +122,7 @@ class SubscribedPlanController extends Controller
 
         $subscribedPlans = QueryBuilder::for(SubscribedPlan::class)
             ->where('tenant_id', $tenant->id)
+            ->where('status', '!=','pending')
             ->allowedFilters(['payment_method', 'type', 'status'])
             ->latest()->paginate($request->per_page ?: 10);
 
