@@ -60,7 +60,7 @@ class OrganizationController extends Controller
         $response = SubscribedPlan::query()
             ->where('tenant_id', $farm->tenant->id)
             ->where('status', 'active')
-            ->dump()   // will show you the query before running
+            ->whereNull('deleted_at')
             ->exists();
 
 
