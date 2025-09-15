@@ -65,7 +65,7 @@ class OrganizationController extends Controller
 
             Log::debug([
                 'response' => $response,
-                'tenant_id' => $farm->tenant->id
+                'tenant' => $farm->tenant
             ]);
 
         return $this->success(
