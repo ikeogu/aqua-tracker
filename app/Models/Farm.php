@@ -37,7 +37,7 @@ class Farm extends Model
 
     public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Tenant::class);
+        return $this->belongsTo(Tenant::class, 'tenant_id');
     }
 
     public function users(): BelongsToMany

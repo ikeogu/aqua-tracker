@@ -57,15 +57,20 @@ class OrganizationController extends Controller
 
     public function checkSubscription(Farm $farm): JsonResponse
     {
+
+        $user = Auth::user();
+        $tenant = $user->tenant;
+
         $response = SubscribedPlan::query()
-            ->where('tenant_id', $farm->tenant->id)
+            ->where('tenant_id', $tenant->id)
             ->where('status', 'active')
             ->whereNull('deleted_at')
             ->exists();
 
             Log::debug([
                 'response' => $response,
-                'tenant' => $farm->tenant
+                'tenant' => $farm->tenant,
+                'farm' => $farm
             ]);
 
         return $this->success(
