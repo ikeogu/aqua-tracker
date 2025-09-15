@@ -14,7 +14,7 @@ class PaystackHandler extends ProcessWebhookJob
         $payload = $webhookCall->payload;
 
         Log::info('Webhook call with id `{$webhookCall->id}` has been received');
-        Log::info('Payload: {$payload}');
+
 
         // perform the work here
 
