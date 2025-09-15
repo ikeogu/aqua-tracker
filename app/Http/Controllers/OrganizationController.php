@@ -25,40 +25,44 @@ class OrganizationController extends Controller
 {
     //
 
-    public function __invoke(UpdateOrganazationRequest $request, Tenant $tenant) : JsonResponse
+    public function __invoke(UpdateOrganazationRequest $request, Tenant $tenant): JsonResponse
 
     {
-         /** @var User $user */
-         $user = Auth::user();
-         if ($user->hasRole(Role::VIEW_FARMS->value)) {
-             return $this->error(
-                 message: "Your current role does not permit this action, kindly contact the Admin.",
-                 code: HttpStatusCode::FORBIDDEN->value
-             );
-         }
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->hasRole(Role::VIEW_FARMS->value)) {
+            return $this->error(
+                message: "Your current role does not permit this action, kindly contact the Admin.",
+                code: HttpStatusCode::FORBIDDEN->value
+            );
+        }
         /** @var User $user */
         $user = Auth::user();
 
-        if(!$user->hasRole(Role::ORGANIZATION_OWNER->value) || $user->tenant !== $tenant->id){
+        if (!$user->hasRole(Role::ORGANIZATION_OWNER->value) || $user->tenant !== $tenant->id) {
             $this->error(
-                message:"unathorized action.",
-                code:403
+                message: "unathorized action.",
+                code: 403
             );
         }
 
-       $tenant->update($request->validated());
+        $tenant->update($request->validated());
 
-       return $this->success(
+        return $this->success(
             message: 'Organization updated successfully',
             data: $tenant,
             code: HttpStatusCode::SUCCESSFUL->value
         );
-
     }
 
-    public function checkSubscription(Farm $farm) : JsonResponse
+    public function checkSubscription(Farm $farm): JsonResponse
     {
-        $response = SubscribedPlan::where('tenant_id', $farm->tenant->id)->where('status', 'active')->exists();
+        $response = SubscribedPlan::query()
+            ->where('tenant_id', $farm->tenant->id)
+            ->where('status', 'active')
+            ->dump()   // will show you the query before running
+            ->exists();
+
 
         return $this->success(
             message: 'Organization subscription status',
@@ -69,7 +73,7 @@ class OrganizationController extends Controller
         );
     }
 
-   public function destroy(array $userIds) : JsonResponse
+    public function destroy(array $userIds): JsonResponse
     {
         try {
 
@@ -94,7 +98,6 @@ class OrganizationController extends Controller
                 Pond::whereIn('farm_id', $farmIds)->delete();
                 Harvest::whereIn('farm_id', $farmIds)->delete();
                 Tenant::whereIn('user_id', $userIds)->delete();
-
             });
 
             Log::info('Records successfully deleted based on the provided user IDs.');
@@ -103,7 +106,6 @@ class OrganizationController extends Controller
                 message: 'Organization/s deleted',
                 code: HttpStatusCode::SUCCESSFUL->value
             );
-
         } catch (\Throwable $th) {
             //throw $th;
             Log::debug(['error' => $th]);
@@ -111,7 +113,6 @@ class OrganizationController extends Controller
                 message: 'Organization deletion failed',
                 code: HttpStatusCode::SERVER_ERROR->value
             );
-
         }
     }
 }
