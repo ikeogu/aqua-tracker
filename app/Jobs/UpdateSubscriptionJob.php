@@ -97,4 +97,10 @@ class UpdateSubscriptionJob implements ShouldQueue
                 }
             });
     }
+
+
+    private function updatePaymentStatus(){
+
+        
+    }
 }

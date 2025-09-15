@@ -25,7 +25,7 @@
                     </tr>
                     <tr>
                         <td style="padding: 20px 0; color: #333333; font-size: 16px; line-height: 20px;">
-                            This is to notify you that your payment for {{$subscribedPlan->subscriptionPlan->title}} plan for {{$organization}} was successful.
+                            Subscription Activated Successfully
                         </td>
                     </tr>
                     <tr>

@@ -64,14 +64,7 @@ class OrganizationController extends Controller
         $response = SubscribedPlan::query()
             ->where('tenant_id', $tenant->id)
             ->where('status', 'active')
-            ->whereNull('deleted_at')
             ->exists();
-
-            Log::debug([
-                'response' => $response,
-                'tenant' => $farm->tenant,
-                'farm' => $farm
-            ]);
 
         return $this->success(
             message: 'Organization subscription status',
