@@ -63,6 +63,10 @@ class OrganizationController extends Controller
             ->whereNull('deleted_at')
             ->exists();
 
+            Log::debug([
+                'response' => $response,
+                'tenant_id' => $farm->tenant->id
+            ]);
 
         return $this->success(
             message: 'Organization subscription status',
