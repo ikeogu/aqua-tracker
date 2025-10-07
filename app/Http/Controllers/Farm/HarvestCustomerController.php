@@ -31,6 +31,7 @@ class HarvestCustomerController extends Controller
         if (! $harvest) {
             return $this->error(Response::HTTP_NOT_FOUND);
         }
+        
         $customers = $harvest?->customers()
             ->when($request->search, function ($query) use ($request) {
                 return $query->where('name', 'like', '%' . $request->search . '%')
