@@ -27,6 +27,11 @@ class HarvestCustomerController extends Controller
     {
 
         $harvest = $farm->harvests()->find($harvest->id);
+
+        if (! $harvest) {
+            return $this->error(Response::HTTP_NOT_FOUND)
+                ->respondWithError('Harvest not found for this farm.');
+        }
         $customers = $harvest?->customers()
             ->when($request->search, function ($query) use ($request) {
                 return $query->where('name', 'like', '%' . $request->search . '%')
