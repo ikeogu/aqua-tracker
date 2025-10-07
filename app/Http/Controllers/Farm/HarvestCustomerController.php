@@ -27,7 +27,7 @@ class HarvestCustomerController extends Controller
     {
 
         $harvest = $farm->harvests()->find($harvest->id);
-        $customers = $harvest->customers()
+        $customers = $harvest?->customers()
             ->when($request->search, function ($query) use ($request) {
                 return $query->where('name', 'like', '%' . $request->search . '%')
                     ->orWhere('email', 'like', '%' . $request->search . '%')
@@ -45,7 +45,7 @@ class HarvestCustomerController extends Controller
             }
             //@codeCoverageIgnoreEnd
         }
-        $customers = $customers->latest()->paginate($request->per_page ?? 10);
+        $customers = $customers?->latest()->paginate($request->per_page ?? 10);
 
         return $this->success(
             message: 'Customers retrieved successfully',
